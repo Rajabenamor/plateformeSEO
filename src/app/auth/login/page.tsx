@@ -33,6 +33,7 @@ export default function LoginPage() {
   };
     return (
       <div>
+        
         <h2>Log In to Your Dashboard</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* 4. Conditionally display the error message to the user */}
