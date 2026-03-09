@@ -2,8 +2,8 @@
 import { cookies } from "next/headers";
 import { forgotPasswordFormData, LoginFormData, RegisterFormData, ResetPasswordFormData } from "@/app/types/auth";
 import { ActionResult } from "next/dist/shared/lib/app-router-types";
-import { success } from "zod";
-import { error } from "console";
+import { redirect } from "next/navigation";
+
  // tells next.js this code MUST run securely on the server , not in the browser
  export async function registerServerAction(data : RegisterFormData){
     try{
@@ -67,11 +67,12 @@ return{success:true};
 }
  };
 
- //logout
+ //logout action 
 
  export async function logoutAction(){
     const cookieStore = await cookies();
     cookieStore.delete("access_token");
+    redirect('/');
  }
 
  //forgotPassword
