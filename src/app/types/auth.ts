@@ -22,3 +22,22 @@ export const loginSchema = z.object({
 });
 //login type
 export type LoginFormData = z.infer<typeof loginSchema>;
+
+//for the "forgot password" initial request
+export const forgotPasswordSchema = z.object ({
+    email : z.string().email("Please enter a valid email address"),
+});
+
+export type forgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+//for the actual reset page (where the user types the new password)
+export const resetPasswordSchema = z.object({
+
+ password: z.string().min(8, "Password must be at least 8 charachters"),
+    confirmPassword: z.string(),
+  }) .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"], // puts the error under the confirm password field
+  });
+
+  export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;

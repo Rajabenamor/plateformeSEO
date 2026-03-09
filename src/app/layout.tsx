@@ -26,14 +26,15 @@ export default function RootLayout({
   return (
     //suppressHydrationWarning is CRUCIAL here, it stops Next.js from throwing an error
     //when next-themes injects the dark mode class on page load.
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         
         <ThemeProvider>
-          <Navbar />
+          <Navbar/>
           {children}
-        </ThemeProvider>
+          </ThemeProvider>
       </body>
     </html>
   );
