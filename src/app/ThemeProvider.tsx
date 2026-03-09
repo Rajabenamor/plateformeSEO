@@ -1,5 +1,6 @@
-// Dark mode / Light Mode
 "use client";
+// Dark mode / Light Mode
+
 
 import { ReactNode } from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
