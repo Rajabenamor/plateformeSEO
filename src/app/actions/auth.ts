@@ -1,6 +1,9 @@
 "use server";
 import { cookies } from "next/headers";
-import { LoginFormData, RegisterFormData } from "../types/auth";
+import { forgotPasswordFormData, LoginFormData, RegisterFormData, ResetPasswordFormData } from "@/app/types/auth";
+import { ActionResult } from "next/dist/shared/lib/app-router-types";
+import { success } from "zod";
+import { error } from "console";
  // tells next.js this code MUST run securely on the server , not in the browser
  export async function registerServerAction(data : RegisterFormData){
     try{
@@ -70,3 +73,80 @@ return{success:true};
     const cookieStore = await cookies();
     cookieStore.delete("access_token");
  }
+
+ //forgotPassword
+
+ //tells the backend to send the email
+
+ export async function forgotPasswordAction(data: forgotPasswordFormData): Promise<ActionResult>{
+    try{
+        const response = await fetch("http://localhost:8000/password_reset/",{
+            method:"POST",
+            headers:{
+              "Content-Type":"application/json",
+            },
+            body: JSON.stringify({email: data.email }),
+        }); 
+        if(!response.ok){
+            const errorData = await response.json();
+            return {success:false , error : errorData.detail || "Email not found"};
+
+        }
+        return {success:true};
+    }catch(e){
+        return{success: false,error:"Server connection failed"};
+
+    }
+
+ }
+
+
+ {/*reset password */}
+
+ export async function resetPasswordAction(data: ResetPasswordFormData, token :string): Promise<ActionResult>{
+   try {
+    console.log("Token being sent:", token)
+    const response = await fetch("http://localhost:8000/password_reset/confirm/",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+        },
+        body: JSON.stringify({
+            token: token.trim(),
+            password: data.password }),
+    }); 
+    
+
+    if(!response.ok){
+        const errorData = await response.json();
+        return {success:false , error : errorData.password?.[0] || "Invalid or expired token."};
+
+    }
+    return {success:true};
+}catch(e){
+    console.error("The actual error is:", e);
+    return{success: false,error:"Server connection failed."};
+
+}
+}
+
+//checks token validity
+
+export async function validateResetTokenAction(token :string): Promise<ActionResult>{
+    try {
+   
+     const response = await fetch("http://localhost:8000/password_reset/validate_token/",{
+         method:"POST",
+         headers:{
+           "Content-Type":"application/json",
+         },
+         body: JSON.stringify({token}),
+     }); 
+     //return ok id django says ok , false if expired
+     return response.ok;
+
+    }catch(error){
+        //if the backend is down or throw an error , its invalid
+        return false;
+    }
+    }
