@@ -1,8 +1,11 @@
 "use server";
+//The Action Taker: This handles database mutations (logging in, registering, changing passwords, destroying cookies).
 import { cookies } from "next/headers";
 import { forgotPasswordFormData, LoginFormData, RegisterFormData, ResetPasswordFormData } from "@/app/types/auth";
 import { ActionResult } from "next/dist/shared/lib/app-router-types";
 import { redirect } from "next/navigation";
+import { verifySession } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 
  // tells next.js this code MUST run securely on the server , not in the browser
  export async function registerServerAction(data : RegisterFormData){
@@ -71,7 +74,13 @@ return{success:true};
 
  export async function logoutAction(){
     const cookieStore = await cookies();
-    cookieStore.delete("access_token");
+    const hasToken =await verifySession();
+    if(hasToken){
+        cookieStore.delete("access_token");
+    }
+    //forces the navbar to re-run verifySession() and show "login"
+    revalidatePath('/','layout');
+    //redirect user
     redirect('/');
  }
 
@@ -151,3 +160,19 @@ export async function validateResetTokenAction(token :string): Promise<ActionRes
         return false;
     }
     }
+
+//analyze 
+
+export async function analyzeUrlAction(formData : FormData){
+    //check if the user is logged in 
+    const isLoggesIn = await verifySession();
+
+    //if not logged in , redirect them to the login page
+    if(!isLoggesIn){
+        redirect('/auth/login?error=please_login');
+    }
+    //if they are logged in 
+    const url = formData.get('url');
+    //django api ..
+
+}
