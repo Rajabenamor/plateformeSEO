@@ -7,16 +7,17 @@ export function middleware(request:NextRequest){
     const isHomePage = request.nextUrl.pathname.startsWith('/');
     //if they are trying to access the home page without a token , kick them to login
     if(isHomePage && !token){
-        return NextResponse.redirect(new URL('/login', request.url));
+        return NextResponse.redirect(new URL('/auth/login', request.url));
     }
     //if they are logged in and try to go to the login/register page , send them to dashboard
-    const isAuthPage = request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/register'; 
+    const isAuthPage = request.nextUrl.pathname === '/auth/login' || request.nextUrl.pathname === '/auth/register'; 
     if(isAuthPage && token){
         return NextResponse.redirect(new URL('/',request.url));
     }
+    
     return NextResponse.next();
 }
 //this tells next.js to only run this code for specific pages
 export const config={
-    matcher: ['/','/login','/register'],
+    matcher: ['/','/auth/:path*'],
 };
