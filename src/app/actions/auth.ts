@@ -10,7 +10,8 @@ import { revalidatePath } from "next/cache";
  // tells next.js this code MUST run securely on the server , not in the browser
  export async function registerServerAction(data : RegisterFormData){
     try{
-        const response = await fetch("http://localhost:8000/api/auth/register/",{
+        
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/register/',{
             method:"POST",
             headers:{
               "Content-Type":"application/json",
@@ -37,7 +38,7 @@ import { revalidatePath } from "next/cache";
  }
  export async function loginServerAction(data:LoginFormData){
     try{
-    const response = await fetch("http://localhost:8000/api/auth/login/",{
+    const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE_URL}/api/api/auth/login/',{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -90,7 +91,7 @@ return{success:true};
 
  export async function forgotPasswordAction(data: forgotPasswordFormData): Promise<ActionResult>{
     try{
-        const response = await fetch("http://localhost:8000/password_reset/",{
+        const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE_URL}/password_reset/',{
             method:"POST",
             headers:{
               "Content-Type":"application/json",
@@ -116,7 +117,7 @@ return{success:true};
  export async function resetPasswordAction(data: ResetPasswordFormData, token :string): Promise<ActionResult>{
    try {
     console.log("Token being sent:", token)
-    const response = await fetch("http://localhost:8000/password_reset/confirm/",{
+    const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE_URL}/password_reset/confirm/',{
         method:"POST",
         headers:{
           "Content-Type":"application/json",
@@ -145,7 +146,7 @@ return{success:true};
 export async function validateResetTokenAction(token :string): Promise<ActionResult>{
     try {
    
-     const response = await fetch("http://localhost:8000/password_reset/validate_token/",{
+     const response = await fetch('${process.env.NEXT_PUBLIC_API_BASE_URL}/password_reset/validate_token/',{
          method:"POST",
          headers:{
            "Content-Type":"application/json",
