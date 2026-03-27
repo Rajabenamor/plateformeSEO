@@ -1,6 +1,16 @@
+import { verifyAdminSession } from "@/lib/session";
 import { analyzeUrlAction } from "./actions/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+
+export default async function Home() {
+  //check if current user is admin
+  const isAdmin = await verifyAdminSession();
+  // if they are admin , immedialty redirect them to thei dashboard
+  if(isAdmin){
+    redirect("/admin");
+  }
+  //if normal user :
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh]">
       <p className="text-gray-600 mt-2">

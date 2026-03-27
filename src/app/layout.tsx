@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "./ThemeProvider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const googleId=process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   return (
     //suppressHydrationWarning is CRUCIAL here, it stops Next.js from throwing an error
     //when next-themes injects the dark mode class on page load.
@@ -30,11 +32,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-         
+        {googleId? (
+         <GoogleOAuthProvider clientId={googleId}>
         <ThemeProvider>
           <Navbar/>
           {children}
           </ThemeProvider>
+          </GoogleOAuthProvider>):(
+            <ThemeProvider>
+          <Navbar/>
+          {children}
+          </ThemeProvider>
+          
+          )}
       </body>
     </html>
   );
