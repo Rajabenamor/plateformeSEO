@@ -1,23 +1,73 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
-export function middleware(request:NextRequest){
+import { jwtVerify } from "jose";
+import { NextResponse,NextRequest } from "next/server";
+
+
+
+
+
+const protectedRoutes= ['/analyze','/history', '/report']
+const adminRoutes=['/admin']
+const authRoutes=['/auth/login', '/auth/register']
+
+async function getTokenPayload(token: string) {
+    try {
+        const secretkey = process.env.DJANGO_SECRET_KEY;
+        if(!secretkey){
+            console.error("Middleware error : DJANGO_SECRET_KEY is missing!");
+            return null;
+        }
+        const secret = new TextEncoder().encode(process.env.DJANGO_SECRET_KEY);
+       
+        const { payload } = await jwtVerify(token, secret, { algorithms: ['HS256'] });
+        return payload;
+    } catch(error) {
+        return null;
+    }
+}
+
+export async function middleware(request:NextRequest){
     //get the token from the secure cookie we created during login 
     const token = request.cookies.get('access_token')?.value;
+    const path = request.nextUrl.pathname;
     //define which paths we want to protect
-    const isHomePage = request.nextUrl.pathname.startsWith('/');
-    //if they are trying to access the home page without a token , kick them to login
-    if(isHomePage && !token){
+    const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
+    const isAdminRoute = adminRoutes.some(route => path.startsWith(route));
+    const isAuthRoute = authRoutes.some(route => path.startsWith(route));
+
+    //only verify token if we actually need to check access
+    const needsCheck = isProtectedRoute || isAdminRoute || isAuthRoute;
+    const payload = (token && needsCheck) ? await getTokenPayload(token) : null;
+    const isValid = !!payload;
+    const isAdmin = Boolean(payload?.is_staff); //catches true ,  or "true"
+
+    //fake/expired token -> clear cookies and redirect to login 
+    if(token && !isValid && needsCheck){
+        const response = NextResponse.redirect(new URL('/auth/login', request.url));
+        response.cookies.delete('access_token');
+        response.cookies.delete('refresh_token');
+        return response;
+    }
+
+    //protected route -> must be logged in 
+    if(isProtectedRoute && !isValid){
         return NextResponse.redirect(new URL('/auth/login', request.url));
     }
-    //if they are logged in and try to go to the login/register page , send them to dashboard
-    const isAuthPage = request.nextUrl.pathname === '/auth/login' || request.nextUrl.pathname === '/auth/register'; 
-    if(isAuthPage && token){
-        return NextResponse.redirect(new URL('/',request.url));
+    //admin route -> must be admin
+    if(isAdminRoute && !isAdmin){
+        return NextResponse.redirect(new URL('/', request.url));
     }
-    
+    // admin goes to /admin, user goes to /
+    if (isAuthRoute && isValid) {
+        return NextResponse.redirect(
+            new URL(isAdmin ? '/admin' : '/', request.url)
+        );
+    }
     return NextResponse.next();
+    
+    
+    
 }
-//this tells next.js to only run this code for specific pages
-export const config={
-    matcher: ['/','/auth/:path*'],
+// ✅ runs on everything except static files and API routes
+export const config = {
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

@@ -21,7 +21,7 @@ const onSubmit = async (data : forgotPasswordFormData) => {
     const result = await forgotPasswordAction(data);
 
     if (result.success){
-        setMesssage("A reset link has been sent, check your email inbox !");
+        setMesssage("If this email is registered, you will receive a reset link shortly");
 
     }else{
         setError(String(result.error));

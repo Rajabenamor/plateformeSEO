@@ -41,3 +41,33 @@ export const resetPasswordSchema = z.object({
   });
 
   export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+
+  //admin
+
+  export type user = {
+    id: number;
+    username: string;
+    email:string;
+    is_active:boolean;
+    is_staff: boolean;
+    date_joined:string;
+}
+
+export type Props ={
+  onClose: ()=> void;
+  onCreated: (user:any)=>void;
+}
+
+//for admin creation
+
+export const AdminSchema = z.object({
+  username: z.string().min(5),
+  password: z.string().min(8),
+});
+
+export type  AdminSchemaData = z.infer<typeof AdminSchema>;
+
+export interface AuthUser{
+  id:number;
+  isSuperAdmin:boolean;
+}

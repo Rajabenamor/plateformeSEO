@@ -3,13 +3,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { loginServerAction } from "@/app/actions/auth";
+import { getRedirectPathAction, GoogleLoginAction, loginServerAction } from "@/app/actions/auth";
 import { LoginFormData, loginSchema } from "@/app/types/auth";
 import Link from "next/link";
-
+import {GoogleLogin} from '@react-oauth/google';
 
 export default function LoginPage() {
   const [error, setError] = useState("");
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
   const {
@@ -22,15 +23,21 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     setError("");
+    // If it succeeds, the action itself will trigger redirect('/admin') or redirect('/')
     const result = await loginServerAction(data);
-
-    if (result.success) {
-      //redirect to home page after successful login
-      router.push("/");
-      router.refresh();
-    } else {
+    //If we reach this line, it means success was false (because redirects throw an error in Next.js that stops execution)
+    if(!result.success){
+      //catch the specific django error for inactive
       setError(result.error);
     }
+    // if (result.success) {
+    //   //redirect to home page after successful login if user , if admin redirect to /admin
+    //   const path = await getRedirectPathAction();
+    //   router.push(path);
+    //   router.refresh();
+    // } else {
+    //   setError(result.error);
+    // }
   };
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white border border-gray-200 rounded-xl shadow-sm">
@@ -38,7 +45,7 @@ export default function LoginPage() {
       <h2 className="text-2xl font-bold text-gray-900">Log In to Your Dashboard</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* 4. Conditionally display the error message to the user */}
-        {error && <div className="color-red mb-10">{error}</div>}
+        {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">{error}</div>}
         <input
           {...register("username")}
           type="text"
@@ -75,6 +82,33 @@ export default function LoginPage() {
           {isSubmitting ? "Signing in..." : "Login"}
         </button>
       </form>
+      {/* divider */}
+      <div className="flex items-center gap-3 my-4">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400">or</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+        {/*google Button */}
+        <GoogleLogin 
+        onSuccess={async (CredentialResponse)=>{
+          setGoogleLoading(true);
+          setError("");
+          const result = await GoogleLoginAction(CredentialResponse.credential!);
+          if(result.success){
+            const path = await getRedirectPathAction();
+            router.push(path);
+            router.refresh();
+          }else{
+            setError(result.error || "Google login failed");
+          }
+          setGoogleLoading(false);
+        }}
+        onError={()=>setError("Google login failed. Please try again.")}
+        width="400"
+        text="signin_with"
+        shape="rectangular"
+        theme="outline"
+        />
       </div>
     </div>
   );
