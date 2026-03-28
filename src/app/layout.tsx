@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "./ThemeProvider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Footer from "@/components/Footer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,24 +26,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const googleId=process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  //define the core layout exactly once
+  //added main so the footer is forced to the bottom
+  const AppContent=(
+    <ThemeProvider>
+      <Navbar/>
+      <main className="flex-grow flex flex-col">
+        {children}
+      </main>
+      <Footer/>
+    </ThemeProvider>
+  );
   return (
     //suppressHydrationWarning is CRUCIAL here, it stops Next.js from throwing an error
     //when next-themes injects the dark mode class on page load.
     <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         {googleId? (
          <GoogleOAuthProvider clientId={googleId}>
-        <ThemeProvider>
-          <Navbar/>
-          {children}
-          </ThemeProvider>
+            {AppContent}
           </GoogleOAuthProvider>):(
-            <ThemeProvider>
-          <Navbar/>
-          {children}
-          </ThemeProvider>
+
+            AppContent
           
           )}
       </body>
