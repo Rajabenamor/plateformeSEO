@@ -3,35 +3,36 @@
 import { deleteUserAction, toggleUserAction } from "@/app/actions/auth";
 import { user } from "@/app/types/auth";
 import { useState } from "react";
-import CreateAdminModal from "./createAdminModal";
+import CreateAdminModal from "./createUserModal";
+import UpdateUserModal from "./UserUpdateModal";
+import CreateUserModal from "./createUserModal";
 
 export default function AdminTable({
   initialUsers,
   isSuperAdmin,
-  currentUserId
+  currentUserId,
 }: {
   initialUsers: user[];
   isSuperAdmin: boolean;
-  currentUserId : number |string | undefined
+  currentUserId: number | string | undefined;
 }) {
   const [users, setUsers] = useState<user[]>(initialUsers);
   const [confirmDelete, setConfirmDelete] = useState<user | null>(null);
+  const [userToUpdate, setUserToUpdate] = useState<user | null>(null);
   const [showCreateAdmin, setShowCreateAdmin] = useState(false);
   const [error, setError] = useState("");
   const [loadingId, setLoadingId] = useState<number | null>(null);
 
   async function handleToggle(userId: number) {
-    const targetUser = users.find((u)=> u.id === userId);
-    if(!targetUser)return;
+    const targetUser = users.find((u) => u.id === userId);
+    if (!targetUser) return;
     const newStatus = !targetUser.is_active;
     const original = [...users];
     setUsers(
-      users.map((u) =>
-        u.id === userId ? { ...u, is_active: newStatus } : u
-      )
+      users.map((u) => (u.id === userId ? { ...u, is_active: newStatus } : u))
     );
 
-    const result = await toggleUserAction(userId,newStatus);
+    const result = await toggleUserAction(userId, newStatus);
     if (!result.success) {
       // revert if server fails
       setUsers(original);
@@ -66,7 +67,7 @@ export default function AdminTable({
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setShowCreateAdmin(true)}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-white bg-[#15418c] rounded-lg hover:bg- transition-colors"
           >
             + Create admin
           </button>
@@ -74,35 +75,53 @@ export default function AdminTable({
       )}
       {/* Create admin modal */}
       {showCreateAdmin && (
-        <CreateAdminModal
+        <CreateUserModal
+          isSuperAdmin={isSuperAdmin} // <-- Add this
           onClose={() => setShowCreateAdmin(false)}
-          onCreated={(newUser) => setUsers([newUser, ...users])} //adds new admin to list instantly
+          onCreated={(newUser) => setUsers([newUser, ...users])}
         />
       )}
+      {/* update user modal */}
+      {userToUpdate && (
+        <UpdateUserModal
+          user={userToUpdate}
+          onClose={() => setUserToUpdate(null)}
+          onUpdated={(updatedUser) => {
+            setUsers(
+              users.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+            );
+            setUserToUpdate(null);
+          }}
+        />
+      )}
+
       {/* delete confirmation modal */}
       {confirmDelete && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 shadow-lg max-w-sm w-full mx-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-2">
-              Delete user?
+          <div className="bg-card rounded-xl p-6 shadow-lg max-w-sm w-full mx-4">
+            <h2 className="text-lg font-semibold text-primary mb-2">
+              Delete user ?
             </h2>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-foreground/80 ">
               Are you sure you want to delete{" "}
-              <span className="font-medium text-gray-900">
+              <span className="font-medium text-foreground">
                 {confirmDelete.username}
-              </span>
-              ? This action cannot be undone.
+              </span>{" "}
+              ?
+            </p>
+            <p className="text-sm text-foreground/80 mb-6">
+              This action cannot be undone.
             </p>
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setConfirmDelete(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg bg-white hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={() => handleDelete(confirmDelete.id)}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-700"
               >
                 Delete
               </button>
@@ -112,42 +131,42 @@ export default function AdminTable({
       )}
 
       {/* users table */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden transition-colors">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-card border-b border-gray-200">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 User
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 Role
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 Joined
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border">
             {users.map((user) => {
               //super admin can modify anyone except himself
               //sub admin can only modify regular users
               const isSelf = String(user.id) === String(currentUserId);
               const canModify = !isSelf && (isSuperAdmin || !user.is_staff);
               return (
-                <tr key={user.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                <tr key={user.id} className="hover:bg-primary/10">
+                  <td className="px-6 py-4 text-sm font-medium text-foreground">
                     {user.username}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-6 py-4 text-sm text-foreground/70">
                     {user.email}
                   </td>
                   <td className="px-6 py-4">
@@ -172,17 +191,17 @@ export default function AdminTable({
                       {user.is_staff ? "Admin" : "User"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                  <td className="px-6 py-4 text-sm text-foreground/70">
                     {new Date(user.date_joined).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
-                      {canModify? (
+                      {canModify ? (
                         <>
                           <button
-                          disabled={loadingId === user.id}
+                            disabled={loadingId === user.id}
                             onClick={() => handleToggle(user.id)}
-                            className={`px-3 py-1 text-xs font-medium rounded-lg transition-colors ${
+                            className={`px-3 py-1 text-xs cursor-pointer font-medium rounded-lg transition-colors ${
                               user.is_active
                                 ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
                                 : "bg-green-100 text-green-700 hover:bg-green-200"
@@ -192,20 +211,24 @@ export default function AdminTable({
                           </button>
                           <button
                             disabled={loadingId === user.id}
+                            onClick={() => setUserToUpdate(user)}
+                            className="px-3 py-1 text-xs font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 cursor-pointer transition-colors"
+                          >
+                            Update
+                          </button>
+                          <button
+                            disabled={loadingId === user.id}
                             onClick={() => setConfirmDelete(user)}
-                            className="px-3 py-1 text-xs font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+                            className="px-3 py-1 text-xs font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 cursor-pointer transition-colors"
                           >
                             Delete
                           </button>
                         </>
-                      ):(
-                      
-                      
+                      ) : (
                         <span className="text-xs text-gray-400 italic">
-                         {isSelf? "You (protected)" : "Protected"} 
+                          {isSelf ? "You (protected)" : "Protected"}
                         </span>
-                      
-                    )}
+                      )}
                     </div>
                   </td>
                 </tr>
