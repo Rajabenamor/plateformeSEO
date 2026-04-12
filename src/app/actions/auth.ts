@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { verifyAdminSession, verifySession } from "@/lib/session";
 import { success } from "zod";
 import { getAuthUser } from "@/lib/auth-utils";
+import isURL from "validator/lib/isURL";
 
  // tells next.js this code MUST run securely on the server , not in the browser
  export async function registerServerAction(data : RegisterFormData){
@@ -83,6 +84,17 @@ cookieStore.set("refresh_token",result.refresh, {
     maxAge: 60 * 60 * 24*7 , // 7 days 
     path : "/",
 });
+// 3. Store User Data for the Sidebar!
+// Notice `httpOnly: false`. This allows the browser to read the username for the UI!
+if (result.user) {
+    cookieStore.set("user_data", JSON.stringify(result.user), {
+        httpOnly: false, // Must be false so our client sidebar can read it!
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+}
 //return{success:true};
 const isAdmin = await verifyAdminSession();
 redirectPath= isAdmin ? "/admin" : "/" ;
@@ -187,29 +199,94 @@ export async function validateResetTokenAction(token :string): Promise<ActionRes
 
 //analyze 
 
-export async function analyzeUrlAction(formData : FormData){
-    //check if the user is logged in 
-    const isLoggedIn = await verifySession();
+// export async function analyzeUrlAction(formData : FormData){
+//     //check if the user is logged in 
+//     const isLoggedIn = await verifySession();
 
-    //if not logged in , redirect them to the login page
-    if(!isLoggedIn){
-        redirect('/auth/login?error=please_login');
+//     //if not logged in , redirect them to the login page
+//     if(!isLoggedIn){
+//         redirect('/auth/login?error=please_login');
+//     }
+//     //forward the token to django for protected routes
+//     const cookieStore = await cookies();
+//     const accessToken = cookieStore.get("access_token")?.value;
+//     //if they are logged in 
+//     let url = formData.get('url') as string;
+//     if (!url) return;
+
+//     //ensure the url has https://
+//     url = url.startsWith("http") ? url : `http://${url}`;
+//     //django api ..
+//     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analyze/`,{
+//         method:"POST",
+//         headers:{
+//           "Content-Type":"application/json",
+//           "Authorization": `Bearer ${accessToken}`, //send token to django
+//         },
+//         body: JSON.stringify({url}), 
+//     });
+//     //handle errors if django rejects it
+//     if(!response.ok){
+//         redirect('/?error=analysis_failed');
+//     }
+//     // if successful , redirect to the dashboard to show the results
+//     redirect(`/dashboard?url=${encodeURIComponent(url)}`);
+
+// }
+export type ActionState = {
+    error: string | null;
+};
+//FUNCTION1 : handles the form submission from the home page
+export async function analyzeUrlAction(prevState: ActionState,formData: FormData): Promise<ActionState> {
+    // 1. Check if the user is logged in
+     const isLoggedIn = await verifySession(); // (Uncomment if you have this function ready)
+
+     if (!isLoggedIn) {
+       redirect('/auth/login?error=please_login');
+     }
+
+    // 2. Get the URL the user typed in
+    let url = formData.get('url') as string;
+    
+    // If they submitted an empty form, do nothing
+    if (!url) return { error: null };
+    
+    // 3. Ensure the URL is formatted correctly with https://
+    url = url.trim();
+// The Validator check: 
+    // require_tld: true ensures they type ".com" or similar.
+    // require_protocol: false means they can just type "github.com" without "https://"
+    if (!isURL(url, { require_tld: true, require_protocol: false })) {
+        return { error: "Please enter a valid website URL with a dot (e.g., example.com)" };
+    
     }
-    //forward the token to django for protected routes
+    const formattedUrl = url.startsWith("http") ? url : `https://${url}`;
+    // 4. INSTANTLY redirect to the dashboard. 
+    // Do NOT fetch Django here. Let the Dashboard page do it so the loading screen shows!
+    redirect(`/dashboard?url=${encodeURIComponent(formattedUrl)}`);
+}
+//FUNCTION 2 : handles the form submission from the home page
+export async function fetchDashboardDataSecurely(url: string) {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
-    //if they are logged in 
-    const url = formData.get('url');
-    //django api ..
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analyze/`,{
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization": `Bearer ${accessToken}`, //send token to django
+
+    if (!accessToken) {
+        throw new Error("Not authenticated");
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/?url=${encodeURIComponent(url)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`, 
         },
-        body: JSON.stringify({url}), 
     });
 
+    if (!response.ok) {
+        throw new Error("Analysis failed");
+    }
+
+    return await response.json();
 }
 
 //google sign in
@@ -250,6 +327,12 @@ return{success:true};
         return{ success: false, error: "Connection failed"};
     }
 }
+
+
+
+
+
+
 
 //******************ADMIN PART******************/
 
@@ -329,6 +412,37 @@ export async function deleteUserAction(userId: number) {
     }
 }
 
+
+//update user
+export async function updateUserAction(userId:number,data:{username:string;email:string; is_staff:boolean}){
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("access_token")?.value;
+
+    if (!accessToken) {
+        throw new Error("Not authenticated");
+    }
+    
+    try{
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/${userId}/update/`,{
+            method:"PATCH",
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":`Bearer ${accessToken}`
+            },
+            body:JSON.stringify(data),
+        });
+        if(!response.ok){
+            const errorData = await response.json();
+            return{success:false,error:errorData.detail || "Failed to update user."};
+        }
+        const updatedUser = await response.json();
+        return {success:true , data:updatedUser};
+    }catch(error){
+        return{success:false, error:"Server Connection failed."};
+    }
+}
+
+
 // redirect path based on role
 export async function getRedirectPathAction() {
     const isAdmin = await verifyAdminSession();
@@ -336,47 +450,71 @@ export async function getRedirectPathAction() {
 }
 
 
-// create another admin
+// create users / admins / super admins
 
-export async function createAdminAction(data: AdminSchemaData){
+export async function createUserAction(data: AdminSchemaData) {
     const user = await getAuthUser();
-    //if they aren't the super admin , stop them here
-    if(!user?.isSuperAdmin){
-        return {success:false,error:"Unauthorized : Only Super Admins can do this."}
+    
+    // 1. Permission Checks
+    if (!user) {
+        return { success: false, error: "Unauthorized: You must be logged in." };
     }
-    //validate input shapes
-    //safeParse ensures your backend only receives expected data types
+
+    // If trying to create any type of admin, strictly check for super admin status
+    if (data.role === "admin" || data.role === "super_admin") {
+        if (!user.isSuperAdmin) {
+            return { success: false, error: "Unauthorized: Only Super Admins can create other administrators." };
+        }
+    }
+
+    // 2. Validate input shapes
     const validation = AdminSchema.safeParse(data);
-    if(!validation.success){
-        return {success: false, error:"Invalid input data"};
+    if (!validation.success) {
+        return { success: false, error: "Invalid input data" };
     }
     
-    try{
+    try {
         const cookieStore = await cookies();
-        const accessToken= cookieStore.get("access_token")?.value;
-        //fail if not logged in 
-        if(!accessToken){
-            return {success:false, error:"Authentication required"}
+        const accessToken = cookieStore.get("access_token")?.value;
+        
+        if (!accessToken) {
+            return { success: false, error: "Authentication required" };
         }
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/create-admin/`,{
+
+        const validData = validation.data;
+
+        // 3. Map Next.js Data to Django Data
+        const djangoPayload = {
+            username: validData.username,
+            password: validData.password,
+            email: validData.email,
+            // Boolean translations:
+            is_staff: validData.role === "admin" || validData.role === "super_admin", 
+            is_superuser: validData.role === "super_admin",
+            is_active: validData.status === "active",
+        };
+
+        // Note: Make sure your Django url ends in /create/ to match our generic setup
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/create/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${accessToken}`,
             },
-            //clean and stripped of extra fields
-            body: JSON.stringify(validation.data),
+            body: JSON.stringify(djangoPayload),
         });
-        if(!response.ok){
+
+        if (!response.ok) {
             const error = await response.json();
-            return { success: false, error: error.error || "Failed to create admin"};
+            // Handle both standard error formats depending on how DRF sends it
+            return { success: false, error: error.error || error.detail || "Failed to create user" };
         }
+
         const result = await response.json();
-        return{success: true , user:result};
+        return { success: true, user: result };
 
-  }catch (error){
-    console.error("Create Admin Error :",error)
-    return {success:false, error:"Server connection failed"};
-
-  }
+    } catch (error) {
+        console.error("Create User Error:", error);
+        return { success: false, error: "Server connection failed" };
+    }
 }
