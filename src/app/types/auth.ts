@@ -58,14 +58,28 @@ export type Props ={
   onCreated: (user:any)=>void;
 }
 
-//for admin creation
-
+//for admin-super_admin-user creation
 export const AdminSchema = z.object({
-  username: z.string().min(5),
-  password: z.string().min(8),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["user", "admin", "super_admin"]),
+  email: z.string().email("Invalid email format").optional().or(z.literal("")),
+  
+  // Both made optional! The user will never type these.
+  status: z.enum(["active", "inactive"]).optional(),
+  joinedDate: z.string().optional(), 
+  
+}).superRefine((data, ctx) => {
+  if (data.role === "user" && (!data.email || data.email.trim() === "")) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Email is required for standard users",
+      path: ["email"],
+    });
+  }
 });
 
-export type  AdminSchemaData = z.infer<typeof AdminSchema>;
+export type AdminSchemaData = z.infer<typeof AdminSchema>;
 
 export interface AuthUser{
   id:number;
