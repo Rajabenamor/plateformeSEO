@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+/* 2. Define your Light Mode colors (Default) */
+:root{
+    --app-bg: #ffffff;
+    --app-text: #0B1B3D;
+    --app-card: #fafbfc;
+    --app-primary: #15418c;
+    --app-border: #e0e1e2;
+    --app-border-card: #e0e1e2;
+}
+
+/* 3. Define your Dark Mode colors (Triggered by your Moon icon toggle) */
+
+.dark{
+    --app-bg: #0B1120;
+    --app-text: #ffffff;
+    --app-card: #101827;
+    --app-primary: #9ABBE9;
+    --app-border: #1f2937;
+    --app-border-card:#22D3EE;
+}
+/* 4. Tell Tailwind v4 to turn these into utility classes */
+@theme {
+    --color-background: var(--app-bg);
+    --color-foreground: var(--app-text);
+    --color-card: var(--app-card);
+    --color-primary: var(--app-primary);
+    --color-border: var(--app-border);
+    --color-border-card:var(--app-border-card);
+}
