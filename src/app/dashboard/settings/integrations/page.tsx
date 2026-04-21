@@ -1,52 +1,41 @@
-// @/app/dashboard/settings/integrations/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { Github, Activity, CheckCircle2, AlertCircle, SignalMedium } from "lucide-react";
-import toast from "react-hot-toast";
+import { Github, CheckCircle2, AlertCircle, SignalMedium } from "lucide-react";
+import { getIntegrationStatusAction } from "@/app/actions/auth"; // Import the new action
 
-// Replace these with your actual OAuth App Client IDs
 const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`; 
+const REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`; 
 
 export default function IntegrationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [status, setStatus] = useState({
     github_connected: false,
+    github_repo: null as string | null,
     ga4_connected: false,
   });
 
-  // Fetch the current integration status from Django on load
   useEffect(() => {
     async function fetchStatus() {
-      try {
-        const token = document.cookie.split('; ').find(row => row.startsWith('access_token='))?.split('=')[1] || localStorage.getItem("access_token");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/integrations/status/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        if (res.ok) {
-          const data = await res.json();
-          setStatus(data);
-        }
-      } catch (error) {
-        console.error("Failed to load integrations", error);
-      } finally {
-        setIsLoading(false);
+      // Use the Server Action instead of raw fetch!
+      const result = await getIntegrationStatusAction();
+      
+      if (result.success && result.data) {
+        setStatus(result.data);
       }
+      setIsLoading(false);
     }
+    
     fetchStatus();
   }, []);
 
   const handleConnectGithub = () => {
-    // Redirects to GitHub's OAuth authorization page
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}/github&scope=repo`;
     window.location.href = githubAuthUrl;
   };
 
   const handleConnectGA4 = () => {
-    // Redirects to Google's OAuth authorization page
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}/google&response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly access_type=offline prompt=consent`;
     window.location.href = googleAuthUrl;
   };
@@ -76,13 +65,20 @@ export default function IntegrationsPage() {
               <p className="text-sm text-slate-500 mt-0.5">
                 Allow Strive AI to create branches and commit SEO fixes directly to your repositories.
               </p>
-              <div className="mt-2 flex items-center gap-1.5">
+              <div className="mt-2 flex flex-col gap-1.5">
                 {status.github_connected ? (
-                  <span className="flex items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
-                    <CheckCircle2 size={14} className="mr-1" /> Connected
-                  </span>
+                  <>
+                    <span className="flex w-max items-center text-xs font-medium text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                      <CheckCircle2 size={14} className="mr-1" /> Connected
+                    </span>
+                    {status.github_repo && (
+                      <span className="text-xs text-slate-600 font-mono bg-slate-100 px-2 py-1 rounded-md w-max border border-slate-200">
+                        Linked: {status.github_repo}
+                      </span>
+                    )}
+                  </>
                 ) : (
-                  <span className="flex items-center text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                  <span className="flex w-max items-center text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
                     <AlertCircle size={14} className="mr-1" /> Not Connected
                   </span>
                 )}
@@ -93,7 +89,7 @@ export default function IntegrationsPage() {
             onClick={status.github_connected ? undefined : handleConnectGithub}
             className={`shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
               status.github_connected
-                ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600" // In the future, this would be a Disconnect function
+                ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600"
                 : "bg-slate-900 text-white hover:bg-slate-800"
             }`}
           >
@@ -106,7 +102,6 @@ export default function IntegrationsPage() {
           <div className="flex items-start gap-4 mb-4 sm:mb-0">
             <div className="p-2.5 bg-blue-50 rounded-lg text-orange-600">
               <SignalMedium size={30}  />
-              
             </div>
             <div>
               <h3 className="text-base font-semibold text-slate-900">Google Analytics 4</h3>
