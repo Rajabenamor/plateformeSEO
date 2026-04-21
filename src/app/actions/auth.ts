@@ -567,3 +567,61 @@ export async function exchangeGithubTokenAction(code: string, installation_id: s
         return { success: false, error: "Network error" };
     }
 }
+
+
+export async function createGithubPullRequestAction(fixTitle: string, codeFix: string, targetFile: string) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/create-pr/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+                title: fixTitle, 
+                code_fix: codeFix,
+                target_file: targetFile // <--- Pass the file to Django here
+            })
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+            return { success: false, error: data.error || "Failed to create PR" };
+        }
+        
+        return { success: true, prUrl: data.pr_url };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function saveGithubRepoAction(repoName: string) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/save-repo/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ repo_name: repoName })
+        });
+
+        if (!res.ok) {
+            return { success: false, error: "Failed to save repository" };
+        }
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}

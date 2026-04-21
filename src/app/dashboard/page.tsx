@@ -4,6 +4,7 @@ import { Pencil, SettingsIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { createGithubPullRequestAction } from "../actions/auth";
 // 1. Tell TypeScript the exact shape of your Django API response
 interface DashboardData {
   overall_score: number;
@@ -21,6 +22,27 @@ export default function Dashboard() {
   const targetUrl = searchParams.get("url");
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setloading] = useState(true);
+// Add state to track which button is loading so we don't spin all of them
+const [fixingIndex, setFixingIndex] = useState<number | null>(null);
+
+const handleFixNow = async (index: number, fix: any) => {
+  setFixingIndex(index);
+  
+  // Extract target_file (fallback to index.html if the AI misses it)
+  const targetFile = fix.target_file || "index.html";
+  
+  // Pass all three pieces of data to the action
+  const result = await createGithubPullRequestAction(fix.title, fix.code_fix, targetFile);
+  
+  setFixingIndex(null);
+
+  if (result.success && result.prUrl) {
+    alert("Success! Opening your Pull Request in GitHub...");
+    window.open(result.prUrl, '_blank'); 
+  } else {
+    alert(`Error: ${result.error}`);
+  }
+};
 
   useEffect(() => {
     if (!targetUrl) {
@@ -223,7 +245,6 @@ export default function Dashboard() {
             Top Recommendations
           </h2>
         </div>
-
         <div className="divide-y divide-gray-100">
           {data?.seo_fixes.map((fix: any, index: number) => (
             <div
@@ -246,12 +267,18 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              <button className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-                Fix Now
+              <button 
+                onClick={() => handleFixNow(index, fix)}
+                disabled={fixingIndex === index}
+                className="cursor-pointer shrink-0 bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {fixingIndex === index ? "Creating PR..." : "Fix Now"}
               </button>
+
             </div>
           ))}
         </div>
+       
       </div>
     </div>
   );
