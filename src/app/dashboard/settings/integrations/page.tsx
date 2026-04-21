@@ -29,6 +29,7 @@ export default function IntegrationsPage() {
       }
       setIsLoading(false);
     }
+    
     fetchStatus();
   }, []);
 
