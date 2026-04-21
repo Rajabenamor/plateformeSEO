@@ -9,9 +9,9 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
     const [progress , setProgress] = useState(0);
 
     useEffect(()=> {
-        const interval = setInterval(()=> {
-            setProgress((prev)=>(prev >= 95 ? 95 : prev + 1));
-        }, 150);
+      const interval = setInterval(()=> {
+        setProgress((prev)=>(prev >= 95 ? 95 : prev + 1));
+    }, 250);
         return () => clearInterval(interval);
       }, []);
   // Determine steps based on progress

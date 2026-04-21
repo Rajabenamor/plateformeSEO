@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import {
-  getRedirectPathAction,
   GoogleLoginAction,
   loginServerAction,
 } from "@/app/actions/auth";
@@ -30,22 +29,16 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     setError("");
-    // If it succeeds, the action itself will trigger redirect('/admin') or redirect('/')
+    
+    // If it succeeds, the action itself will trigger redirect()
     const result = await loginServerAction(data);
-    //If we reach this line, it means success was false (because redirects throw an error in Next.js that stops execution)
-    if (!result.success) {
-      //catch the specific django error for inactive
+    
+    // If we reach this line, it means success was false (because redirects throw an error in Next.js that stops execution)
+    if (result && !result.success) {
       setError(result.error);
     }
-    // if (result.success) {
-    //   //redirect to home page after successful login if user , if admin redirect to /admin
-    //   const path = await getRedirectPathAction();
-    //   router.push(path);
-    //   router.refresh();
-    // } else {
-    //   setError(result.error);
-    // }
   };
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-[#F5F5F7] font-serif">
       {/* ========================================== */}
@@ -56,7 +49,7 @@ export default function LoginPage() {
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-11">
           <div className=" text-white-10 font-serif  flex items-center justify-center font-extrabold text-lg leading-relaxed tracking-wide">
-             STRIVE
+              STRIVE
             </div>
           </div>
 
@@ -115,6 +108,7 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
+            
             {/* username */}
             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">
               Username
@@ -131,6 +125,7 @@ export default function LoginPage() {
                 {errors.username.message}
               </p>
             )}
+            
             {/* Password */}
             <div className="relative w-full">
             <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">
@@ -138,22 +133,21 @@ export default function LoginPage() {
             </label>
             <input
               {...register("password")}
-              //   switch between password and text
               type={showPassword ? "text" : "password"}
               name="password"
               placeholder="••••••••"
               className="w-full px-4 py-3 bg-white border border-gray-200 rounded text-gray-900 focus:outline-none focus:border-[#00415A] focus:ring-1 focus:ring-[#00415A] transition-all"
             />
             <button
-                    type="button" //prevents form submission
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                    aria-label={
-                      showPassword ? "Hide password" : "show password"
-                    }
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
+              type="button" 
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 text-gray-400 hover:text-gray-600 transition-colors mt-2"
+              aria-label={
+                showPassword ? "Hide password" : "show password"
+              }
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
                 
             {errors.password && (
               <p className="text-red-500 text-xs mt-1 font-medium">
@@ -161,6 +155,7 @@ export default function LoginPage() {
               </p>
             )}
             </div>
+            
             {/*Forgot password link */}
             <div className="flex justify-end mt-2">
               <Link
@@ -170,6 +165,7 @@ export default function LoginPage() {
                 Forgot password?
               </Link>
             </div>
+            
             <button
               type="submit"
               disabled={isSubmitting || googleLoading}
@@ -178,6 +174,7 @@ export default function LoginPage() {
               {isSubmitting ? "Signing in..." : "Login"}
             </button>
           </form>
+          
           {/* divider */}
           <div className="relative flex py-2  mt-5 mb-2 items-center">
             <div className="grow border-t border-gray-200" />
@@ -186,23 +183,21 @@ export default function LoginPage() {
             </span>
             <div className="grow border-t border-gray-200" />
           </div>
+          
           {/*google Button */}
           <div className="flex justify-center w-full overflow-hidden rounded-lg">
             <GoogleLogin
               onSuccess={async (CredentialResponse) => {
                 setGoogleLoading(true);
                 setError("");
-                const result = await GoogleLoginAction(
-                  CredentialResponse.credential!
-                );
-                if (result.success) {
-                  const path = await getRedirectPathAction();
-                  router.push(path);
-                  router.refresh();
-                } else {
+                
+                const result = await GoogleLoginAction(CredentialResponse.credential!);
+                
+                // If we reach this point without a redirect happening, it means it failed.
+                if (result && !result.success) {
                   setError(result.error || "Google login failed");
+                  setGoogleLoading(false);
                 }
-                setGoogleLoading(false);
               }}
               onError={() => setError("Google login failed. Please try again.")}
               width={400}
@@ -211,6 +206,7 @@ export default function LoginPage() {
               theme="outline"
             />
           </div>
+          
           {/* bottom register link */}
           <div className="mt-10 text-center">
             <p className="text-sm text-foreground/70">New to Strive ?{" "}
@@ -220,7 +216,6 @@ export default function LoginPage() {
               >
                 Sign up
               </Link>
-
             </p>
           </div>
         </div>
