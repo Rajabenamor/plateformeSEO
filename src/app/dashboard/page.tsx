@@ -4,6 +4,8 @@ import { Pencil, SettingsIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { fetchDashboardDataSecurely } from "@/app/actions/auth"; // Added import
+
 import { createGithubPullRequestAction } from "../actions/auth";
 // 1. Tell TypeScript the exact shape of your Django API response
 interface DashboardData {
@@ -49,13 +51,9 @@ const handleFixNow = async (index: number, fix: any) => {
       router.push("/");
       return;
     }
-    //Fetch data from your Django backend
-    fetch(
-      `http://127.0.0.1:8000/api/dashboard/?url=${encodeURIComponent(
-        targetUrl
-      )}`
-    )
-      .then((res) => res.json())
+    
+    // Fetch data using the secure server action
+    fetchDashboardDataSecurely(targetUrl)
       .then((json) => {
         //Format the YYYYMMDD dates from GA4 into readable labels (e.g., "MAR 04")
         const formattedTraffic = json.data.traffic.map((item: any) => {
@@ -72,6 +70,7 @@ const handleFixNow = async (index: number, fix: any) => {
             }),
           };
         });
+        
         setData({
           overall_score: json.data.overall_score || 0,
           analyzed_url: json.data.analyzed_url || targetUrl,
@@ -86,11 +85,13 @@ const handleFixNow = async (index: number, fix: any) => {
       })
       .catch((err) => console.error("Error fetching data:", err));
   }, [targetUrl, router]);
+
   // --- SCREEN 1: THE LOADING SCREEN ---
   if (loading) {
     // Just return the new component and pass it the URL!
     return <AnalysisLoadingScreen targetUrl={targetUrl} />;
   }
+
   // --- SCREEN 2: THE ACTUAL DASHBOARD ---
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
@@ -172,7 +173,7 @@ const handleFixNow = async (index: number, fix: any) => {
 
             </h3>
             <div className="w-full bg-gray-100 rounded-full h-1.5 mt-4 mb-3">
-              <div className="bg-green-500 h-1.5 rouded-full" style={{width:`${data?.technical_health}`}}>
+              <div className="bg-green-500 h-1.5 rouded-full" style={{width:`${data?.technical_health}%`}}>
 
               </div>
 
@@ -197,7 +198,7 @@ const handleFixNow = async (index: number, fix: any) => {
 
             </h3>
             <div className="w-full bg-gray-100 rounded-full h-1.5 mt-4 mb-3">
-              <div className="bg-orange-500 h-1.5 rouded-full" style={{width:`${data?.content_score}`}}>
+              <div className="bg-orange-500 h-1.5 rouded-full" style={{width:`${data?.content_score}%`}}>
 
               </div>
 
@@ -222,7 +223,7 @@ const handleFixNow = async (index: number, fix: any) => {
 
             </h3>
             <div className="w-full bg-gray-100 rounded-full h-1.5 mt-4 mb-3">
-              <div className="bg-blue-500 h-1.5 rouded-full" style={{width:`${data?.backlink_strength}`}}>
+              <div className="bg-blue-500 h-1.5 rouded-full" style={{width:`${data?.backlink_strength}%`}}>
 
               </div>
 
