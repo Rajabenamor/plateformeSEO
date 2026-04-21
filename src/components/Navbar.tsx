@@ -4,7 +4,7 @@ import { verifySession } from "@/lib/session";
 import LogoutButton from "./LogoutButton";
 import { Suspense } from "react";
 import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Settings } from "lucide-react";
 //AuthLinks is the smart component that handles the security logic
 
 async function AuthLinks() {
@@ -13,6 +13,15 @@ async function AuthLinks() {
   if (IsLoggedIn) {
     return (
       <div className="flex items-center gap-4">
+        <Link
+            href="/dashboard/settings"
+            className="text-sm font-semibold text-foreground hover:text-[#15418c] transition-colors"
+          >
+            <Settings size={20}/>
+            {/* Settings */}
+          </Link>
+          {/* Separator Line */}
+        <div className="h-4 w-px bg-border" />
         <LogoutButton />
       </div>
     );
