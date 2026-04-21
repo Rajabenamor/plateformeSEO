@@ -491,7 +491,9 @@ export async function createUserAction(data: AdminSchemaData) {
             // Boolean translations:
             is_staff: validData.role === "admin" || validData.role === "super_admin", 
             is_superuser: validData.role === "super_admin",
-            is_active: validData.status === "active",
+            // is_active: validData.status === "active",
+            // Calculate active status securely on the server
+            is_active: validData.role !== "user",
         };
 
         // Note: Make sure your Django url ends in /create/ to match our generic setup
@@ -518,3 +520,78 @@ export async function createUserAction(data: AdminSchemaData) {
         return { success: false, error: "Server connection failed" };
     }
 }
+
+// export async function createUserAction(data: AdminSchemaData) {
+//     const user = await getAuthUser();
+    
+//     // 1. Permission Checks
+//     if (!user) {
+//         return { success: false, error: "Unauthorized: You must be logged in." };
+//     }
+
+//     if (data.role === "admin" || data.role === "super_admin") {
+//         if (!user.isSuperAdmin) {
+//             return { success: false, error: "Unauthorized: Only Super Admins can create other administrators." };
+//         }
+//     }
+
+//     // 2. Validate input shapes
+//     const validation = AdminSchema.safeParse(data);
+//     if (!validation.success) {
+//         return { success: false, error: "Invalid input data" };
+//     }
+    
+//     try {
+//         const cookieStore = await cookies();
+//         const accessToken = cookieStore.get("access_token")?.value;
+        
+//         if (!accessToken) {
+//             return { success: false, error: "Authentication required" };
+//         }
+
+//         const validData = validation.data;
+
+//         // 3. Map Next.js Data to Django Data
+//         const djangoPayload = {
+//             username: validData.username,
+//             password: validData.password,
+//             email: validData.email === "" ? null : validData.email, // Django prefers null over empty string for unique emails
+            
+//             // AUTOMATIC BOOLEAN LOGIC:
+//             is_staff: validData.role === "admin" || validData.role === "super_admin", 
+//             is_superuser: validData.role === "super_admin",
+            
+//             // SECURITY: Ignore whatever the frontend sends for 'status'. 
+//             // Enforce business logic directly: Admins are active, standard users are not.
+//             is_active: validData.role !== "user", 
+//         };
+
+//         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/create/`, {
+//             method: "POST",
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "Authorization": `Bearer ${accessToken}`,
+//             },
+//             body: JSON.stringify(djangoPayload),
+//         });
+
+//         if (!response.ok) {
+//             const error = await response.json();
+            
+//             // Safely parse Django's nested object errors (e.g., {"username": ["This field must be unique."]})
+//             const errorMessage = error.error || error.detail || 
+//                                  (error.username && error.username[0]) || 
+//                                  (error.email && error.email[0]) || 
+//                                  "Failed to create user";
+                                 
+//             return { success: false, error: errorMessage };
+//         }
+
+//         const result = await response.json();
+//         return { success: true, user: result };
+
+//     } catch (error) {
+//         console.error("Create User Error:", error);
+//         return { success: false, error: "Server connection failed" };
+//     }
+// }
