@@ -419,7 +419,9 @@ export async function createUserAction(data: AdminSchemaData) {
             email: validData.email,
             is_staff: validData.role === "admin" || validData.role === "super_admin", 
             is_superuser: validData.role === "super_admin",
-            is_active: validData.status === "active",
+            // is_active: validData.status === "active",
+            // Calculate active status securely on the server
+            is_active: validData.role !== "user",
         };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/create/`, {
@@ -442,5 +444,110 @@ export async function createUserAction(data: AdminSchemaData) {
     } catch (error) {
         console.error("Create User Error:", error);
         return { success: false, error: "Server connection failed" };
+    }
+}
+export async function getIntegrationStatusAction() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        // Notice the exact URL matching your Django trace (no /api/ prefix)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/integrations/status/`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+        
+        if (!res.ok) return { success: false };
+        const data = await res.json();
+        return { success: true, data };
+    } catch (error) {
+        return { success: false };
+    }
+}
+
+export async function exchangeGithubTokenAction(code: string, installation_id: string | null) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        // Notice the exact URL matching your Django trace
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/exchange/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ code, installation_id })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            return { success: false, error: err.error || "Failed to exchange token" };
+        }
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}
+
+
+export async function createGithubPullRequestAction(fixTitle: string, codeFix: string, targetFile: string) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/create-pr/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+                title: fixTitle, 
+                code_fix: codeFix,
+                target_file: targetFile // <--- Pass the file to Django here
+            })
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+            return { success: false, error: data.error || "Failed to create PR" };
+        }
+        
+        return { success: true, prUrl: data.pr_url };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function saveGithubRepoAction(repoName: string) {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("access_token")?.value;
+    
+    if (!token) return { success: false, error: "Not authenticated" };
+
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/save-repo/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ repo_name: repoName })
+        });
+
+        if (!res.ok) {
+            return { success: false, error: "Failed to save repository" };
+        }
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Network error" };
     }
 }
