@@ -47,12 +47,12 @@ export default function CreateUserModal({ onClose, onCreated, isSuperAdmin }: Pr
     setError(null);
 
     // AUTOMATIC LOGIC: Inject the correct status before sending
-    const finalData = {
-      ...data,
-      status: data.role === "user" ? "inactive" : "active",
-    };
+    // const finalData = {
+    //   ...data,
+    //   status: (data.role === "user" ? "inactive" : "active") as "active" | "inactive",
+    // };
 
-    const result = await createUserAction(finalData);
+    const result = await createUserAction(data);
     
     if (result.success) {
       toast.success("User created successfully");
