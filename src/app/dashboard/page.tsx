@@ -78,7 +78,7 @@ const handleFixNow = async (index: number, fix: any) => {
           seo_fixes: json.data.seo_fixes || [],
           technical_health:json.data.technical_health || 0,
           content_score: json.data.content_score || 0,
-          backlink_strength : json.data.backlink_score|| 0
+          backlink_strength : json.data.backlink_strength || 0
 
         });
         setloading(false);
