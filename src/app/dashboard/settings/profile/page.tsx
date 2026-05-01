@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import { User as UserIcon, Mail } from "lucide-react";
+// We removed 'toast' and added CheckCircle, AlertCircle, and Info icons
+import { User as UserIcon, Mail, CheckCircle, AlertCircle, Info } from "lucide-react";
 import { updateProfileAction } from "@/app/actions/settings";
 import type { user } from "@/app/types/auth";
 
@@ -20,6 +20,12 @@ type ProfileFormData = z.infer<typeof ProfileSchema>;
 
 export default function ProfileSettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 1. Add state for the inline alert messages
+  const [serverMessage, setServerMessage] = useState<{ 
+    type: "success" | "error" | "info" | null; 
+    text: string 
+  }>({ type: null, text: "" });
 
   const {
     register,
@@ -46,29 +52,42 @@ export default function ProfileSettingsPage() {
   }, [setValue]);
 
   const onSubmit = async (data: ProfileFormData) => {
+    // Clear any previous messages
+    setServerMessage({ type: null, text: "" });
+
     const result = await updateProfileAction(data);
 
     if (result.success) {
-      toast.success("Profile updated successfully");
-      
       // Update the local cookie so the Sidebar updates instantly!
       const storedUser = Cookies.get("user_data");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        //only update the username in the cookie 
-        //email remains the same  old one until verified
         const updatedUser = { ...parsedUser, username: data.username };
         Cookies.set("user_data", JSON.stringify(updatedUser));
         
-        // Dispatch a custom event so the Sidebar knows to re-render (Optional but great for UX)
+        // Dispatch a custom event so the Sidebar knows to re-render
         window.dispatchEvent(new Event("userUpdated")); 
-        //if the backend indicates an email verification is pending, notify the user
-        if (result.email_pending) {
-            toast("Please check your new email to verify the change.", { icon: <Mail/> });
-          }
       }
+
+      // 2. Set the appropriate inline message
+      if (result.email_pending) {
+        setServerMessage({ 
+          type: "info", 
+          text: "Profile updated! Please check your new email to verify the address change." 
+        });
+      } else {
+        setServerMessage({ 
+          type: "success", 
+          text: "Profile updated successfully!" 
+        });
+      }
+
     } else {
-      toast.error(result.error || "Failed to update profile");
+      // 3. Set the error inline message
+      setServerMessage({ 
+        type: "error", 
+        text: result.error || "Failed to update profile" 
+      });
     }
   };
 
@@ -86,6 +105,29 @@ export default function ProfileSettingsPage() {
       <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           
+          {/* --- INLINE ALERTS --- */}
+          {serverMessage.type === "success" && (
+            <div className="flex items-center gap-3 p-4 text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle size={18} className="text-green-600" />
+              <p>{serverMessage.text}</p>
+            </div>
+          )}
+
+          {serverMessage.type === "info" && (
+            <div className="flex items-center gap-3 p-4 text-sm text-blue-800 bg-blue-50 border border-blue-200 rounded-lg">
+              <Info size={18} className="text-[#15418c]" />
+              <p>{serverMessage.text}</p>
+            </div>
+          )}
+
+          {serverMessage.type === "error" && (
+            <div className="flex items-center gap-3 p-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle size={18} className="text-red-600" />
+              <p>{serverMessage.text}</p>
+            </div>
+          )}
+          {/* --------------------- */}
+
           <div>
             <div className="flex items-center gap-2 mb-1">
               <UserIcon size={16} className="text-slate-400" />

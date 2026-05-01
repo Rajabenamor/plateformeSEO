@@ -20,7 +20,7 @@ interface ChangePasswordData {
       }
   
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/change-password/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/change-password/`, {
         method: "PUT", // Matches the generics.UpdateAPIView in Django
         headers: {
           "Content-Type": "application/json",

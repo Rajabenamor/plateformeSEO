@@ -4,9 +4,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import toast from "react-hot-toast";
-import { Shield, Key } from "lucide-react";
+import { Shield, Key, CheckCircle, AlertCircle } from "lucide-react";
 import { changePasswordAction } from "@/app/actions/settings"; // You'll create this server action
+import { useState } from "react";
 
 const PasswordSchema = z.object({
   oldPassword: z.string().min(1, "Current password is required"),
@@ -20,6 +20,9 @@ const PasswordSchema = z.object({
 type PasswordFormData = z.infer<typeof PasswordSchema>;
 
 export default function SecuritySettingsPage() {
+  // 2. Add this state to hold our message
+  const [serverMessage, setServerMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
+
   const {
     register,
     handleSubmit,
@@ -30,25 +33,27 @@ export default function SecuritySettingsPage() {
   });
 
   const onSubmit = async (data: PasswordFormData) => {
+    // Clear any old messages when they click submit again
+    setServerMessage({ type: null, text: "" });
+
     const result = await changePasswordAction({
       old_password: data.oldPassword,
       new_password: data.newPassword,
     });
 
     if (result.success) {
-      toast.success("Password updated successfully");
-      reset(); // Clear the form fields
+      // 3. Set the success message instead of toast
+      setServerMessage({ type: "success", text: "Password updated successfully! Your account is secure." });
+      reset(); 
     } else {
-      toast.error(result.error || "Failed to update password");
+      // 4. Set the error message instead of toast
+      setServerMessage({ type: "error", text: result.error || "Failed to update password." });
     }
   };
 
   return (
     <div className="max-w-2xl space-y-8">
-      <div>
-        <h2 className="text-xl font-bold text-slate-900 mb-1">Security Settings</h2>
-        <p className="text-sm text-slate-500">Update your password to keep your account secure.</p>
-      </div>
+      {/* ... your header text ... */}
 
       <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
@@ -61,6 +66,24 @@ export default function SecuritySettingsPage() {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          
+          {/* --- INLINE ALERTS GO HERE --- */}
+          {serverMessage.type === "success" && (
+            <div className="flex items-center gap-3 p-4 text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle size={18} className="text-green-600" />
+              <p>{serverMessage.text}</p>
+            </div>
+          )}
+
+          {serverMessage.type === "error" && (
+            <div className="flex items-center gap-3 p-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle size={18} className="text-red-600" />
+              <p>{serverMessage.text}</p>
+            </div>
+          )}
+          {/* ----------------------------- */}
+
+        
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1">
               <Key size={14} className="text-slate-400" />
