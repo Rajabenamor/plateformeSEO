@@ -1,6 +1,6 @@
 "use server"
-import { cookies } from "next/headers";
 import { AnalysisRecord } from "../types/auth";
+import { secureFetch } from "@/lib/api";
 
 // Define the expected input types based on your Django Serializer
 interface ChangePasswordData {
@@ -10,22 +10,8 @@ interface ChangePasswordData {
 
   export async function changePasswordAction(data: ChangePasswordData) {
     try {
-      // 1. Retrieve the auth token from Next.js server-side cookies
-      // Replace "access_token" with the actual name of your cookie storing the JWT/OAuth token
-      const cookieStore = await cookies();
-      const token = cookieStore.get("access_token")?.value;
-  
-      if (!token) {
-        return { success: false, error: "Unauthorized. Please log in again." };
-      }
-  
-      
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/change-password/`, {
+      const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/change-password/`, {
         method: "PUT", // Matches the generics.UpdateAPIView in Django
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Or `Token ${token}` depending on your DRF setup
-        },
         body: JSON.stringify(data),
       });
   
@@ -58,17 +44,8 @@ interface ChangePasswordData {
 
 export async function updateProfileAction(data: { username: string; email: string }) {
     try {
-      const cookieStore = await cookies();
-      const accessToken = cookieStore.get("access_token")?.value;
-  
-      if (!accessToken) return { success: false, error: "Not authenticated" };
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/update-profile/`, {
+      const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/update-profile/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken}`,
-        },
         body: JSON.stringify(data),
       });
   
@@ -126,19 +103,8 @@ export async function updateProfileAction(data: { username: string; email: strin
   
   export async function getHistoryAction() {
     try {
-      const cookieStore = await cookies();
-      const token = cookieStore.get("access_token")?.value;
-  
-      if (!token) {
-        return { success: false, error: "Unauthorized. Please log in again." };
-      }
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/history/`, {
+      const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/history/`, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
         // Optional: Add cache rules. 'no-store' ensures fresh data every time the user checks history
         cache: 'no-store' 
       });

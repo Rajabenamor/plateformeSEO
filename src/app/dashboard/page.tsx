@@ -1,13 +1,15 @@
 "use client";
 
 import AnalysisLoadingScreen from "@/components/AnalysisLoadingScreen";
-import { Pencil, SettingsIcon } from "lucide-react";
+import SearchForm from "@/components/SearchForm";
+import { Pencil, SettingsIcon, LayoutDashboard, AlertCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { fetchDashboardDataSecurely, createGithubPullRequestAction } from "@/app/actions/auth";
+import Cookies from "js-cookie";
 
-// Tell TypeScript the exact shape of your Django API response
 interface DashboardData {
   overall_score: number;
   analyzed_url?: string;
@@ -24,28 +26,23 @@ export default function Dashboard() {
   const targetUrl = searchParams.get("url");
   
   const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setloading] = useState(true);
+  const [loading, setloading] = useState(!!targetUrl);
+  const [error, setError] = useState<string | null>(null);
 
-  // NEW: State to track the exact status and PR URL for EACH individual fix
   const [fixStatuses, setFixStatuses] = useState<Record<number, 'idle' | 'fixing' | 'success' | 'error'>>({});
   const [prUrls, setPrUrls] = useState<Record<number, string>>({});
 
   const handleFixNow = async (index: number, fix: any) => {
-    // Mark this specific item as 'fixing'
     setFixStatuses(prev => ({ ...prev, [index]: 'fixing' }));
     
-    // Pass the file the AI guessed during the initial analysis, or default to page.tsx
     const targetFile = fix.target_file || "src/app/page.tsx"; 
     
-    // Pass the title, EXPLANATION, and targetFile
     const result = await createGithubPullRequestAction(fix.title, fix.explanation, targetFile);
     
     if (result.success && result.prUrl) {
-      // Mark as success and save the specific PR URL
       setFixStatuses(prev => ({ ...prev, [index]: 'success' }));
       setPrUrls(prev => ({ ...prev, [index]: result.prUrl }));
     } else {
-      // Mark as error so the user can try again
       setFixStatuses(prev => ({ ...prev, [index]: 'error' }));
       alert(`Error: ${result.error}`);
     }
@@ -53,14 +50,21 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!targetUrl) {
-      router.push("/");
+      const lastUrl = Cookies.get("last_analyzed_url");
+      if (lastUrl) {
+        router.push(`/dashboard?url=${encodeURIComponent(lastUrl)}`);
+      }
+      setloading(false);
       return;
     }
+
+    setloading(true);
+    setError(null);
     
-    // Fetch data using the secure server action
+    Cookies.set("last_analyzed_url", targetUrl, { expires: 7, path: "/" });
+    
     fetchDashboardDataSecurely(targetUrl)
       .then((json) => {
-        // Format the YYYYMMDD dates from GA4 into readable labels (e.g., "MAR 04")
         const formattedTraffic = json.data.traffic?.map((item: any) => {
           const year = item.date.substring(0, 4);
           const month = item.date.substring(4, 6);
@@ -88,18 +92,64 @@ export default function Dashboard() {
         });
         setloading(false);
       })
-      .catch((err) => console.error("Error fetching data:", err));
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        setError("Failed to fetch dashboard data. Please try again.");
+        setloading(false);
+      });
   }, [targetUrl, router]);
 
-  // --- SCREEN 1: THE LOADING SCREEN ---
   if (loading) {
     return <AnalysisLoadingScreen targetUrl={targetUrl} />;
   }
 
-  // --- SCREEN 2: THE ACTUAL DASHBOARD ---
+  if (!targetUrl) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8 font-sans">
+        <div className="max-w-md w-full text-center">
+          <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600">
+            <LayoutDashboard size={32} />
+          </div>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Welcome to your Dashboard</h1>
+          <p className="text-gray-500 mb-8">
+            Enter a website URL to start your SEO analysis and get AI-powered recommendations.
+          </p>
+          <SearchForm />
+          <div className="mt-8">
+            <Link 
+              href="/dashboard/settings/history" 
+              className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+            >
+              View Analysis History →
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-8 font-sans">
+        <div className="max-w-md w-full text-center">
+          <div className="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 text-red-600">
+            <AlertCircle size={32} />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Oops! Something went wrong</h1>
+          <p className="text-gray-500 mb-8">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8 font-sans">
-      {/*header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900">Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">
@@ -108,7 +158,6 @@ export default function Dashboard() {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        {/*Overall Score Card */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 self-start">
             Overall Score
@@ -126,7 +175,6 @@ export default function Dashboard() {
           </p>
         </div>
         
-        {/* Traffic Chart Card */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:col-span-2">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-sm font-bold text-gray-800">
@@ -165,9 +213,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Dynamic Metric Cards*/}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/*Technical Health */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 bg-green-50 rounded-lg text-green-600">
@@ -185,7 +231,6 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/*content score */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 bg-orange-50 rounded-lg text-orange-600">
@@ -203,7 +248,6 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/*backlink strength */}
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start mb-4">
             <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
@@ -222,7 +266,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* AI Recommendations Section */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
           <h2 className="text-base font-bold text-gray-800">
@@ -247,14 +290,12 @@ export default function Dashboard() {
                     {fix.explanation}
                   </p>
                   
-                  {/* File Target Badge (Optional but helpful!) */}
                   {fix.target_file && (
                     <div className="mb-3 inline-block bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-1 rounded border border-blue-100">
                       Target: {fix.target_file}
                     </div>
                   )}
 
-                  {/* Fallback to show raw code if needed, hiding it makes the UI cleaner if AI is auto-fixing */}
                   {fix.code_fix && (
                     <div className="bg-gray-800 text-gray-200 text-xs p-3 rounded-lg font-mono overflow-x-auto">
                       <code>{fix.code_fix}</code>
@@ -263,7 +304,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Dynamic Action Buttons Area */}
               <div className="ml-4 flex flex-col items-end gap-2 shrink-0 mt-1">
                 {fixStatuses[index] === 'success' ? (
                   <div className="flex gap-2">

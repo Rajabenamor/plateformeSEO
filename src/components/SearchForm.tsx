@@ -5,7 +5,6 @@ import { AlertCircle, Globe, Zap } from "lucide-react";
 import { analyzeUrlAction } from "@/app/actions/auth";
 
 export default function SearchForm() {
-  // TypeScript now perfectly understands this!
   const [state, formAction] = useActionState(analyzeUrlAction, { error: null });
 
   return (
