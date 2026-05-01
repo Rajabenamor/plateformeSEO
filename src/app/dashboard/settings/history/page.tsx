@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { getHistoryAction } from '@/app/actions/settings'; // Adjust path to where you saved the action
+import { getHistoryAction } from '@/app/actions/settings';
 import { AnalysisRecord } from '@/app/types/auth';
-
-// ... (Keep the AnalysisRecord interface if it's not imported) ...
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<AnalysisRecord[]>([]);
@@ -28,7 +26,6 @@ export default function HistoryPage() {
     fetchHistory();
   }, []);
 
-  // 3. Helper function for status badge colors
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'COMPLETED': return <span className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Completed</span>;
@@ -41,7 +38,6 @@ export default function HistoryPage() {
   if (isLoading) return <div className="p-8 text-center text-gray-500">Loading your history...</div>;
   if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
-  // 4. Render the UI
   return (
     <div className="max-w-6xl p-6 mx-auto">
       <div className="flex items-center justify-between mb-8">

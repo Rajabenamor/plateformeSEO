@@ -5,7 +5,7 @@ import { NextResponse,NextRequest } from "next/server";
 
 
 
-const protectedRoutes= ['/analyze','/history', '/report']
+const protectedRoutes= ['/analyze','/history', '/report', '/dashboard', '/admin']
 const adminRoutes=['/admin']
 const authRoutes=['/auth/login', '/auth/register']
 
@@ -26,46 +26,48 @@ async function getTokenPayload(token: string) {
 }
 
 export async function middleware(request:NextRequest){
-    //get the token from the secure cookie we created during login 
-    const token = request.cookies.get('access_token')?.value;
+    //get tokens from cookies
+    const accessToken = request.cookies.get('access_token')?.value;
+    const refreshToken = request.cookies.get('refresh_token')?.value;
     const path = request.nextUrl.pathname;
+
     //define which paths we want to protect
     const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route));
     const isAdminRoute = adminRoutes.some(route => path.startsWith(route));
     const isAuthRoute = authRoutes.some(route => path.startsWith(route));
 
-    //only verify token if we actually need to check access
-    const needsCheck = isProtectedRoute || isAdminRoute || isAuthRoute;
-    const payload = (token && needsCheck) ? await getTokenPayload(token) : null;
+    // verify access token
+    const payload = (accessToken) ? await getTokenPayload(accessToken) : null;
     const isValid = !!payload;
-    const isAdmin = Boolean(payload?.is_staff); //catches true ,  or "true"
+    const isAdmin = Boolean(payload?.is_staff);
 
-    //fake/expired token -> clear cookies and redirect to login 
-    if(token && !isValid && needsCheck){
-        const response = NextResponse.redirect(new URL('/auth/login', request.url));
-        response.cookies.delete('access_token');
-        response.cookies.delete('refresh_token');
-        return response;
+    // 1. If trying to access a protected route
+    if (isProtectedRoute || isAdminRoute) {
+        // If we have NO tokens at all, redirect to login
+        if (!accessToken && !refreshToken) {
+            return NextResponse.redirect(new URL('/auth/login', request.url));
+        }
+
+        // If access token is invalid but we have a refresh token, let it pass
+        // The Page or Server Action (via secureFetch) will handle the refresh.
+        if (!isValid && refreshToken) {
+            return NextResponse.next();
+        }
+
+        // If it's an admin route but the user is not an admin, redirect home
+        if (isAdminRoute && !isAdmin) {
+            return NextResponse.redirect(new URL('/', request.url));
+        }
     }
 
-    //protected route -> must be logged in 
-    if(isProtectedRoute && !isValid){
-        return NextResponse.redirect(new URL('/auth/login', request.url));
-    }
-    //admin route -> must be admin
-    if(isAdminRoute && !isAdmin){
-        return NextResponse.redirect(new URL('/', request.url));
-    }
-    // admin goes to /admin, user goes to /
+    // 2. If on an auth route (login/register) and already validly logged in, redirect away
     if (isAuthRoute && isValid) {
         return NextResponse.redirect(
-            new URL(isAdmin ? '/admin' : '/', request.url)
+            new URL(isAdmin ? '/admin' : '/dashboard', request.url)
         );
     }
+
     return NextResponse.next();
-    
-    
-    
 }
 // ✅ runs on everything except static files and API routes
 export const config = {

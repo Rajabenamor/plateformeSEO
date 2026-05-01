@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 
 
 export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string | null}){
-    //the fake progress timer 
     const [progress , setProgress] = useState(0);
 
     useEffect(()=> {
@@ -14,7 +13,7 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
     }, 250);
         return () => clearInterval(interval);
       }, []);
-  // Determine steps based on progress
+
   const step1Status = progress < 30 ? "active" : "complete";
   const step2Status = progress < 30 ? "pending" : progress < 70 ? "active" : "complete";
   const step3Status = progress < 70 ? "pending" : "active";
@@ -23,7 +22,6 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
     <div className="min-h-screen bg-[#f8f9fa] flex flex-col items-center justify-center p-4 font-sans">
       <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] max-w-3xl w-full p-10 relative overflow-hidden border border-gray-100">
         
-        {/* Header */}
         <div className="flex flex-col items-center text-center mb-10 mt-4">
           <span className="bg-[#eef2ff] text-blue-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">
             System Active
@@ -32,7 +30,6 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
           <p className="text-gray-500 text-sm">Our advanced AI agents are performing a comprehensive scan of <span className="font-bold">{targetUrl}</span></p>
         </div>
 
-        {/* Animated Circular Progress */}
         <div className="flex justify-center mb-12">
           <div className="relative w-48 h-48 flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -52,9 +49,7 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
           </div>
         </div>
 
-        {/* Steps List */}
         <div className="max-w-md mx-auto space-y-3">
-          {/* Step 1 */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step1Status === 'active' ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step1Status === 'complete' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
               {step1Status === 'complete' ? (
@@ -69,7 +64,6 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
             </div>
           </div>
 
-          {/* Step 2 */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step2Status === 'active' ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step2Status === 'complete' ? 'bg-green-100 text-green-600' : step2Status === 'active' ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-400'}`}>
               {step2Status === 'complete' ? (
@@ -86,7 +80,6 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
             </div>
           </div>
 
-          {/* Step 3 */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step3Status === 'active' ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step3Status === 'active' ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-400'}`}>
               {step3Status === 'active' ? (
