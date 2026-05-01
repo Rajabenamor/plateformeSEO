@@ -137,14 +137,10 @@ export default function IntegrationsPage() {
           </div>
           
           <button
-            onClick={status.github_connected ? undefined : handleConnectGithub}
-            className={`shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              status.github_connected
-                ? "bg-slate-100 text-slate-500 cursor-not-allowed"
-                : "bg-slate-900 text-white hover:bg-slate-800"
-            }`}
+            onClick={handleConnectGithub}
+            className="shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-900 text-white hover:bg-slate-800"
           >
-            {status.github_connected ? "Connected" : "Connect"}
+            {status.github_connected ? "Reconnect GitHub" : "Connect"}
           </button>
         </div>
 

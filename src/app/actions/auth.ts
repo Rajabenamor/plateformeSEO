@@ -494,8 +494,7 @@ export async function exchangeGithubTokenAction(code: string, installation_id: s
     }
 }
 
-
-export async function createGithubPullRequestAction(fixTitle: string, codeFix: string, targetFile: string) {
+export async function createGithubPullRequestAction(fixTitle: string, fixExplanation: string, targetFile: string) {
     const cookieStore = await cookies();
     const token = cookieStore.get("access_token")?.value;
     
@@ -510,8 +509,8 @@ export async function createGithubPullRequestAction(fixTitle: string, codeFix: s
             },
             body: JSON.stringify({ 
                 title: fixTitle, 
-                code_fix: codeFix,
-                target_file: targetFile // <--- Pass the file to Django here
+                explanation: fixExplanation, 
+                target_file: targetFile 
             })
         });
 
