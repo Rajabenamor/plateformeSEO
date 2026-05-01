@@ -6,7 +6,8 @@ import { AnalysisRecord } from "../types/auth";
 interface ChangePasswordData {
     old_password: string;
     new_password: string;
-  }
+} 
+
   export async function changePasswordAction(data: ChangePasswordData) {
     try {
       // 1. Retrieve the auth token from Next.js server-side cookies
@@ -19,7 +20,7 @@ interface ChangePasswordData {
       }
   
       
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/change-password/`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/change-password/`, {
         method: "PUT", // Matches the generics.UpdateAPIView in Django
         headers: {
           "Content-Type": "application/json",
@@ -62,8 +63,8 @@ export async function updateProfileAction(data: { username: string; email: strin
   
       if (!accessToken) return { success: false, error: "Not authenticated" };
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/me/`, {
-        method: "PATCH",
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/update-profile/`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${accessToken}`,
@@ -74,14 +75,49 @@ export async function updateProfileAction(data: { username: string; email: strin
       if (!response.ok) {
         const errorData = await response.json();
         // Handle Django REST Framework dictionary errors nicely
-        const errorMessage = errorData.username?.[0] || errorData.email?.[0] || "Failed to update profile.";
+        const errorMessage = errorData.error || errorData.username?.[0] || errorData.email?.[0] || "Failed to update profile.";
         return { success: false, error: errorMessage };
       }
   
-      const updatedUser = await response.json();
-      return { success: true, user: updatedUser };
+      const responseData = await response.json();
+    
+    //  pass along the email_pending and message flags from Django
+    return { 
+      success: true, 
+      user: responseData, // Or responseData.user depending on your exact Django response format
+      email_pending: responseData.email_pending || false, 
+      message: responseData.message || "Profile updated successfully"
+    };
     } catch (error) {
       return { success: false, error: "Server connection failed." };
+    }
+  }
+  //verify email
+  type VerifyEmailResponse = {
+    success: boolean;
+    error?: string;
+    new_email?: string;
+  };
+
+  export async function verifyEmailAction(token: string): Promise<VerifyEmailResponse> {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/users/verify-email/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+  
+      const data = await response.json();
+      console.log("DJANGO VERIFY RESPONSE:", data);
+      if (response.ok && data.success) {
+        return { success: true ,new_email: data.new_email};
+      } else {
+        return { success: false, error: data.error || "Verification failed. The link may have expired." };
+      }
+    } catch (error) {
+      return { success: false, error: "A network error occurred." };
     }
   }
 

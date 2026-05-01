@@ -55,11 +55,17 @@ export default function ProfileSettingsPage() {
       const storedUser = Cookies.get("user_data");
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
-        const updatedUser = { ...parsedUser, username: data.username, email: data.email };
+        //only update the username in the cookie 
+        //email remains the same  old one until verified
+        const updatedUser = { ...parsedUser, username: data.username };
         Cookies.set("user_data", JSON.stringify(updatedUser));
         
         // Dispatch a custom event so the Sidebar knows to re-render (Optional but great for UX)
         window.dispatchEvent(new Event("userUpdated")); 
+        //if the backend indicates an email verification is pending, notify the user
+        if (result.email_pending) {
+            toast("Please check your new email to verify the change.", { icon: <Mail/> });
+          }
       }
     } else {
       toast.error(result.error || "Failed to update profile");
