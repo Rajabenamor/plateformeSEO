@@ -11,7 +11,6 @@ const REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`;
 export default function IntegrationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   
-  // NEW: State for the repository input field
   const [repoInput, setRepoInput] = useState("");
   const [isSavingRepo, setIsSavingRepo] = useState(false);
 
@@ -42,7 +41,7 @@ export default function IntegrationsPage() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${REDIRECT_URI}/google&response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly access_type=offline prompt=consent`;
     window.location.href = googleAuthUrl;
   };
-  // NEW: Function to save the repo
+
   const handleSaveRepo = async () => {
     if (!repoInput.includes("/")) {
       alert("Please enter in format: username/repository (e.g., vercel/next.js)");
@@ -74,7 +73,6 @@ export default function IntegrationsPage() {
       </div>
 
       <div className="space-y-4">
-        {/* GitHub Integration Card */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
           <div className="flex items-start gap-4 mb-4 sm:mb-0">
             <div className="p-2.5 bg-slate-100 rounded-lg text-slate-700">
@@ -86,7 +84,6 @@ export default function IntegrationsPage() {
                 Allow Strive AI to create branches and commit SEO fixes directly to your repositories.
               </p>
               
-              {/* STATUS & INPUT AREA */}
               <div className="flex flex-col gap-2">
                 {status.github_connected ? (
                   <>
@@ -94,7 +91,6 @@ export default function IntegrationsPage() {
                       <CheckCircle2 size={14} className="mr-1" /> Connected
                     </span>
                     
-                    {/* IF REPO IS SAVED */}
                     {status.github_repo ? (
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-xs text-slate-600 font-mono bg-slate-100 px-2 py-1.5 rounded-md border border-slate-200">
@@ -108,7 +104,6 @@ export default function IntegrationsPage() {
                         </button>
                       </div>
                     ) : (
-                      /* IF NO REPO SAVED YET */
                       <div className="flex items-center gap-2 mt-1">
                         <input
                           type="text"
@@ -144,7 +139,6 @@ export default function IntegrationsPage() {
           </button>
         </div>
 
-         {/* GA4 Integration Card */}
          <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
           <div className="flex items-start gap-4 mb-4 sm:mb-0">
             <div className="p-2.5 bg-blue-50 rounded-lg text-orange-600">

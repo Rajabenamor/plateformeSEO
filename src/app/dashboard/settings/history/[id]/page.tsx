@@ -1,6 +1,5 @@
 // app/dashboard/history/[id]/page.tsx
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { secureFetch } from "@/lib/api";
 import Link from "next/link";
 
 // Define the shape of our deep recommendations
@@ -17,23 +16,10 @@ interface ReportData {
 }
 
 export default async function ReportPage({ params }: { params: { id: string } }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("access_token")?.value;
-
-  if (!token) {
-    redirect('/login');
-  }
-
   // Fetch the single report using the ID from the URL
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/history/${params.id}/`, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
+  const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/history/${params.id}/`, {
     cache: 'no-store'
   });
-
-  if (response.status === 401) redirect('/login');
   if (response.status === 404) return <div className="p-8 text-center text-red-500">Report not found.</div>;
   if (!response.ok) return <div className="p-8 text-center text-red-500">Failed to load report.</div>;
 
@@ -45,7 +31,7 @@ export default async function ReportPage({ params }: { params: { id: string } })
       {/* Header Section */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <Link href="/dashboard/history" className="text-sm text-blue-600 hover:underline">
+          <Link href="/dashboard/settings/history" className="text-sm text-blue-600 hover:underline">
             &larr; Back to History
           </Link>
           <h1 className="mt-2 text-3xl font-bold text-gray-900">SEO Analysis Report</h1>

@@ -1,11 +1,10 @@
-// @/app/dashboard/settings/security/page.tsx
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Shield, Key, CheckCircle, AlertCircle } from "lucide-react";
-import { changePasswordAction } from "@/app/actions/settings"; // You'll create this server action
+import { changePasswordAction } from "@/app/actions/settings";
 import { useState } from "react";
 
 const PasswordSchema = z.object({
@@ -20,7 +19,6 @@ const PasswordSchema = z.object({
 type PasswordFormData = z.infer<typeof PasswordSchema>;
 
 export default function SecuritySettingsPage() {
-  // 2. Add this state to hold our message
   const [serverMessage, setServerMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
 
   const {
@@ -33,7 +31,6 @@ export default function SecuritySettingsPage() {
   });
 
   const onSubmit = async (data: PasswordFormData) => {
-    // Clear any old messages when they click submit again
     setServerMessage({ type: null, text: "" });
 
     const result = await changePasswordAction({
@@ -42,19 +39,15 @@ export default function SecuritySettingsPage() {
     });
 
     if (result.success) {
-      // 3. Set the success message instead of toast
       setServerMessage({ type: "success", text: "Password updated successfully! Your account is secure." });
       reset(); 
     } else {
-      // 4. Set the error message instead of toast
       setServerMessage({ type: "error", text: result.error || "Failed to update password." });
     }
   };
 
   return (
     <div className="max-w-2xl space-y-8">
-      {/* ... your header text ... */}
-
       <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
           <div className="p-2 bg-[#15418c]/10 rounded-lg">
@@ -67,7 +60,6 @@ export default function SecuritySettingsPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           
-          {/* --- INLINE ALERTS GO HERE --- */}
           {serverMessage.type === "success" && (
             <div className="flex items-center gap-3 p-4 text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg">
               <CheckCircle size={18} className="text-green-600" />
@@ -81,8 +73,6 @@ export default function SecuritySettingsPage() {
               <p>{serverMessage.text}</p>
             </div>
           )}
-          {/* ----------------------------- */}
-
         
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-1">
