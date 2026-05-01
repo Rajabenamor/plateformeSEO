@@ -1,4 +1,3 @@
-// @/app/dashboard/settings/layout.tsx
 "use client";
 
 import Link from "next/link";
@@ -16,16 +15,13 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
   const pathname = usePathname();
 
   return (
-    // We don't need min-h-screen here because your main dashboard layout already handles the height
     <div className="max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-8">
       
-      {/* Secondary Settings Sidebar */}
       <aside className="w-full md:w-56 shrink-0">
         <h2 className="text-xl font-bold text-[#00415A] mb-6 tracking-tight">Account Settings</h2>
         <nav className="flex flex-col gap-1">
           {SETTINGS_NAV.map((link) => {
             const Icon = link.icon;
-            // Exact match or sub-path match
             const isActive = pathname.startsWith(link.href);
 
             return (
@@ -46,7 +42,6 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
         </nav>
       </aside>
 
-      {/* Main Content Area for the specific settings page */}
       <main className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 lg:p-8">
         {children}
       </main>

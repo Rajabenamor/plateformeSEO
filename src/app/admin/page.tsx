@@ -2,25 +2,20 @@
 import { redirect } from "next/navigation";
 import { getUsersAction } from "../actions/auth";
 import AdminTable from "@/components/AdminTable";
+import AdminError from "@/components/AdminError";
 import { verifyAdminSession } from "@/lib/session";
 import { getAuthUser } from "@/lib/auth-utils";
 
-
-
 export default async function AdminPage(){
-    //verify admin on server before rendering anything
     const isAdmin = await verifyAdminSession();
     if(!isAdmin){
         redirect('/');
     }
-    //get detailed user info to check for "super admin" status
-        const currentUser = await getAuthUser();
+    const currentUser = await getAuthUser();
 
     const result = await getUsersAction();
     if(!result.success) {
-        return(<div className="p-8 text-center text-red-500">Failed to load users</div>
-
-        );
+        return <AdminError error={result.error || ""} />;
     }
     return(
         <div className="max-w-6xl mx-auto p-8 transition-colors">

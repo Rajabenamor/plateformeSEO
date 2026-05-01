@@ -7,20 +7,14 @@ import Link from "next/link";
 import SearchForm from "@/components/SearchForm";
 
 export default async function Home() {
-  //check if current user is admin
   const isAdmin = await verifyAdminSession();
-  // if they are admin , immedialty redirect them to thei dashboard
   if (isAdmin) {
     redirect("/admin");
   }
-  //if normal user :
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground transition-colors duration-300 font-sans overflow-hidden">
-      {/* ========================================== */}
-      {/* HERO SECTION                               */}
-      {/* ========================================== */}
       <section className="relative pt-20 pb-24 lg:pt-32 flex flex-col items-center justify-center text-center px-4">
-        {/*soft backgound gradient blobs  */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-125 opacity-40 dark:opacity-20 pointer-events-none">
           <div className="absolute top-2 -left-100 w-97 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob" />
 
@@ -36,14 +30,12 @@ export default async function Home() {
           <div className="absolute -bottom-8 left-1/2 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-4000" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto">
-          {/*badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
             <span className="text-[10px] font-bold text-primary tracking-widest uppercase">
               V2.0 Neural Update Live
             </span>
           </div>
-          {/*Headline */}
           <h1 className="text-5xl md:text-7xl font-extrabold text-foreground tracking-tight mb-6 leading-tight transition-colors">
             Dominate Search <br className="hidden md:block" />
             with{" "}
@@ -51,31 +43,14 @@ export default async function Home() {
               AI Intelligence
             </span>
           </h1>
-          {/*subheadline */}
           <p className="text-foreground/70 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed transition-colors">
             Strive for the top : Professional SEO insights to outrank the
             competition.
           </p>
-          {/* ========================================== */}
-          {/* ERROR MESSAGE CONTAINER                    */}
-          {/* ========================================== */}
-          {/* {error === "invalid_url" && (
-            
-            <div className="mb-4 max-w-xl mx-auto flex items-center gap-2 text-red-600 bg-red-50 px-4 py-3 rounded-xl text-sm font-semibold border border-red-100">
-              <AlertCircle size={18 } />
-              Please Enter a valid website URL (e.g., example.com)
-            </div>
-            
-          )} */}
-          {/*URL Input Box */}
-{/* Replace the massive <form> block with this one line! */}
-<SearchForm />
+          <SearchForm />
         </div>
         <p className="text-[10px] text-foreground/50">Partially Free</p>
       </section>
-      {/* ========================================== */}
-      {/* FEATURES SECTION                           */}
-      {/* ========================================== */}
       <section className="py-20 bg-background  z-10 relative px-4">
         <div className="max-w-7xl mx-auto text-center mb-16">
           <h2 className="text-[10px] font-bold text-blue-500 tracking-widest uppercase mb-3">
@@ -90,7 +65,6 @@ export default async function Home() {
           </p>
         </div>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 px-4">
-          {/*Feature 1 */}
           <div className="bg-card rounded-3xl p-8 border border-border-card shadow-md shadow-primary/40 hover:shadow-xl transition-all">
             <div className="w-10 h-10 rounded-md bg-border-card/10 flex items-center justify-center mb-6">
               <svg
@@ -115,7 +89,6 @@ export default async function Home() {
             </p>
           </div>
 
-          {/*Feature 2 */}
           <div className="bg-card rounded-3xl p-8 border border-border-card shadow-md shadow-primary/40 hover:shadow-xl transition-all">
             <div className="w-10 h-10 rounded-md bg-border-card/10 flex items-center justify-center mb-6">
               <svg
@@ -139,7 +112,6 @@ export default async function Home() {
               search engines find them.
             </p>
           </div>
-          {/*Feature 3 */}
           <div className="bg-card rounded-3xl p-8 border border-border-card shadow-md shadow-primary/40 hover:shadow-xl transition-all">
             <div className="w-10 h-10 rounded-md bg-border-card/10 flex items-center justify-center mb-6">
               <svg
@@ -165,12 +137,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      {/* ========================================== */}
-      {/* BOTTOM SECTION                             */}
-      {/* ========================================== */}
       <section className="py-24 px-4 relative z-10">
         <div className="max-w-5xl mx-auto bg-card  rounded-[2.5rem] p-12 md:p-20 text-center relative overflow-hidden border border-border-card">
-          {/* Subtle overlay gradient blob for the  */}
           <div className="absolute top-10 right-0 w-64 h-64 bg-blue-200/50 rounded-full mix-blend-multiply filter blur-3xl" />
           <div className="absolute -top-4 -right-20 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl" />
 
