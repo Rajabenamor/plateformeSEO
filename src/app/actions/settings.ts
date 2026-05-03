@@ -1,5 +1,5 @@
 "use server"
-import { AnalysisRecord } from "../types/auth";
+import { AnalysisRecord } from "../types/analysis";
 import { secureFetch } from "@/lib/api";
 
 // Define the expected input types based on your Django Serializer

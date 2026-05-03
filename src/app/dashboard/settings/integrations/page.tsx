@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Github, CheckCircle2, AlertCircle, SignalMedium } from "lucide-react";
-import { getIntegrationStatusAction, saveGithubRepoAction } from "@/app/actions/auth"; 
+import { getIntegrationStatusAction, saveGithubRepoAction } from "@/app/actions/integrations"; 
 
 const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react"; 
 import { AlertCircle, Globe, Zap } from "lucide-react";
-import { analyzeUrlAction } from "@/app/actions/auth";
+import { analyzeUrlAction } from "@/app/actions/dashboard";
 
 export default function SearchForm() {
   const [state, formAction] = useActionState(analyzeUrlAction, { error: null });
