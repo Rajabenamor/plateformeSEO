@@ -1,6 +1,6 @@
 
 import { verifyAdminSession } from "@/lib/session";
-import { analyzeUrlAction } from "./actions/auth";
+import { analyzeUrlAction } from "./actions/dashboard";
 import { redirect } from "next/navigation";
 import {  Globe, Zap } from "lucide-react";
 import Link from "next/link";

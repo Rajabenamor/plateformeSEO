@@ -1,11 +1,10 @@
 "use client";
 
-import { deleteUserAction, toggleUserAction } from "@/app/actions/auth";
 import { user } from "@/app/types/auth";
 import { useState } from "react";
-import CreateAdminModal from "./createUserModal";
 import UpdateUserModal from "./UserUpdateModal";
 import CreateUserModal from "./createUserModal";
+import { useAdminUsers } from "@/hooks/useAdminUsers";
 
 export default function AdminTable({
   initialUsers,
@@ -16,42 +15,20 @@ export default function AdminTable({
   isSuperAdmin: boolean;
   currentUserId: number | string | undefined;
 }) {
-  const [users, setUsers] = useState<user[]>(initialUsers);
+  const {
+    users,
+    error,
+    setError,
+    loadingId,
+    handleToggle,
+    handleDelete,
+    handleUserUpdated,
+    handleUserCreated
+  } = useAdminUsers(initialUsers);
+
   const [confirmDelete, setConfirmDelete] = useState<user | null>(null);
   const [userToUpdate, setUserToUpdate] = useState<user | null>(null);
   const [showCreateAdmin, setShowCreateAdmin] = useState(false);
-  const [error, setError] = useState("");
-  const [loadingId, setLoadingId] = useState<number | null>(null);
-
-  async function handleToggle(userId: number) {
-    const targetUser = users.find((u) => u.id === userId);
-    if (!targetUser) return;
-    const newStatus = !targetUser.is_active;
-    const original = [...users];
-    setUsers(
-      users.map((u) => (u.id === userId ? { ...u, is_active: newStatus } : u))
-    );
-
-    const result = await toggleUserAction(userId, newStatus);
-    if (!result.success) {
-      // revert if server fails
-      setUsers(original);
-      setError(result.error || "Failed to toggle user");
-    }
-    setLoadingId(null);
-  }
-  async function handleDelete(userId: number) {
-    setLoadingId(userId);
-    const result = await deleteUserAction(userId);
-    if (result.success) {
-      setUsers(users.filter((u) => u.id !== userId));
-      setConfirmDelete(null);
-    } else {
-      setError(result.error || "Failed to delete user");
-      setConfirmDelete(null);
-    }
-    setLoadingId(null);
-  }
 
   return (
     <div>
@@ -76,9 +53,9 @@ export default function AdminTable({
       {/* Create admin modal */}
       {showCreateAdmin && (
         <CreateUserModal
-          isSuperAdmin={isSuperAdmin} // <-- Add this
+          isSuperAdmin={isSuperAdmin}
           onClose={() => setShowCreateAdmin(false)}
-          onCreated={(newUser) => setUsers([newUser, ...users])}
+          onCreated={handleUserCreated}
         />
       )}
       {/* update user modal */}
@@ -87,9 +64,7 @@ export default function AdminTable({
           user={userToUpdate}
           onClose={() => setUserToUpdate(null)}
           onUpdated={(updatedUser) => {
-            setUsers(
-              users.map((u) => (u.id === updatedUser.id ? updatedUser : u))
-            );
+            handleUserUpdated(updatedUser);
             setUserToUpdate(null);
           }}
         />
@@ -120,7 +95,10 @@ export default function AdminTable({
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(confirmDelete.id)}
+                onClick={async () => {
+                  await handleDelete(confirmDelete.id);
+                  setConfirmDelete(null);
+                }}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-700 rounded-lg hover:bg-red-700"
               >
                 Delete
@@ -157,8 +135,6 @@ export default function AdminTable({
           </thead>
           <tbody className="divide-y divide-border">
             {users.map((user) => {
-              //super admin can modify anyone except himself
-              //sub admin can only modify regular users
               const isSelf = String(user.id) === String(currentUserId);
               const canModify = !isSelf && (isSuperAdmin || !user.is_staff);
               return (

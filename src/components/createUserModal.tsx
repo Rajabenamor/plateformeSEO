@@ -1,6 +1,6 @@
 "use client";
 
-import { createUserAction } from "@/app/actions/auth"; 
+import { createUserAction } from "@/app/actions/admin"; 
 import { AdminSchema, AdminSchemaData } from "@/app/types/auth"; // <-- Make sure to import your schema
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, X } from "lucide-react";
