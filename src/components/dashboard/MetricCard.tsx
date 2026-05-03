@@ -11,22 +11,22 @@ interface MetricCardProps {
 
 const variants = {
   green: {
-    bg: "bg-green-50",
-    text: "text-green-600",
-    badge: "bg-green-100 text-green-700",
+    bg: "bg-green-500/10",
+    text: "text-green-500",
+    badge: "bg-green-500/10 text-green-500",
     progress: "bg-green-500",
   },
   orange: {
-    bg: "bg-orange-50",
-    text: "text-orange-600",
-    badge: "bg-orange-100 text-orange-700",
+    bg: "bg-orange-500/10",
+    text: "text-orange-500",
+    badge: "bg-orange-500/10 text-orange-500",
     progress: "bg-orange-500",
   },
   blue: {
-    bg: "bg-blue-50",
-    text: "text-blue-600",
-    badge: "bg-blue-100 text-blue-700",
-    progress: "bg-blue-500",
+    bg: "bg-primary/10",
+    text: "text-primary",
+    badge: "bg-primary/10 text-primary",
+    progress: "bg-primary",
   },
 };
 
@@ -40,26 +40,26 @@ export default function MetricCard({
   const styles = variants[variant];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-      <div className="flex justify-between items-start mb-4">
-        <div className={`p-2 ${styles.bg} rounded-lg ${styles.text}`}>
-          <Icon size={16} />
+    <div className="bg-card p-6 rounded-2xl shadow-saas border border-border transition-colors duration-300">
+      <div className="flex justify-between items-start mb-6">
+        <div className={`p-2.5 ${styles.bg} rounded-xl ${styles.text}`}>
+          <Icon size={18} />
         </div>
         <span
-          className={`${styles.badge} text-xs px-2 py-1 rounded font-bold tracking-wide`}
+          className={`${styles.badge} text-[10px] px-2.5 py-1 rounded-lg font-black tracking-widest uppercase`}
         >
-          EXCELLENT
+          Excellent
         </span>
       </div>
-      <p className="text-sm text-gray-500 mb-1">{title}</p>
-      <h3 className="text-3xl font-bold text-gray-900">{score}%</h3>
-      <div className="w-full bg-gray-100 rounded-full h-1.5 mt-4 mb-3">
+      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">{title}</p>
+      <h3 className="text-3xl font-black text-foreground tracking-tight">{score}%</h3>
+      <div className="w-full bg-slate-100 dark:bg-white/5 rounded-full h-1.5 mt-4 mb-4">
         <div
-          className={`${styles.progress} h-1.5 rounded-full`}
+          className={`${styles.progress} h-1.5 rounded-full shadow-[0_0_8px_rgba(var(--color-primary),0.5)]`}
           style={{ width: `${score}%` }}
         ></div>
       </div>
-      <p className="text-xs text-gray-500">{footer}</p>
+      <p className="text-[10px] text-slate-500 font-medium leading-relaxed">{footer}</p>
     </div>
   );
 }

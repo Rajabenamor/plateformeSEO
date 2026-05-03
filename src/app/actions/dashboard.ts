@@ -37,7 +37,7 @@ export async function analyzeUrlAction(prevState: ActionState, formData: FormDat
 import { DashboardData } from "../types/dashboard";
 
 export async function fetchDashboardDataSecurely(url: string): Promise<{ data: DashboardData }> {
-    const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/?url=${encodeURIComponent(url)}`, {
+    const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/dashboard-data/?url=${encodeURIComponent(url)}`, {
         method: "GET",
     });
 
@@ -45,5 +45,7 @@ export async function fetchDashboardDataSecurely(url: string): Promise<{ data: D
         throw new Error("Analysis failed");
     }
 
-    return await response.json();
+    // The new backend endpoint returns the data object directly, so we wrap it
+    const data = await response.json();
+    return { data };
 }

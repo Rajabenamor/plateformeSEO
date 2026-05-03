@@ -7,12 +7,12 @@ interface TrafficChartProps {
 
 export default function TrafficChart({ traffic }: TrafficChartProps) {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 lg:col-span-2">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-sm font-bold text-gray-800">
+    <div className="bg-card p-6 rounded-2xl shadow-saas border border-border lg:col-span-2 transition-colors duration-300">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
           Traffic Over Time (GA4)
         </h2>
-        <span className="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full font-medium">
+        <span className="bg-primary/10 text-primary text-[10px] px-3 py-1 rounded-lg font-black uppercase tracking-widest">
           Last 30 Days
         </span>
       </div>
@@ -23,21 +23,26 @@ export default function TrafficChart({ traffic }: TrafficChartProps) {
               dataKey="displayDate"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: "#9CA3AF" }}
+              tick={{ fontSize: 10, fill: "#64748b", fontWeight: 700 }}
             />
             <Tooltip
-              cursor={{ fill: "#F3F4F6" }}
+              cursor={{ fill: "rgba(var(--color-primary), 0.05)" }}
               contentStyle={{
-                borderRadius: "8px",
-                border: "none",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "var(--color-card)",
+                borderRadius: "12px",
+                border: "1px solid var(--color-border)",
+                boxShadow: "var(--shadow-saas)",
+                fontSize: "12px",
+                fontWeight: "bold",
+                color: "var(--color-foreground)"
               }}
+              itemStyle={{ color: "var(--color-primary)" }}
             />
             <Bar
               dataKey="users"
-              fill="#3B82F6"
+              fill="var(--color-primary)"
               radius={[4, 4, 0, 0]}
-              barSize={40}
+              barSize={32}
             />
           </BarChart>
         </ResponsiveContainer>

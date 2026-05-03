@@ -5,22 +5,60 @@ interface ScoreCardProps {
 }
 
 export default function ScoreCard({ score }: ScoreCardProps) {
+  const radius = 56; // 3.5rem (56px) radius
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - ((score || 0) / 100) * circumference;
+
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center">
-      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 self-start">
+    <div className="bg-card p-6 rounded-3xl shadow-saas border border-border flex flex-col items-center justify-center transition-colors duration-300 relative overflow-hidden group hover:shadow-md">
+      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 self-start z-10">
         Overall Score
       </p>
-      <div className="w-32 h-32 rounded-full border-12 border-blue-600 flex items-center justify-center">
-        <div className="text-center">
-          <span className="text-3xl font-black text-gray-800">
+      
+      <div className="relative flex items-center justify-center z-10 my-2">
+        {/* Background Circle */}
+        <svg className="w-36 h-36 transform -rotate-90">
+          <circle
+            cx="72"
+            cy="72"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="12"
+            fill="transparent"
+            className="text-primary/10"
+          />
+          {/* Progress Circle */}
+          <circle
+            cx="72"
+            cy="72"
+            r={radius}
+            stroke="currentColor"
+            strokeWidth="12"
+            fill="transparent"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            className="text-primary transition-all duration-1000 ease-out"
+          />
+        </svg>
+        
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-4xl font-black text-foreground tracking-tighter">
             {score || "--"}
           </span>
-          <p className="text-xs text-gray-400">of 100</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">of 100</p>
         </div>
       </div>
-      <p className="text-green-500 font-semibold text-sm mt-6">
-        ~ +5.2% from last week
-      </p>
+
+      <div className="mt-6 flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-lg z-10">
+         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+         <p className="text-emerald-500 font-bold text-[10px] uppercase tracking-widest">
+           +5.2% vs last week
+         </p>
+      </div>
+
+      {/* Decorative background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/5 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
     </div>
   );
 }
