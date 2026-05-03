@@ -1,6 +1,6 @@
 "use client";
 
-import { updateUserAction } from "@/app/actions/auth";
+import { updateUserAction } from "@/app/actions/admin";
 import { user } from "@/app/types/auth";
 import { useState } from "react";
 

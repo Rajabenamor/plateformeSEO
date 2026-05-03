@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getHistoryAction } from '@/app/actions/settings';
-import { AnalysisRecord } from '@/app/types/auth';
+import { AnalysisRecord } from '@/app/types/analysis';
 
 export default function HistoryPage() {
   const [history, setHistory] = useState<AnalysisRecord[]>([]);
