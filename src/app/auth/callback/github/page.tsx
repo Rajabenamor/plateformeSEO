@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { exchangeGithubTokenAction } from "@/app/actions/auth"; 
+import { exchangeGithubTokenAction } from "@/app/actions/integrations"; 
 
 export default function GithubCallbackPage() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function GithubCallbackPage() {
 
     async function processGithubAuth() {
       // Use the Server Action instead of raw fetch!
-      const result = await exchangeGithubTokenAction(code, installation_id);
+      const result = await exchangeGithubTokenAction(code!, installation_id);
 
       if (result.success) {
         setStatus("Successfully connected! Redirecting...");

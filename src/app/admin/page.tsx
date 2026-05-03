@@ -1,6 +1,6 @@
 
 import { redirect } from "next/navigation";
-import { getUsersAction } from "../actions/auth";
+import { getUsersAction } from "../actions/admin";
 import AdminTable from "@/components/AdminTable";
 import AdminError from "@/components/AdminError";
 import { verifyAdminSession } from "@/lib/session";
