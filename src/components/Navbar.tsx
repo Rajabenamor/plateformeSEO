@@ -4,8 +4,7 @@ import { verifySession } from "@/lib/session";
 import LogoutButton from "./LogoutButton";
 import { Suspense } from "react";
 import Image from "next/image";
-import { ChevronDown, Settings } from "lucide-react";
-//AuthLinks is the smart component that handles the security logic
+import { ChevronDown } from "lucide-react";
 
 async function AuthLinks() {
   const IsLoggedIn = await verifySession();
@@ -14,14 +13,12 @@ async function AuthLinks() {
     return (
       <div className="flex items-center gap-4">
         <Link
-            href="/dashboard/settings"
-            className="text-sm font-semibold text-foreground hover:text-[#15418c] transition-colors"
+            href="/dashboard"
+            className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-accent uppercase tracking-widest transition-colors"
           >
-            <Settings size={20}/>
-            {/* Settings */}
+            Dashboard
           </Link>
-          {/* Separator Line */}
-        <div className="h-4 w-px bg-border" />
+        <div className="h-4 w-px bg-slate-200 dark:bg-white/10" />
         <LogoutButton />
       </div>
     );
@@ -29,81 +26,75 @@ async function AuthLinks() {
   return (
     <div className="flex items-center gap-3">
       <Link
-        href="/auth/register"
-        className="px-6 py-2.5  text-sm font-semibold text-white bg-[#15418c] rounded-full hover:bg-[#0f306b] transition-colors shadow-sm"
-      >
-        Get Started
-      </Link>
-      <Link
         href="/auth/login"
-        className="px-6 py-2.5  text-sm font-semibold text-gray-900 bg-[#f4f6f8] rounded-full hover:bg-[#e2e8f0] transition-colors"
+        className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-foreground transition-all uppercase tracking-widest"
       >
         Sign In
+      </Link>
+      <Link
+        href="/auth/register"
+        className="px-6 py-2 text-xs font-bold text-white bg-primary rounded-lg hover:opacity-90 transition-all uppercase tracking-widest shadow-lg shadow-primary/20"
+      >
+        Get Started
       </Link>
     </div>
   );
 }
 
-//navbar component
-
-export default async function navbar() {
+export default async function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-background backdrop-blur-md borber-b border-border">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-20">
-        {/* ========================================== */}
-        {/* LEFT SIDE: LOGO                            */}
-        {/* ========================================== */}
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-white/5 bg-white/60 dark:bg-background/60 backdrop-blur-md">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between px-6 h-20">
         <Link href="/" className="flex items-center gap-2 group">
-          <Image src="/6.png" alt="app_logo_strive" width={100} height={80} />
+          <Image 
+            src="/6.png" 
+            alt="STRIVE Logo" 
+            width={100} 
+            height={40} 
+            className="h-8 w-auto object-contain transition-transform group-hover:scale-105 dark:invert-0 brightness-0 dark:brightness-100"
+            priority
+          />
         </Link>
-        {/* ========================================== */}
-        {/* RIGHT SIDE: LINKS & BUTTONS                */}
-        {/* ========================================== */}
 
-        <div className="flex items-center gap-8">
-          {/* Middle navigation links (hidden on mobile ) */}
-          <div className="hidden md:flex items-center gap-6">
+        <div className="flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
             <Link
               href="/features"
-              className="text-sm font-semibold  text-foreground hover:text-primary transition-colors"
+              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-widest"
             >
               Features
             </Link>
             <Link
               href="/pricing"
-              className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-widest"
             >
               Pricing
             </Link>
             <div className="relative group flex items-center">
-              {/* 1. The Trigger (Notice the 'py-2' to give hover breathing room) */}
-             
-              <button className="flex items-center gap-1 text-sm font-semibold text-foreground hover:text-primary transition-colors py-2">
+              <button className="flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors py-2 uppercase tracking-widest cursor-pointer">
                 Company
                 <ChevronDown
                   size={14}
-                  className=" mt-1 group-hover:rotate-180 transition-transform duration-200"
+                  className="group-hover:rotate-180 transition-transform duration-300"
                 />
               </button>
-              
-              {/* 2. The Dropdown Menu (Hidden by default, shows on group hover) */}
-              <div className="absolute left-0 top-full mt-1 w-48 bg-card border border-border-card rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden translate-y-2 group-hover:translate-y-0">
+              <div className="absolute left-0 top-full mt-2 w-48 bg-white dark:bg-card border border-slate-200 dark:border-white/5 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden translate-y-4 group-hover:translate-y-0">
                 <div className="py-2 flex flex-col">
                   <Link
                     href="/about"
-                    className="px-4 py-2.5 text-sm text-foreground/70 hover:bg-slate-50 hover:text-[#15418c] font-medium transition-colors"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
                   >
                     About Us
                   </Link>
                   <Link
                     href="/blog"
-                    className="px-4 py-2.5 text-sm text-foreground/70 hover:bg-slate-50 hover:text-[#15418c] font-medium transition-colors"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
                   >
                     Blog
                   </Link>
                   <Link
                     href="/contact"
-                    className="px-4 py-2.5 text-sm text-foreground/70 hover:bg-slate-50 hover:text-[#15418c] font-medium transition-colors"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
                   >
                     Contact
                   </Link>
@@ -111,20 +102,18 @@ export default async function navbar() {
               </div>
             </div>
           </div>
-          {/* button areas*/}
-          {/* wrapping cookie-reading in a component Suspense */}
-          <div className="flex items-center gap-4">
+          
+          <div className="flex items-center gap-6">
             <Suspense
               fallback={
                 <div className="flex gap-3">
-                  <div className="w-28 h-10 bg-gray-100 animate-pulse rounded-full" />
-                  <div className="w-28 h-10 bg-gray-100 animate-pulse rounded-full" />
+                  <div className="w-24 h-10 bg-slate-100 dark:bg-white/5 animate-pulse rounded-full" />
                 </div>
               }
             >
               <AuthLinks />
             </Suspense>
-            <div className="ml-2 border-l border-gray-200 pl-4 hidden sm:block">
+            <div className="hidden sm:block border-l border-slate-200 dark:border-white/10 pl-6">
               <ThemeToggle />
             </div>
           </div>

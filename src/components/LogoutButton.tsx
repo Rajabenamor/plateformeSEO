@@ -6,11 +6,10 @@ export default function LogoutButton(){
         <form action={logoutAction}>
             <button
             type="submit"
-            className="flex items-center gap-2 text-red-600 hover:text-red-800 transition p-2 font-medium"
+            className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest cursor-pointer"
             >
-                <LogOut size={20}/>
+                <LogOut size={16}/>
                 Log Out
-
             </button>
         </form>
     );

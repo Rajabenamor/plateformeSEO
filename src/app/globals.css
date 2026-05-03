@@ -1,31 +1,74 @@
 @import "tailwindcss";
 
-/* 2. Define your Light Mode colors (Default) */
-:root{
-    --app-bg: #ffffff;
-    --app-text: #0B1B3D;
-    --app-card: #fafbfc;
-    --app-primary: #15418c;
-    --app-border: #e0e1e2;
-    --app-border-card: #e0e1e2;
-}
-
-/* 3. Define your Dark Mode colors (Triggered by your Moon icon toggle) */
-
-.dark{
-    --app-bg: #0B1120;
-    --app-text: #ffffff;
-    --app-card: #101827;
-    --app-primary: #9ABBE9;
-    --app-border: #1f2937;
-    --app-border-card:#22D3EE;
-}
-/* 4. Tell Tailwind v4 to turn these into utility classes */
 @theme {
-    --color-background: var(--app-bg);
-    --color-foreground: var(--app-text);
-    --color-card: var(--app-card);
-    --color-primary: var(--app-primary);
-    --color-border: var(--app-border);
-    --color-border-card:var(--app-border-card);
+  --color-background: #FFFFFF;
+  --color-foreground: #0F172A;
+  --color-primary: #1E4E9D;
+  --color-primary-foreground: #FFFFFF;
+  --color-accent: #48A2E8;
+  --color-accent-foreground: #FFFFFF;
+  --color-card: #F8FAFC;
+  --color-card-foreground: #0F172A;
+  --color-border: rgba(0, 0, 0, 0.05);
+  
+  --shadow-saas: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --color-background: #050914;
+  --color-foreground: #F8FAFC;
+  --color-card: #0F172A;
+  --color-card-foreground: #F8FAFC;
+  --color-border: rgba(255, 255, 255, 0.05);
+  --shadow-saas: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-accent/50;
+  }
+  
+  html {
+    @apply scroll-smooth antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-accent/20 selection:text-accent font-sans;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+  }
+
+  /* Sharp transitions for interactive elements */
+  a, button, input, div, section, header, footer, aside {
+    @apply transition-all duration-200 ease-out;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-background/60 backdrop-blur-md border-b border-white/5;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-white/10 rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent/20;
+  }
+
+  .animate-gradient {
+    background-size: 200% auto;
+    animation: gradient 6s ease infinite;
+  }
+}
+
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
