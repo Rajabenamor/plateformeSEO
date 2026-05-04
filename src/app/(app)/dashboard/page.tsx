@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import AnalysisLoadingScreen from "@/components/AnalysisLoadingScreen";
 import SearchForm from "@/components/SearchForm";
 import { SettingsIcon, AlertCircle, TrendingUp, Globe, MousePointer2 } from "lucide-react";
@@ -16,6 +17,7 @@ function DashboardContent() {
   const {
     data,
     loading,
+    initialCheck,
     error,
     targetUrl,
     fixStatuses,
@@ -23,10 +25,14 @@ function DashboardContent() {
     handleFixNow
   } = useDashboardData();
 
-  if (loading) {
-    return <AnalysisLoadingScreen targetUrl={targetUrl} />;
+  const [isChanging, setIsChanging] = React.useState(false);
+
+  // 0. Prevent flicker: Wait for the hook to resolve its initial URL/cookie check
+  if (initialCheck) {
+    return null;
   }
 
+  // 1. If NO website has been analyzed yet, show the full-screen onboarding canvas
   if (!targetUrl) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700">
@@ -55,6 +61,11 @@ function DashboardContent() {
     );
   }
 
+  // 2. Only show loading if we have a URL and are waiting for data
+  if (loading) {
+    return <AnalysisLoadingScreen targetUrl={targetUrl} />;
+  }
+
   if (error) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500">
@@ -80,28 +91,61 @@ function DashboardContent() {
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h2 className="text-[11px] font-bold text-accent tracking-[0.2em] uppercase mb-2">Performance Blueprint</h2>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-            Dashboard Overview
-          </h1>
-          <div className="flex items-center gap-2 mt-2 text-slate-500 font-medium">
-             <Globe size={14} className="text-primary" />
-             <span className="text-sm">{targetUrl}</span>
-             <span className="w-1 h-1 rounded-full bg-white/10" />
-             <span className="text-xs uppercase tracking-widest">Real-time Telemetry</span>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card/30 p-6 rounded-3xl border border-white/5 backdrop-blur-sm">
+        <div className="flex-1">
+          <h2 className="text-[10px] font-bold text-accent tracking-[0.3em] uppercase mb-1.5 opacity-80">Performance Blueprint</h2>
+          <div className="flex items-center gap-4">
+             <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+                Dashboard
+             </h1>
+             <div className="h-6 w-px bg-white/10 hidden md:block" />
+             {!isChanging ? (
+               <div className="flex items-center gap-2 text-slate-400 font-medium animate-in fade-in slide-in-from-left-2 duration-300">
+                  <Globe size={14} className="text-primary" />
+                  <span className="text-sm font-semibold truncate max-w-[200px] md:max-w-md">{targetUrl}</span>
+                  <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse ml-1" />
+               </div>
+             ) : (
+               <div className="flex-1 max-w-xl animate-in fade-in zoom-in-95 duration-300">
+                  <SearchForm />
+               </div>
+             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-           <button className="px-4 py-2 bg-card border border-white/5 rounded-xl text-xs font-bold text-slate-400 hover:text-foreground hover:bg-white/5 transition-all shadow-sm flex items-center gap-2 cursor-pointer">
-              <MousePointer2 size={14} />
-              Export Report
+        <div className="flex items-center gap-3 shrink-0">
+           <button 
+              onClick={() => setIsChanging(!isChanging)}
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer border ${
+                isChanging 
+                ? "bg-red-500/10 border-red-500/20 text-red-500 hover:bg-red-500/20" 
+                : "bg-white/5 border-white/10 text-slate-300 hover:text-foreground hover:bg-white/10"
+              }`}
+           >
+              {isChanging ? (
+                <>
+                  <AlertCircle size={14} />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <Globe size={14} />
+                  Change Website
+                </>
+              )}
            </button>
-           <button className="px-4 py-2 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer">
-              Refresh Data
-           </button>
+           
+           {!isChanging && (
+             <>
+               <button className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-foreground hover:bg-white/10 transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+                  <MousePointer2 size={14} />
+                  Export
+               </button>
+               <button className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer">
+                  Refresh
+               </button>
+             </>
+           )}
         </div>
       </div>
       

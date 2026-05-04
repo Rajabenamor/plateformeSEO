@@ -81,7 +81,11 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
               </div>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed font-medium">
-              Your mobile site is significantly slower than desktop, risking a Google ranking penalty for mobile searchers.
+              {stats.mobile_penalty.penalty_gap > 10 
+                ? "Your mobile site is significantly slower than desktop, risking a Google ranking penalty for mobile searchers."
+                : stats.mobile_penalty.penalty_gap > 0
+                ? "There is a slight performance gap between mobile and desktop. Aim for parity to ensure consistent rankings."
+                : "Your mobile performance is perfectly aligned with desktop. You are protected from mobile-specific ranking penalties."}
             </p>
           </div>
         )}

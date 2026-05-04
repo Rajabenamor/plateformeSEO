@@ -1,47 +1,69 @@
 "use client";
 
 import { useActionState } from "react"; 
-import { AlertCircle, Globe, Zap } from "lucide-react";
+import { AlertCircle, Globe, Zap, ArrowRight } from "lucide-react";
 import { analyzeUrlAction } from "@/app/actions/dashboard";
 
 export default function SearchForm() {
   const [state, formAction] = useActionState(analyzeUrlAction, { error: null });
 
   return (
-    <div className="w-full max-w-xl mx-auto z-20 relative">
-      
+    <div className="w-full relative group">
       {state?.error && (
-        <div className="mb-4 flex items-center gap-2 text-red-600 bg-red-50 px-4 py-3 rounded-xl text-sm font-semibold border border-red-100 animate-in fade-in slide-in-from-bottom-2">
-          <AlertCircle size={18} />
+        <div className="absolute -top-12 left-0 right-0 flex items-center gap-2 text-red-500 bg-red-500/5 px-4 py-2 rounded-lg text-xs font-bold border border-red-500/10 animate-in fade-in slide-in-from-bottom-2">
+          <AlertCircle size={14} />
           {state.error}
         </div>
       )}
 
       <form
         action={formAction}
-        className={`py-3.5 bg-white p-2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border flex items-center mb-5 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] ${
-          state?.error ? "border-red-500 ring-4 ring-red-50" : "border-[#334155]"
+        className={`relative flex items-center transition-all duration-300 ${
+          state?.error ? "opacity-100" : ""
         }`}
       >
-        <div className="pl-4 pr-2 shrink-0">
-          <Globe size={20} className={state?.error ? "text-red-400" : "text-gray-400"} />
+        <div className="relative flex-1 flex items-center">
+          <div className="absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors pointer-events-none">
+            <Globe size={16} />
+          </div>
+
+          <input
+            name="url"
+            type="text"
+            autoComplete="off"
+            placeholder="target-domain.com"
+            className={`w-full bg-slate-950/50 border backdrop-blur-md rounded-xl py-3 pl-11 pr-32 text-sm font-medium transition-all outline-none placeholder:text-slate-600 ${
+              state?.error 
+                ? "border-red-500/50 ring-2 ring-red-500/10" 
+                : "border-white/10 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 shadow-inner"
+            }`}
+          />
+
+          <div className="absolute right-1.5 flex items-center gap-2">
+            <button
+              type="submit"
+              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+            >
+              Start Analysis
+              <ArrowRight size={12} className="opacity-70" />
+            </button>
+          </div>
         </div>
-        
-        <input
-          name="url"
-          type="text"
-          placeholder="Enter your website URL (e.g., https://yourbrand.com)"
-          className="grow bg-transparent border-none focus:ring-0 text-sm text-gray-700 outline-none w-full"
-        />
-        
-        <button
-          type="submit"
-          className="bg-[#15418c] text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-[#0f306b] transition-colors whitespace-nowrap flex items-center gap-2 shrink-0"
-        >
-          Analyse
-          <Zap size={10} />
-        </button>
       </form>
+
+      <div className="mt-3 flex items-center justify-between px-1">
+         <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+               <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
+               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Neural Core Active</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+               <Zap size={10} className="text-amber-500/50" />
+               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">GPT-4o Optimized</span>
+            </div>
+         </div>
+         <span className="text-[10px] font-medium text-slate-600 italic">HTTPS required for deep crawl</span>
+      </div>
     </div>
   );
 }
