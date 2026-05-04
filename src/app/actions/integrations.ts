@@ -31,14 +31,22 @@ export async function exchangeGithubTokenAction(code: string, installation_id: s
     }
 }
 
-export async function createGithubPullRequestAction(fixTitle: string, fixExplanation: string, targetFile: string) {
+export async function createGithubPullRequestAction(
+    fixTitle: string, 
+    fixExplanation: string, 
+    targetFile: string,
+    currentCode?: string,
+    suggestedCode?: string
+) {
     try {
         const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/create-pr/`, {
             method: "POST",
             body: JSON.stringify({
                 title: fixTitle,
                 explanation: fixExplanation,
-                target_file: targetFile
+                target_file: targetFile,
+                current_code: currentCode,
+                suggested_code: suggestedCode
             })
         });
         const data = await res.json();

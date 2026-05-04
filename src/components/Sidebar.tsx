@@ -1,105 +1,135 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import {
-  ClipboardCheck,
   LayoutDashboard,
   Lightbulb,
+  ClipboardCheck,
   Settings,
-  TrendingUp,
+  ChevronLeft,
+  ChevronRight,
+  Zap,
+  ShieldCheck,
+  LogOut
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { user } from "@/app/types/auth";
+import { usePathname, useSearchParams } from "next/navigation";
+
+import { logoutAction } from "@/app/actions/auth";
+import Image from "next/image";
 
 const NAV_ITEMS = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  {
-    name: "Recommendations",
-    href: "/dashboard/recommendations",
-    icon: Lightbulb,
-  },
+  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
   { name: "Site Audit", href: "/dashboard/audit", icon: ClipboardCheck },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
-const getInitials = (name: string) => {
-  if (!name) return "G";
-  const parts = name.trim().split(" ");
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-};
-
 export default function Sidebar() {
   const pathname = usePathname();
-  const [currentUser, setCurrentUser] = useState<user | null>(null);
-
-  useEffect(() => {
-    const storedUser = Cookies.get("user_data");
-    if (storedUser) {
-      try {
-        setCurrentUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error("Failed to parse user data from cookie", error);
-      }
-    }
-  }, []);
+  const searchParams = useSearchParams();
+  const currentUrl = searchParams.get("url");
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <aside className="w-64 h-screen bg-[#fafbfc] border-r border-slate-200 flex flex-col justify-between sticky top-0 shrink-0">
-      <div>
-        <div className="h-24 flex items-center px-8">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 text-[#00415A] font-black text-2xl tracking-tight"
-          >
-            <TrendingUp size={28} strokeWidth={3} className="text-blue-600" />
-            STRIVE
-          </Link>
-        </div>
-
-        <nav className="px-4 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                  isActive
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                <Icon
-                  size={18}
-                  className={isActive ? "text-blue-600" : "text-slate-400"}
-                />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
+    <aside 
+      className={`relative h-screen bg-background border-r border-border transition-all duration-300 flex flex-col z-40 ${
+        isCollapsed ? "w-16" : "w-64"
+      }`}
+    >
+      {/* Brand Logo */}
+      <div className="h-20 flex items-center px-4 mb-6">
+        <Link href={currentUrl ? `/?url=${encodeURIComponent(currentUrl)}` : "/"} className="flex items-center gap-3">
+          <Image 
+            src="/6.png" 
+            alt="STRIVE Logo" 
+            width={100} 
+            height={40} 
+            className={`h-8 w-auto object-contain transition-all brightness-0 dark:brightness-100 ${isCollapsed ? "scale-0 w-0" : "scale-100"}`}
+            priority
+          />
+          {isCollapsed && (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20 shrink-0">
+               <Zap size={22} className="text-white" />
+            </div>
+          )}
+        </Link>
       </div>
 
-      <div className="p-4 border-t border-slate-200">
-        <div className="flex items-center gap-3 px-4 py-3 hover:bg-slate-100 rounded-xl cursor-pointer transition-colors">
-          <div className="w-10 h-10 rounded-full bg-[#15418c] flex items-center justify-center text-white font-bold overflow-hidden shrink-0">
-            {getInitials(currentUser?.username || "Guest")}
-          </div>
+      {/* Navigation Groups */}
+      <div className="flex-1 px-3 space-y-8">
+        <div>
+          {!isCollapsed && (
+            <p className="px-3 mb-4 text-[10px] font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest">
+              Core Platform
+            </p>
+          )}
+          <nav className="space-y-1">
+            {NAV_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
+              const Icon = item.icon;
+              const href = currentUrl ? `${item.href}?url=${encodeURIComponent(currentUrl)}` : item.href;
 
-          <div className="overflow-hidden">
-            <p className="text-sm font-bold text-slate-900 truncate">
-              {currentUser?.username || "Guest"}
-            </p>
-            <p className="text-xs text-slate-500">
-              Free Plan
-            </p>
-          </div>
+              return (
+                <Link
+                  key={item.name}
+                  href={href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
+                    isActive
+                      ? "bg-primary text-white shadow-lg shadow-primary/20"
+                      : "text-slate-500 dark:text-slate-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5"
+                  } ${isCollapsed ? "justify-center" : ""}`}
+                >
+                  <Icon size={18} className={isActive ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"} />
+                  {!isCollapsed && (
+                    <span className="tracking-tight">
+                      {item.name}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
+
+        <div>
+          {!isCollapsed && (
+            <p className="px-3 mb-4 text-[10px] font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest">
+              Security
+            </p>
+          )}
+          <nav className="space-y-1">
+             <Link
+                href={currentUrl ? `/admin?url=${encodeURIComponent(currentUrl)}` : "/admin"}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
+                    pathname === "/admin" 
+                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                    : "text-slate-500 dark:text-slate-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5"
+                } ${isCollapsed ? "justify-center" : ""}`}
+              >
+                <ShieldCheck size={18} className={pathname === "/admin" ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"} />
+                {!isCollapsed && <span className="tracking-tight">Admin Console</span>}
+             </Link>
+          </nav>
+        </div>
+      </div>
+
+      {/* Collapse Toggle */}
+      <button 
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute -right-3 top-24 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-slate-500 hover:text-primary shadow-sm transition-all z-50 cursor-pointer"
+      >
+        {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+      </button>
+
+      {/* User Info / Footer */}
+      <div className="p-3 border-t border-border">
+        <form action={logoutAction}>
+          <button className={`w-full flex items-center gap-3 p-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""}`}>
+             <LogOut size={18} />
+             {!isCollapsed && <span>Log Out</span>}
+          </button>
+        </form>
       </div>
     </aside>
   );

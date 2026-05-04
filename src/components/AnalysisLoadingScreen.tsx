@@ -9,8 +9,8 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
 
     useEffect(()=> {
       const interval = setInterval(()=> {
-        setProgress((prev)=>(prev >= 95 ? 95 : prev + 1));
-    }, 250);
+        setProgress((prev)=>(prev >= 98 ? 98 : prev + 1));
+    }, 150); // Faster visual progress
         return () => clearInterval(interval);
       }, []);
 
@@ -45,11 +45,20 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
             <div className="text-center z-10">
               <span className="text-4xl font-black text-gray-900">{progress}%</span>
               <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Crawled</p>
-            </div>
-          </div>
-        </div>
+              </div>
+              </div>
+              </div>
 
-        <div className="max-w-md mx-auto space-y-3">
+              {progress >= 95 && (
+              <div className="text-center mb-8 animate-pulse">
+              <p className="text-sm text-blue-600 font-semibold italic">
+              Finalizing deep analysis... This can take up to 60 seconds for larger sites.
+              </p>
+              </div>
+              )}
+
+              <div className="max-w-md mx-auto space-y-3">
+
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step1Status === 'active' ? 'bg-blue-50 border border-blue-100' : 'bg-gray-50 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step1Status === 'complete' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
               {step1Status === 'complete' ? (
