@@ -1,5 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import { Suspense } from "react";
 
 export default function AppLayout({
   children,
@@ -9,7 +10,9 @@ export default function AppLayout({
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background text-foreground transition-colors duration-300">
       {/* LEFT: Slim, collapsible Sidebar */}
-      <Sidebar />
+      <Suspense fallback={<div className="w-16 md:w-64 bg-background border-r border-border" />}>
+        <Sidebar />
+      </Suspense>
       
       {/* RIGHT: Main App Architecture */}
       <div className="flex-1 flex flex-col relative overflow-hidden">

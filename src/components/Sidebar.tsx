@@ -13,9 +13,10 @@ import {
   LogOut
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 import { logoutAction } from "@/app/actions/auth";
+import Image from "next/image";
 
 const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +27,8 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentUrl = searchParams.get("url");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -36,14 +39,19 @@ export default function Sidebar() {
     >
       {/* Brand Logo */}
       <div className="h-20 flex items-center px-4 mb-6">
-        <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20 shrink-0">
-             <Zap size={22} className="text-white" />
-          </div>
-          {!isCollapsed && (
-            <span className="text-lg font-black tracking-tightest text-foreground uppercase">
-              STRIVE<span className="text-accent italic">.</span>
-            </span>
+        <Link href={currentUrl ? `/?url=${encodeURIComponent(currentUrl)}` : "/"} className="flex items-center gap-3">
+          <Image 
+            src="/6.png" 
+            alt="STRIVE Logo" 
+            width={100} 
+            height={40} 
+            className={`h-8 w-auto object-contain transition-all brightness-0 dark:brightness-100 ${isCollapsed ? "scale-0 w-0" : "scale-100"}`}
+            priority
+          />
+          {isCollapsed && (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20 shrink-0">
+               <Zap size={22} className="text-white" />
+            </div>
           )}
         </Link>
       </div>
@@ -60,11 +68,12 @@ export default function Sidebar() {
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
+              const href = currentUrl ? `${item.href}?url=${encodeURIComponent(currentUrl)}` : item.href;
 
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  href={href}
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
                     isActive
                       ? "bg-primary text-white shadow-lg shadow-primary/20"
@@ -91,7 +100,7 @@ export default function Sidebar() {
           )}
           <nav className="space-y-1">
              <Link
-                href="/admin"
+                href={currentUrl ? `/admin?url=${encodeURIComponent(currentUrl)}` : "/admin"}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
                     pathname === "/admin" 
                     ? "bg-primary text-white shadow-lg shadow-primary/20" 

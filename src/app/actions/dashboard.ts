@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/session";
 import isURL from "validator/lib/isURL";
 import { secureFetch } from "@/lib/api";
+import { DashboardData } from "../types/dashboard";
 
 export type ActionState = {
     error: string | null;
@@ -34,8 +35,6 @@ export async function analyzeUrlAction(prevState: ActionState, formData: FormDat
     redirect(`/dashboard?url=${encodeURIComponent(formattedUrl)}`);
 }
 
-import { DashboardData } from "../types/dashboard";
-
 export async function fetchDashboardDataSecurely(url: string): Promise<{ data: DashboardData }> {
     const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/analysis/dashboard-data/?url=${encodeURIComponent(url)}`, {
         method: "GET",
@@ -45,7 +44,6 @@ export async function fetchDashboardDataSecurely(url: string): Promise<{ data: D
         throw new Error("Analysis failed");
     }
 
-    // The new backend endpoint returns the data object directly, so we wrap it
     const data = await response.json();
     return { data };
 }

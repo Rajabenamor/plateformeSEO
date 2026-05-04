@@ -89,14 +89,7 @@ export async function loginServerAction(data: LoginFormData) {
         }
 
         const isAdmin = await verifyAdminSession();
-        
-        const pendingUrl = cookieStore.get("pending_analysis")?.value;
-        if (pendingUrl && !isAdmin) {
-            cookieStore.delete("pending_analysis");
-            redirectPath = `/dashboard?url=${encodeURIComponent(pendingUrl)}`;
-        } else {
-            redirectPath = isAdmin ? "/admin" : "/dashboard";
-        }
+        redirectPath = isAdmin ? "/admin" : "/dashboard";
     } catch (error) {
         return { success: false, error: "Connection Failed" };
     }
