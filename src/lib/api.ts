@@ -23,6 +23,7 @@ export async function secureFetch(url: string, options: RequestInit = {}) {
     let response = await fetch(url, {
         ...options,
         headers,
+        cache: 'no-store',
     });
 
     // If 401, attempt to refresh the token

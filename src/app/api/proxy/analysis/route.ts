@@ -17,17 +17,26 @@ export async function GET(request: Request) {
             method: "GET",
         });
 
-        console.log(`[Proxy] Backend response status: ${response.status}`);
+        const status = response.status;
+        console.log(`[Proxy] Backend response status: ${status}`);
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`[Proxy] Backend error: ${errorText}`);
-            return NextResponse.json({ error: "Analysis failed" }, { status: response.status });
+        // Handle various status codes
+        if (status === 200) {
+            const data = await response.json();
+            return NextResponse.json(data);
+        } else if (status === 401 || status === 403) {
+            return NextResponse.json({ error: "Authentication failed. Please login again." }, { status: 401 });
+        } else {
+            const errorText = await response.text().catch(() => "Unknown error");
+            console.error(`[Proxy] Backend error (${status}): ${errorText}`);
+            return NextResponse.json({ error: `Analysis failed: ${status}` }, { status: status });
         }
-
-        const data = await response.json();
-        return NextResponse.json(data);
-    } catch (error) {
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    } catch (error: any) {
+        console.error(`[Proxy] Critical failure: ${error.message}`);
+        // Check if it's a Next.js redirect error
+        if (error.digest?.startsWith('NEXT_REDIRECT')) {
+            return NextResponse.json({ error: "Session expired", redirect: true }, { status: 401 });
+        }
+        return NextResponse.json({ error: "Internal server error connecting to backend" }, { status: 500 });
     }
 }
