@@ -57,7 +57,13 @@ export function useDashboardData() {
     const targetFile = fix.target_file || "src/app/page.tsx"; 
     
     try {
-        const result = await createGithubPullRequestAction(fix.title, fix.explanation, targetFile);
+        const result = await createGithubPullRequestAction(
+          fix.title, 
+          fix.explanation, 
+          targetFile,
+          fix.current_code,
+          fix.suggested_code
+        );
         
         if (result.success && result.prUrl) {
           setFixStatuses(prev => ({ ...prev, [fixId]: 'success' }));
@@ -130,6 +136,7 @@ export function useDashboardData() {
           effort_level: "Low",
           explanation: "Critical hero images are delaying the Largest Contentful Paint. Injecting fetchpriority='high' will accelerate visual completion by ~400ms.",
           technical_details: "Add fetchpriority='high' to the priority <img> tags.",
+          target_file: "src/app/page.tsx",
           status: "pending"
         },
         {
@@ -139,6 +146,7 @@ export function useDashboardData() {
           effort_level: "Low",
           explanation: "Search engines and screen readers use Alt text to understand image context. 12 images are currently missing these tags.",
           technical_details: "Inject descriptive alt='...' attributes into the detected <img> tags.",
+          target_file: "src/app/page.tsx",
           status: "pending"
         }
       ],
