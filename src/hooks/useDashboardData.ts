@@ -4,6 +4,9 @@ import Cookies from "js-cookie";
 import { createGithubPullRequestAction } from "@/app/actions/integrations";
 import { DashboardData } from "@/app/types/dashboard";
 
+// Simple in-memory cache to persist data across page navigations in the same session
+let globalDashboardCache: DashboardData | null = null;
+
 export function useDashboardData() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -11,7 +14,7 @@ export function useDashboardData() {
   const targetUrl = searchParams.get("url");
   const isChanging = searchParams.get("change") === "true";
 
-  const [data, setData] = useState<DashboardData | null>(null);
+  const [data, setData] = useState<DashboardData | null>(globalDashboardCache);
   
   // To prevent flickering: only start as loading if we have a URL AND no data yet
   const [loading, setLoading] = useState(false);
@@ -89,10 +92,16 @@ export function useDashboardData() {
     if (!targetUrl) {
       setLoading(false);
       setData(null);
+      globalDashboardCache = null;
       return;
     }
 
-    // FORCE FETCH EVERY TIME FOR DEMO RELIABILITY
+    // SMART CHECK: If we already have data for this URL and we aren't explicitly refreshing, skip fetch
+    if (data?.analyzed_url === targetUrl && !isChanging) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     
@@ -134,9 +143,13 @@ export function useDashboardData() {
         }
       ],
       enriched_statistics: {
-        traffic_decay: [],
+        traffic_decay: [
+            { url: targetUrl + "/blog/outdated-content", drop_percentage: 15, recommended_action: "Update content with fresh 2024 insights" }
+        ],
         cannibalization: [],
-        missed_clicks: [],
+        missed_clicks: [
+            { keyword: "seo dashboard", url: targetUrl, current_position: 4, current_ctr: 2.1, potential_traffic_gain: 450 }
+        ],
         mobile_penalty: { desktop_score: 75, mobile_score: 65, penalty_gap: 10, critical_issues: ["Core Web Vitals Optimization Required"] },
         competitor_blind_spots: []
       }
@@ -144,7 +157,10 @@ export function useDashboardData() {
 
     fetch(`/api/proxy/analysis?url=${encodeURIComponent(targetUrl)}`, {
       cache: 'no-store',
-      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      headers: { 
+        'Cache-Control': 'no-cache', 
+        'Pragma': 'no-cache' 
+      }
     })
       .then(async (res) => {
         if (!res.ok) throw new Error("Fetch failed");
@@ -159,17 +175,20 @@ export function useDashboardData() {
           ...rawData,
           overall_score: rawData.overall_score || rawData.global_health_score || fallbackData.overall_score,
           seo_fixes: (rawData.seo_fixes && rawData.seo_fixes.length > 0) ? rawData.seo_fixes : (rawData.critical_action_items && rawData.critical_action_items.length > 0) ? rawData.critical_action_items : fallbackData.seo_fixes,
+          analyzed_url: targetUrl
         };
 
+        globalDashboardCache = mappedData;
         setData(mappedData);
         setLoading(false);
       })
       .catch((err) => {
         console.warn("[useDashboardData] Fetch failed, using high-quality demo fallbacks.", err);
+        globalDashboardCache = fallbackData;
         setData(fallbackData);
         setLoading(false);
       });
-  }, [targetUrl, initialCheck]); // Only depend on targetUrl and initialCheck
+  }, [targetUrl, initialCheck, isChanging]);
 
   return {
     data,
