@@ -62,7 +62,8 @@ export function useDashboardData() {
           fix.explanation, 
           targetFile,
           fix.current_code,
-          fix.suggested_code
+          fix.suggested_code,
+          fix.code_fix
         );
         
         if (result.success && result.prUrl) {
@@ -115,54 +116,6 @@ export function useDashboardData() {
     
     console.log(`[useDashboardData] God-Mode: Initiating fresh fetch for ${targetUrl}`);
 
-    const fallbackData: DashboardData = {
-      overall_score: 68,
-      global_health_score: 68,
-      technical_health: 75,
-      content_score: 72,
-      backlink_strength: 45,
-      traffic_velocity: "trending_up",
-      analyzed_url: targetUrl,
-      traffic: [
-        { date: "20240401", users: 420, displayDate: "Apr 01" },
-        { date: "20240415", users: 650, displayDate: "Apr 15" },
-        { date: "20240501", users: 890, displayDate: "May 01" }
-      ],
-      seo_fixes: [
-        {
-          id: "demo-fix-1",
-          title: "Optimize LCP Images with fetchpriority",
-          impact_score: 9,
-          effort_level: "Low",
-          explanation: "Critical hero images are delaying the Largest Contentful Paint. Injecting fetchpriority='high' will accelerate visual completion by ~400ms.",
-          technical_details: "Add fetchpriority='high' to the priority <img> tags.",
-          target_file: "src/app/page.tsx",
-          status: "pending"
-        },
-        {
-          id: "demo-fix-2",
-          title: "Fix Missing Alt Attributes for Accessibility",
-          impact_score: 7,
-          effort_level: "Low",
-          explanation: "Search engines and screen readers use Alt text to understand image context. 12 images are currently missing these tags.",
-          technical_details: "Inject descriptive alt='...' attributes into the detected <img> tags.",
-          target_file: "src/app/page.tsx",
-          status: "pending"
-        }
-      ],
-      enriched_statistics: {
-        traffic_decay: [
-            { url: targetUrl + "/blog/outdated-content", drop_percentage: 15, recommended_action: "Update content with fresh 2024 insights" }
-        ],
-        cannibalization: [],
-        missed_clicks: [
-            { keyword: "seo dashboard", url: targetUrl, current_position: 4, current_ctr: 2.1, potential_traffic_gain: 450 }
-        ],
-        mobile_penalty: { desktop_score: 75, mobile_score: 65, penalty_gap: 10, critical_issues: ["Core Web Vitals Optimization Required"] },
-        competitor_blind_spots: []
-      }
-    };
-
     fetch(`/api/proxy/analysis?url=${encodeURIComponent(targetUrl)}`, {
       cache: 'no-store',
       headers: { 
@@ -179,10 +132,9 @@ export function useDashboardData() {
         console.log("[useDashboardData] Success! Data received:", rawData);
         
         const mappedData: DashboardData = {
-          ...fallbackData,
           ...rawData,
-          overall_score: rawData.overall_score || rawData.global_health_score || fallbackData.overall_score,
-          seo_fixes: (rawData.seo_fixes && rawData.seo_fixes.length > 0) ? rawData.seo_fixes : (rawData.critical_action_items && rawData.critical_action_items.length > 0) ? rawData.critical_action_items : fallbackData.seo_fixes,
+          overall_score: rawData.overall_score || rawData.global_health_score || 0,
+          seo_fixes: (rawData.seo_fixes && rawData.seo_fixes.length > 0) ? rawData.seo_fixes : (rawData.critical_action_items || []),
           analyzed_url: targetUrl
         };
 
@@ -191,9 +143,8 @@ export function useDashboardData() {
         setLoading(false);
       })
       .catch((err) => {
-        console.warn("[useDashboardData] Fetch failed, using high-quality demo fallbacks.", err);
-        globalDashboardCache = fallbackData;
-        setData(fallbackData);
+        console.warn("[useDashboardData] Fetch failed.", err);
+        setError("Failed to load dashboard data. Please try again.");
         setLoading(false);
       });
   }, [targetUrl, initialCheck, isChanging]);

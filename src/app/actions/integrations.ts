@@ -36,7 +36,8 @@ export async function createGithubPullRequestAction(
     fixExplanation: string, 
     targetFile: string,
     currentCode?: string,
-    suggestedCode?: string
+    suggestedCode?: string,
+    codeFix?: string
 ) {
     try {
         const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/github/create-pr/`, {
@@ -46,7 +47,8 @@ export async function createGithubPullRequestAction(
                 explanation: fixExplanation,
                 target_file: targetFile,
                 current_code: currentCode,
-                suggested_code: suggestedCode
+                suggested_code: suggestedCode,
+                code_fix: codeFix
             })
         });
         const data = await res.json();
@@ -67,6 +69,37 @@ export async function saveGithubRepoAction(repoName: string) {
         });
         if (!res.ok) {
             return { success: false, error: "Failed to save repository" };
+        }
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function exchangeGoogleTokenAction(code: string) {
+    try {
+        const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/google/exchange/`, {
+            method: "POST",
+            body: JSON.stringify({ code })
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            return { success: false, error: err.error || "Failed to exchange google token" };
+        }
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function saveGA4PropertyAction(propertyId: string) {
+    try {
+        const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/google/save-property/`, {
+            method: "POST",
+            body: JSON.stringify({ property_id: propertyId })
+        });
+        if (!res.ok) {
+            return { success: false, error: "Failed to save GA4 property" };
         }
         return { success: true };
     } catch (error) {

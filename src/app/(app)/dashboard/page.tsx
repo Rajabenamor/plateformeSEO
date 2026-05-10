@@ -137,11 +137,30 @@ function DashboardContent() {
            
            {!isChanging && (
              <>
-               <button className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-foreground hover:bg-white/10 transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+               <button 
+                  onClick={() => {
+                     const jsonStr = JSON.stringify(data, null, 2);
+                     const blob = new Blob([jsonStr], { type: "application/json" });
+                     const url = URL.createObjectURL(blob);
+                     const a = document.createElement('a');
+                     a.href = url;
+                     a.download = `strive-analysis-${targetUrl?.replace(/[^a-z0-9]/gi, '_')}.json`;
+                     a.click();
+                     URL.revokeObjectURL(url);
+                  }}
+                  className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-slate-300 hover:text-foreground hover:bg-white/10 transition-all shadow-sm flex items-center gap-2 cursor-pointer"
+               >
                   <MousePointer2 size={14} />
                   Export
                </button>
-               <button className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer">
+               <button 
+                  onClick={() => {
+                     const currentUrl = new URL(window.location.href);
+                     currentUrl.searchParams.set('refresh', 'true');
+                     window.location.href = currentUrl.toString();
+                  }}
+                  className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl text-xs font-bold hover:opacity-90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 cursor-pointer"
+               >
                   Refresh
                </button>
              </>

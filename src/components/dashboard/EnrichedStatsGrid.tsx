@@ -72,7 +72,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
               <p className="text-sm font-bold text-slate-400 mb-4">Desktop vs Mobile Gap</p>
               
               <div className="bg-background rounded-xl p-3 border border-border text-xs mb-4 space-y-2">
-                {stats.mobile_penalty.critical_issues.map((issue, idx) => (
+                {stats.mobile_penalty.critical_issues?.map((issue, idx) => (
                    <div key={idx} className="flex items-center gap-2 text-slate-500">
                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                      <span className="font-medium">{issue}</span>
@@ -136,7 +136,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
               <p className="text-sm font-bold text-slate-400 mb-4">Pages fighting each other</p>
               
               <div className="bg-background rounded-xl p-3 border border-border text-xs mb-4 space-y-1">
-                {stats.cannibalization[0].competing_urls.slice(0, 2).map((url, idx) => (
+                {stats.cannibalization[0].competing_urls?.slice(0, 2).map((url, idx) => (
                    <p key={idx} className="font-medium text-slate-500 truncate text-[10px]">{url}</p>
                 ))}
               </div>
@@ -173,7 +173,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
                 
                 <div className="flex-1 bg-background rounded-2xl p-4 border border-border">
                    <div className="flex flex-wrap gap-2">
-                     {stats.competitor_blind_spots[0].missing_topics.map((topic, idx) => (
+                     {stats.competitor_blind_spots[0].missing_topics?.map((topic, idx) => (
                         <span key={idx} className="px-3 py-1.5 bg-card border border-border rounded-lg text-xs font-bold text-foreground shadow-sm">
                            {topic}
                         </span>
