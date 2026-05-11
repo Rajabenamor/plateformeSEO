@@ -22,7 +22,6 @@ const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
   { name: "Site Audit", href: "/dashboard/audit", icon: ClipboardCheck },
-  { name: "Analysis History", href: "/dashboard/settings/history", icon: ClipboardCheck },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
