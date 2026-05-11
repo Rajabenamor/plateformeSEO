@@ -37,17 +37,17 @@ export default function ForgotPasswordPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full" />
 
-      <div className="w-full max-w-[500px] bg-card/50 backdrop-blur-xl border border-white/5 rounded-3xl overflow-hidden shadow-saas relative z-10 p-8 md:p-12">
+      <div className="w-full max-w-[500px] bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-sm relative z-10 p-8 md:p-12">
         <Link href="/auth/login" className="inline-flex items-center gap-2 text-slate-400 hover:text-foreground transition-colors mb-12 group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-xs font-bold uppercase tracking-widest">Back to Sign In</span>
+          <span className="text-xs font-bold uppercase tracking-wider">Back to Sign In</span>
         </Link>
 
         <div className="flex flex-col items-center text-center mb-10">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-6">
             <Mail size={24} />
           </div>
-          <h2 className="text-3xl font-black text-foreground mb-3 tracking-tight">Reset Password</h2>
+          <h2 className="text-3xl font-bold text-foreground mb-3 tracking-tight">Reset Password</h2>
           <p className="text-slate-400 font-medium leading-relaxed">
             Enter your email and we'll send you a link to get back into your account.
           </p>
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
             )}
 
             <div className="space-y-2 text-left">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                 Email Address
               </label>
               <input

@@ -40,7 +40,7 @@ export default function RegisterPage() {
       <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full" />
       
-      <div className="w-full max-w-[1100px] grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-3xl overflow-hidden shadow-saas relative z-10">
+      <div className="w-full max-w-[1100px] grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-sm relative z-10">
         
         {/* Left Side: Brand & Marketing */}
         <div className="hidden md:flex flex-col justify-between p-12 bg-primary/5 border-r border-white/5">
@@ -49,12 +49,12 @@ export default function RegisterPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
                 <Zap size={22} className="text-white" />
               </div>
-              <span className="text-xl font-black tracking-tightest text-foreground uppercase">
+              <span className="text-xl font-bold tracking-tight text-foreground uppercase">
                 STRIVE<span className="text-accent italic">.</span>
               </span>
             </Link>
 
-            <h1 className="text-4xl lg:text-5xl font-black text-foreground leading-[1.1] mb-6 tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] mb-6 tracking-tight">
               Build your technical <span className="text-accent">authority.</span>
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed max-w-md">
@@ -84,7 +84,7 @@ export default function RegisterPage() {
               </div>
             </div>
             
-            <div className="pt-6 border-t border-white/5 text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+            <div className="pt-6 border-t border-white/5 text-[10px] text-slate-500 uppercase tracking-wider font-bold">
               Trusted by Technical SEOs Worldwide
             </div>
           </div>
@@ -98,7 +98,7 @@ export default function RegisterPage() {
                 <Check size={40} />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-foreground mb-3 tracking-tight">Registration Received!</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-3 tracking-tight">Registration Received!</h2>
                 <p className="text-slate-400 font-medium leading-relaxed max-w-sm mx-auto">
                   Please wait for an administrator to review and activate your account. We will email you once you are approved.
                 </p>
@@ -113,7 +113,7 @@ export default function RegisterPage() {
           ) : (
             <>
               <div className="mb-10 text-center md:text-left">
-                <h2 className="text-3xl font-black text-foreground mb-2 tracking-tight">Create Account</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-2 tracking-tight">Create Account</h2>
                 <p className="text-slate-400 font-medium">Join the next generation of technical SEOs.</p>
               </div>
 
@@ -126,7 +126,7 @@ export default function RegisterPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                       Username
                     </label>
                     <input
@@ -140,7 +140,7 @@ export default function RegisterPage() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                       Email
                     </label>
                     <input
@@ -156,7 +156,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                     Password
                   </label>
                   <div className="relative">
@@ -180,7 +180,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                     Confirm Password
                   </label>
                   <div className="relative">

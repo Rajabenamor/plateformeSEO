@@ -11,7 +11,8 @@ export default function TrafficChart({ traffic }: TrafficChartProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    const timer = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const hasData = traffic && traffic.length > 0;

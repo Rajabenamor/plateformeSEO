@@ -9,14 +9,14 @@ export default function ContactPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/10 blur-[120px] rounded-full" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="grid md:grid-cols-2 gap-12 bg-card/50 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-16 shadow-saas">
+        <div className="grid md:grid-cols-2 gap-12 bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl p-8 md:p-16 shadow-sm">
           
           <div className="flex flex-col justify-between">
             <div>
-              <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
+              <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Home
               </Link>
-              <h1 className="text-5xl font-black mb-6 tracking-tightest leading-tight">Get in <span className="text-accent italic">touch.</span></h1>
+              <h1 className="text-5xl font-bold mb-6 tracking-tight leading-tight">Get in <span className="text-accent italic">touch.</span></h1>
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-12 max-w-sm text-lg">
                 Have questions about our AI analysis or enterprise plans? We're here to help.
               </p>
@@ -27,7 +27,7 @@ export default function ContactPage() {
                     <Mail size={22} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-1">Email us</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Email us</p>
                     <p className="font-bold text-foreground text-lg">strive.support@gmail.com</p>
                   </div>
                 </div>
@@ -36,7 +36,7 @@ export default function ContactPage() {
                     <MessageSquare size={22} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-1">Live Chat</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">Live Chat</p>
                     <p className="font-bold text-foreground text-lg">Available Mon-Fri, 9am-5pm</p>
                   </div>
                 </div>
@@ -45,13 +45,13 @@ export default function ContactPage() {
 
             <div className="mt-16 pt-8 border-t border-white/5 flex items-center gap-3">
                <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-               <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">Average response time: 2 hours</p>
+               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">Average response time: 2 hours</p>
             </div>
           </div>
 
-          <form className="space-y-6 bg-white/5 p-8 md:p-12 rounded-[2rem] border border-white/5 shadow-inner">
+          <form className="space-y-6 bg-white/5 p-8 md:p-12 rounded-2xl border border-white/5 shadow-inner">
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-600 ml-1">Full Name</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-600 ml-1">Full Name</label>
               <input 
                 type="text" 
                 className="w-full bg-background border border-white/10 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium text-foreground placeholder:text-slate-700" 
@@ -59,7 +59,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-600 ml-1">Work Email</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-600 ml-1">Work Email</label>
               <input 
                 type="email" 
                 className="w-full bg-background border border-white/10 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium text-foreground placeholder:text-slate-700" 
@@ -67,14 +67,14 @@ export default function ContactPage() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-600 ml-1">Message</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-slate-600 ml-1">Message</label>
               <textarea 
                 rows={4} 
                 className="w-full bg-background border border-white/10 rounded-xl px-4 py-4 text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium text-foreground placeholder:text-slate-700 resize-none" 
                 placeholder="How can we help?"
               ></textarea>
             </div>
-            <button className="w-full bg-primary text-white font-black py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group">
+            <button className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group">
               Send Message
               <Zap size={18} className="group-hover:translate-x-1 transition-transform" />
             </button>

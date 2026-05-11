@@ -10,11 +10,11 @@ export default function PrivacyPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/10 blur-[120px] rounded-full" />
 
-      <div className="max-w-4xl mx-auto relative z-10 bg-card/50 backdrop-blur-xl border border-white/5 shadow-saas rounded-3xl overflow-hidden">
+      <div className="max-w-4xl mx-auto relative z-10 bg-card/50 backdrop-blur-xl border border-white/5 shadow-sm rounded-2xl overflow-hidden">
         
         {/* Header Section */}
         <div className="bg-primary/20 p-12 border-b border-white/5">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Home
           </Link>
           <div className="flex items-center gap-4 mb-4">
@@ -22,8 +22,8 @@ export default function PrivacyPage() {
                <ShieldCheck size={32} />
             </div>
             <div>
-              <h1 className="text-4xl font-black tracking-tightest uppercase text-foreground">Privacy Policy</h1>
-              <p className="text-[10px] text-slate-500 uppercase font-black tracking-widest mt-1">Last Revised: {lastUpdated}</p>
+              <h1 className="text-4xl font-bold tracking-tight uppercase text-foreground">Privacy Policy</h1>
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mt-1">Last Revised: {lastUpdated}</p>
             </div>
           </div>
         </div>
@@ -31,8 +31,8 @@ export default function PrivacyPage() {
         <div className="p-8 md:p-16 space-y-16">
           
           {/* Table of Contents */}
-          <nav className="bg-white/5 p-8 rounded-3xl border border-white/5 shadow-inner">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-6">Navigation</h2>
+          <nav className="bg-white/5 p-8 rounded-2xl border border-white/5 shadow-inner">
+            <h2 className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-6">Navigation</h2>
             <ul className="grid md:grid-cols-2 gap-x-8 gap-y-3 text-sm font-bold text-slate-400">
               <li><a href="#intro" className="hover:text-accent transition-colors flex items-center gap-2"><div className="h-1 w-1 rounded-full bg-accent" /> Introduction</a></li>
               <li><a href="#controller" className="hover:text-accent transition-colors flex items-center gap-2"><div className="h-1 w-1 rounded-full bg-accent" /> Data Controller</a></li>
@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
           {/* 1. Introduction & Controller */}
           <section id="intro">
-            <h2 className="text-2xl font-black text-foreground mb-6 tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-foreground mb-6 tracking-tight flex items-center gap-3">
                <span className="text-accent italic">0.</span> Introduction
             </h2>
             <p className="leading-relaxed text-slate-500 dark:text-slate-400 font-medium">
@@ -55,14 +55,14 @@ export default function PrivacyPage() {
 
           <section id="controller" className="grid md:grid-cols-2 gap-8 pt-8 border-t border-white/5">
             <div>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-4">Data Controller</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-4">Data Controller</h3>
               <p className="text-sm text-foreground font-bold leading-relaxed">
                 STRIVE AI SEO Solutions <br />
                 Sousse, Tunisia
               </p>
             </div>
             <div>
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-600 mb-4">Contact Information</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-4">Contact Information</h3>
               <div className="flex items-center gap-2 text-sm text-accent font-bold">
                 <Mail size={16} />
                 <a href="mailto:strive.support@gmail.com" className="hover:underline">strive.support@gmail.com</a>
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
 
           {/* 2. Content Sections */}
           <section id="collection">
-            <h2 className="text-2xl font-black text-foreground mb-6 tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-foreground mb-6 tracking-tight flex items-center gap-3">
                <span className="text-accent italic">1.</span> Data We Collect
             </h2>
             <ul className="space-y-4 text-slate-500 dark:text-slate-400 font-medium text-sm">
@@ -96,24 +96,24 @@ export default function PrivacyPage() {
           </section>
 
           <section id="usage">
-            <h2 className="text-2xl font-black text-foreground mb-6 tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-foreground mb-6 tracking-tight flex items-center gap-3">
                <span className="text-accent italic">2.</span> How We Use Data
             </h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium mb-6">We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-widest text-slate-400">Customer Registration</div>
-               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-widest text-slate-400">SEO Audit Delivery</div>
-               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-widest text-slate-400">Service Updates</div>
-               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-widest text-slate-400">Platform Security</div>
+               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">Customer Registration</div>
+               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">SEO Audit Delivery</div>
+               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">Service Updates</div>
+               <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-xs font-bold uppercase tracking-wider text-slate-400">Platform Security</div>
             </div>
           </section>
 
           <section id="rights">
-            <h2 className="text-2xl font-black text-foreground mb-6 tracking-tight flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-foreground mb-6 tracking-tight flex items-center gap-3">
                <span className="text-accent italic">3.</span> Your Rights
             </h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium mb-8">Under certain circumstances, you have rights under data protection laws in relation to your personal data:</p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-[10px] font-black uppercase tracking-tight text-accent">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-[10px] font-bold uppercase tracking-tight text-accent">
               <div className="p-4 bg-accent/5 rounded-xl border border-accent/10 text-center">Request Access</div>
               <div className="p-4 bg-accent/5 rounded-xl border border-accent/10 text-center">Request Correction</div>
               <div className="p-4 bg-accent/5 rounded-xl border border-accent/10 text-center">Request Erasure</div>
@@ -123,8 +123,8 @@ export default function PrivacyPage() {
             </div>
           </section>
 
-          <section id="security" className="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10">
-            <h2 className="text-2xl font-black text-foreground mb-4 tracking-tight flex items-center gap-3">
+          <section id="security" className="bg-primary/5 p-8 rounded-2xl border border-primary/10">
+            <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight flex items-center gap-3">
                <Lock size={24} className="text-primary" /> 4. Security Measures
             </h2>
             <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed text-sm">
@@ -136,9 +136,9 @@ export default function PrivacyPage() {
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent shadow-lg shadow-accent/20 text-primary mb-6">
                <Zap size={24} />
             </div>
-            <h2 className="text-2xl font-black text-foreground mb-4 tracking-tight">Privacy Concerns?</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Privacy Concerns?</h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium">If you have any questions about this privacy policy or our privacy practices, please contact our data team.</p>
-            <a href="mailto:strive.support@gmail.com" className="bg-primary text-white px-10 py-4 rounded-xl font-black hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 inline-block text-xs uppercase tracking-widest">
+            <a href="mailto:strive.support@gmail.com" className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 inline-block text-xs uppercase tracking-wider">
               Email Privacy Team
             </a>
           </footer>

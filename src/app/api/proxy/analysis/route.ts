@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { secureFetch } from "@/lib/api";
 
 export const maxDuration = 60; // Set timeout for this specific API route
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -24,8 +25,11 @@ export async function GET(request: Request) {
         if (status === 200) {
             const data = await response.json();
             return NextResponse.json(data);
-        } else if (status === 401 || status === 403) {
+        } else if (status === 401) {
             return NextResponse.json({ error: "Authentication failed. Please login again." }, { status: 401 });
+        } else if (status === 403) {
+            const data = await response.json().catch(() => ({ error: "Forbidden" }));
+            return NextResponse.json({ error: data.error || "Forbidden" }, { status: 403 });
         } else {
             const errorText = await response.text().catch(() => "Unknown error");
             console.error(`[Proxy] Backend error (${status}): ${errorText}`);

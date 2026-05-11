@@ -25,12 +25,12 @@ export default async function Home() {
         <div className="relative z-10 max-w-5xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <span className="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-            <span className="text-[10px] font-black text-primary dark:text-accent tracking-widest uppercase">
+            <span className="text-[10px] font-bold text-primary dark:text-accent tracking-wider uppercase">
               V2.0 Neural Engine Live
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-8xl font-black text-foreground tracking-tightest mb-8 leading-[1.05] animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <h1 className="text-5xl md:text-8xl font-bold text-foreground tracking-tight mb-8 leading-[1.05] animate-in fade-in slide-in-from-bottom-8 duration-700">
             Dominate search <br className="hidden md:block" />
             with <span className="text-accent italic">Intelligence.</span>
           </h1>
@@ -42,7 +42,7 @@ export default async function Home() {
 
           <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-12 duration-1000">
              <SearchForm />
-             <div className="mt-4 flex items-center justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-slate-600">
+             <div className="mt-4 flex items-center justify-center gap-6 text-[10px] font-bold uppercase tracking-wider text-slate-600">
                 <span className="flex items-center gap-1.5"><ShieldCheck size={14} className="text-primary" /> Enterprise Grade</span>
                 <span className="flex items-center gap-1.5"><Globe size={14} className="text-primary" /> Global Reach</span>
                 <span className="flex items-center gap-1.5"><Zap size={14} className="text-primary" /> Real-time Analysis</span>
@@ -55,10 +55,10 @@ export default async function Home() {
       <section className="py-32 bg-background/50 backdrop-blur-sm z-10 relative px-6 border-y border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
-            <h2 className="text-[10px] font-black text-primary tracking-widest uppercase mb-4">
+            <h2 className="text-[10px] font-bold text-primary tracking-wider uppercase mb-4">
               Core Platform
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black text-foreground mb-6 tracking-tightest">
+            <h3 className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
               Everything you need to <span className="text-accent italic">scale.</span>
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto font-medium leading-relaxed">
@@ -67,31 +67,31 @@ export default async function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-10 border border-white/5 shadow-saas hover:border-primary/50 transition-all">
+            <div className="group bg-card/50 backdrop-blur-xl rounded-2xl p-10 border border-white/5 shadow-sm hover:border-primary/50 transition-all">
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                  <Search size={28} className="text-primary" />
               </div>
-              <h4 className="text-2xl font-black text-foreground mb-4 tracking-tight">Smart Keywords</h4>
+              <h4 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Smart Keywords</h4>
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Discover high-intent, low-competition keywords tailored to your niche using neural search patterns.
               </p>
             </div>
 
-            <div className="group bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-10 border border-white/5 shadow-saas hover:border-primary/50 transition-all">
+            <div className="group bg-card/50 backdrop-blur-xl rounded-2xl p-10 border border-white/5 shadow-sm hover:border-primary/50 transition-all">
               <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                  <Zap size={28} className="text-accent" />
               </div>
-              <h4 className="text-2xl font-black text-foreground mb-4 tracking-tight">Auto-Optimizer</h4>
+              <h4 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Auto-Optimizer</h4>
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Let our AI detect and fix technical bottlenecks automatically before search engines crawl your site.
               </p>
             </div>
 
-            <div className="group bg-card/50 backdrop-blur-xl rounded-[2.5rem] p-10 border border-white/5 shadow-saas hover:border-primary/50 transition-all">
+            <div className="group bg-card/50 backdrop-blur-xl rounded-2xl p-10 border border-white/5 shadow-sm hover:border-primary/50 transition-all">
               <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
                  <BarChart3 size={28} className="text-primary" />
               </div>
-              <h4 className="text-2xl font-black text-foreground mb-4 tracking-tight">Neural Insights</h4>
+              <h4 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Neural Insights</h4>
               <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Clear, architectural reports delivered with precision. No jargon, just actionable intelligence.
               </p>
@@ -107,7 +107,7 @@ export default async function Home() {
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/10 rounded-full blur-[100px]" />
 
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-7xl font-black text-foreground mb-8 tracking-tightest leading-tight">
+            <h2 className="text-4xl md:text-7xl font-bold text-foreground mb-8 tracking-tight leading-tight">
               Ready to master <br /> your <span className="text-accent italic">Search.</span>
             </h2>
             <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl max-w-xl mx-auto mb-12 font-medium leading-relaxed">
@@ -116,14 +116,14 @@ export default async function Home() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <Link
                 href="/auth/register"
-                className="w-full sm:w-auto px-10 py-5 text-sm font-black text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group uppercase tracking-widest"
+                className="w-full sm:w-auto px-10 py-5 text-sm font-bold text-white bg-primary rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20 flex items-center justify-center gap-2 group uppercase tracking-wider"
               >
                 Get Started for Free
                 <Zap size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/pricing"
-                className="w-full sm:w-auto px-10 py-5 text-sm font-black text-foreground bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 uppercase tracking-widest"
+                className="w-full sm:w-auto px-10 py-5 text-sm font-bold text-foreground bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-2 uppercase tracking-wider"
               >
                 View Pricing
                 <ArrowRight size={18} />
@@ -134,7 +134,7 @@ export default async function Home() {
       </section>
 
       <footer className="py-12 border-t border-white/5 text-center">
-         <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">
+         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
             © 2026 STRIVE AI SEO Solutions. Precision Intelligence for the modern web.
          </p>
       </footer>

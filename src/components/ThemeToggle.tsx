@@ -10,7 +10,8 @@ export default function ThemeToggle() {
 
   //Only show the button after the browser has loaded to prevent hydration errors
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
   //if we havent mounted yet, render a "placeholder" with the same dimensions
   //to prevent the layout shift

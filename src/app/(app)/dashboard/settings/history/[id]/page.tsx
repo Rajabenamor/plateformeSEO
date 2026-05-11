@@ -89,7 +89,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
           </div>
 
           <div className="shrink-0 flex flex-col items-center md:items-end">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">SEO Score</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">SEO Score</span>
             <div className="relative">
                 <div className={`text-5xl md:text-6xl font-bold tracking-tighter ${report.seo_score && report.seo_score >= 80 ? 'text-emerald-500' : 'text-orange-500'}`}>
                    {report.seo_score || '--'}<span className="text-xl text-muted-foreground/40">/100</span>

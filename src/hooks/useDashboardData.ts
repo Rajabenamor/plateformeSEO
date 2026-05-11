@@ -15,7 +15,10 @@ export function useDashboardData() {
   const isChanging = searchParams.get("change") === "true";
   const isRefreshing = searchParams.get("refresh") === "true";
 
-  const [data, setData] = useState<DashboardData | null>(globalDashboardCache);
+  // Prevent cross-URL data bleed on initial mount
+  const [data, setData] = useState<DashboardData | null>(
+    globalDashboardCache?.analyzed_url === targetUrl ? globalDashboardCache : null
+  );
   
   // To prevent flickering: only start as loading if we have a URL AND no data yet
   const [loading, setLoading] = useState(false);
@@ -24,6 +27,16 @@ export function useDashboardData() {
 
   const [fixStatuses, setFixStatuses] = useState<Record<string, 'idle' | 'fixing' | 'success' | 'error'>>({});
   const [prUrls, setPrUrls] = useState<Record<string, string>>({});
+
+  // If targetUrl changes, immediately clear local state if it doesn't match
+  useEffect(() => {
+    if (targetUrl) {
+      if (data && data.analyzed_url !== targetUrl) {
+        setData(null);
+      }
+      setError(null);
+    }
+  }, [targetUrl]);
 
   // Persistence: Load from localStorage on mount/targetUrl change
   useEffect(() => {
@@ -114,8 +127,6 @@ export function useDashboardData() {
     setLoading(true);
     setError(null);
     
-    Cookies.set("last_analyzed_url", targetUrl, { expires: 7, path: "/" });
-    
     console.log(`[useDashboardData] Initiating fresh fetch for ${targetUrl}`);
 
     fetch(`/api/proxy/analysis?url=${encodeURIComponent(targetUrl)}`, {
@@ -126,12 +137,31 @@ export function useDashboardData() {
       }
     })
       .then(async (res) => {
-        if (!res.ok) throw new Error("Fetch failed");
+        if (!res.ok) {
+           let errorMsg = "Fetch failed";
+           let registeredDomain = null;
+           try {
+               const errorData = await res.json();
+               if (errorData.error) errorMsg = errorData.error;
+               if (errorData.registered_domain) registeredDomain = errorData.registered_domain;
+           } catch (e) {
+               // ignore json parse error
+           }
+           
+           // Attach registered domain to the error message string using a special delimiter so the UI can parse it
+           if (registeredDomain) {
+               throw new Error(`${errorMsg}|_DOMAIN_|${registeredDomain}`);
+           }
+           throw new Error(errorMsg);
+        }
         return res.json();
       })
       .then((responseData) => {
         const rawData = responseData.data || responseData;
         console.log("[useDashboardData] Success! Data received:", rawData);
+        
+        // Only set the cookie if the analysis was actually successful
+        Cookies.set("last_analyzed_url", targetUrl, { expires: 7, path: "/" });
         
         const mappedData: DashboardData = {
           ...rawData,
@@ -156,7 +186,7 @@ export function useDashboardData() {
       })
       .catch((err) => {
         console.warn("[useDashboardData] Fetch failed.", err);
-        setError("Failed to load dashboard data. Please try again.");
+        setError(err.message || "Failed to load dashboard data. Please try again.");
         setLoading(false);
       });
   }, [targetUrl, initialCheck, isChanging, isRefreshing]);

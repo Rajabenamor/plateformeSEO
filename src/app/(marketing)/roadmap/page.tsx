@@ -16,12 +16,12 @@ export default function RoadmapPage() {
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/10 blur-[120px] rounded-full" />
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
+        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-colors group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back
         </Link>
         
         <header className="mb-24">
-          <h1 className="text-5xl md:text-7xl font-black text-foreground mb-6 leading-[1.1] tracking-tightest">The Strive <span className="text-accent italic">Roadmap.</span></h1>
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">The Strive <span className="text-accent italic">Roadmap.</span></h1>
           <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
             Transparent development. Building the future of SEO together.
           </p>
@@ -41,10 +41,10 @@ export default function RoadmapPage() {
                 {i < ROADMAP_ITEMS.length - 1 && <div className="w-px h-full bg-white/5 mt-4 group-hover:bg-primary/20 transition-colors"></div>}
               </div>
               <div className="pb-16 pt-1">
-                <span className={`text-[10px] font-black uppercase tracking-widest mb-3 block ${
+                <span className={`text-[10px] font-bold uppercase tracking-wider mb-3 block ${
                     item.status === 'now' ? 'text-accent' : 'text-slate-600'
                 }`}>{item.q}</span>
-                <h3 className="text-2xl font-black text-foreground mb-4 tracking-tight group-hover:text-primary transition-colors">{item.title}</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-4 tracking-tight group-hover:text-primary transition-colors">{item.title}</h3>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xl font-medium">{item.desc}</p>
               </div>
             </div>
@@ -55,9 +55,9 @@ export default function RoadmapPage() {
            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent shadow-lg shadow-accent/20 text-primary mb-6">
               <Zap size={24} />
            </div>
-           <h2 className="text-2xl font-black text-foreground mb-4 tracking-tight">Have a feature request?</h2>
+           <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">Have a feature request?</h2>
            <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 font-medium">We build for our users. Join the conversation on our roadmap.</p>
-           <Link href="/contact" className="bg-primary text-white px-10 py-4 rounded-xl font-black hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 inline-block text-xs uppercase tracking-widest">
+           <Link href="/contact" className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 inline-block text-xs uppercase tracking-wider">
               Contact Product Team
            </Link>
         </footer>

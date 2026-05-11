@@ -6,7 +6,7 @@ export default function LogoutButton(){
         <form action={logoutAction}>
             <button
             type="submit"
-            className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-widest cursor-pointer"
+            className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider cursor-pointer"
             >
                 <LogOut size={16}/>
                 Log Out

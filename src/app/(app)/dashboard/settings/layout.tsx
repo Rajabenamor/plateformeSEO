@@ -17,7 +17,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
   return (
     <div className="flex flex-col md:flex-row gap-8 animate-in fade-in duration-500">
       <aside className="w-full md:w-64 shrink-0">
-        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 px-3">
+        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-6 px-3">
           Account Control
         </h2>
         <nav className="flex flex-col gap-1">
@@ -45,7 +45,7 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
         </nav>
       </aside>
 
-      <main className="flex-1 bg-card border border-white/5 rounded-2xl shadow-saas p-6 lg:p-8">
+      <main className="flex-1 bg-card border border-white/5 rounded-2xl shadow-sm p-6 lg:p-8">
         {children}
       </main>
     </div>

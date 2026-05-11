@@ -10,8 +10,6 @@
   --color-card: #F8FAFC;
   --color-card-foreground: #0F172A;
   --color-border: rgba(0, 0, 0, 0.05);
-  
-  --shadow-saas: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .dark {
@@ -20,7 +18,6 @@
   --color-card: #0F172A;
   --color-card-foreground: #F8FAFC;
   --color-border: rgba(255, 255, 255, 0.05);
-  --shadow-saas: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
   color-scheme: dark;
 }
 

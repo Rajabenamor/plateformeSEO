@@ -46,7 +46,7 @@ export default function ScoreCard({ score }: ScoreCardProps) {
           <span className="text-4xl font-bold text-foreground tracking-tighter">
             {score || "--"}
           </span>
-          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">of 100</p>
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">of 100</p>
         </div>
       </div>
 

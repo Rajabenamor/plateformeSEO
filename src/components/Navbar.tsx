@@ -14,7 +14,7 @@ async function AuthLinks() {
       <div className="flex items-center gap-4">
         <Link
             href="/dashboard"
-            className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-accent uppercase tracking-widest transition-colors"
+            className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-accent uppercase tracking-wider transition-colors"
           >
             Dashboard
           </Link>
@@ -27,13 +27,13 @@ async function AuthLinks() {
     <div className="flex items-center gap-3">
       <Link
         href="/auth/login"
-        className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-foreground transition-all uppercase tracking-widest"
+        className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-foreground transition-all uppercase tracking-wider"
       >
         Sign In
       </Link>
       <Link
         href="/auth/register"
-        className="px-6 py-2 text-xs font-bold text-white bg-primary rounded-lg hover:opacity-90 transition-all uppercase tracking-widest shadow-lg shadow-primary/20"
+        className="px-6 py-2 text-xs font-bold text-white bg-primary rounded-lg hover:opacity-90 transition-all uppercase tracking-wider shadow-lg shadow-primary/20"
       >
         Get Started
       </Link>
@@ -60,18 +60,18 @@ export default async function Navbar() {
           <div className="hidden md:flex items-center gap-8">
             <Link
               href="/features"
-              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-widest"
+              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-wider"
             >
               Features
             </Link>
             <Link
               href="/pricing"
-              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-widest"
+              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-wider"
             >
               Pricing
             </Link>
             <div className="relative group flex items-center">
-              <button className="flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors py-2 uppercase tracking-widest cursor-pointer">
+              <button className="flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors py-2 uppercase tracking-wider cursor-pointer">
                 Company
                 <ChevronDown
                   size={14}
@@ -82,19 +82,19 @@ export default async function Navbar() {
                 <div className="py-2 flex flex-col">
                   <Link
                     href="/about"
-                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-wider"
                   >
                     About Us
                   </Link>
                   <Link
                     href="/blog"
-                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-wider"
                   >
                     Blog
                   </Link>
                   <Link
                     href="/contact"
-                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-widest"
+                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-wider"
                   >
                     Contact
                   </Link>

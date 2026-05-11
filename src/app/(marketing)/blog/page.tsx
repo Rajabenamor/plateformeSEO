@@ -39,12 +39,12 @@ export default function BlogPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/10 blur-[120px] rounded-full" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-all group">
+        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-accent mb-12 transition-all group">
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Home
         </Link>
         
         <header className="mb-20 max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tightest text-foreground mb-6 leading-[1.1]">The Strive <span className="text-accent italic">Blog.</span></h1>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-6 leading-[1.1]">The Strive <span className="text-accent italic">Blog.</span></h1>
           <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl max-w-2xl font-medium leading-relaxed">
             Expert technical advice on SEO, AI intelligence, and scaling your organic growth.
           </p>
@@ -53,26 +53,26 @@ export default function BlogPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {BLOG_POSTS.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
-              <div className={`h-64 ${post.imageColor} rounded-3xl mb-8 transition-all duration-500 group-hover:scale-[1.02] group-hover:rotate-1 shadow-2xl shadow-black/20 flex items-center justify-center relative overflow-hidden`}>
+              <div className={`h-64 ${post.imageColor} rounded-2xl mb-8 transition-all duration-500 group-hover:scale-[1.02] group-hover:rotate-1 shadow-2xl shadow-black/20 flex items-center justify-center relative overflow-hidden`}>
                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-                 <span className="text-white/20 font-black text-6xl uppercase tracking-tighter italic relative z-10">{post.category.split(' ')[0]}</span>
+                 <span className="text-white/20 font-bold text-6xl uppercase tracking-tighter italic relative z-10">{post.category.split(' ')[0]}</span>
                  <div className="absolute bottom-4 right-4 bg-white/10 backdrop-blur-md p-2 rounded-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Zap size={20} className="text-white" />
                  </div>
               </div>
               <div className="space-y-4 px-2">
-                <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-accent">
+                <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-accent">
                   <span>{post.category}</span>
                   <span className="w-1 h-1 rounded-full bg-slate-600"></span>
                   <span className="flex items-center gap-1 text-slate-500"><Clock size={12}/> {post.readTime}</span>
                 </div>
-                <h2 className="text-2xl font-black text-foreground group-hover:text-accent transition-colors leading-tight tracking-tight">
+                <h2 className="text-2xl font-bold text-foreground group-hover:text-accent transition-colors leading-tight tracking-tight">
                   {post.title}
                 </h2>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 font-medium">
                   {post.excerpt}
                 </p>
-                <div className="flex items-center gap-1 text-primary dark:text-accent font-black text-xs pt-2 uppercase tracking-widest group-hover:gap-2 transition-all">
+                <div className="flex items-center gap-1 text-primary dark:text-accent font-bold text-xs pt-2 uppercase tracking-wider group-hover:gap-2 transition-all">
                   Read Article <ChevronRight size={14} />
                 </div>
               </div>

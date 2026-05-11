@@ -58,10 +58,10 @@ export default function PricingPage() {
 
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-20">
-          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-primary dark:hover:text-accent mb-8 transition-colors group">
+          <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500 hover:text-primary dark:hover:text-accent mb-8 transition-colors group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> BACK TO HOME
           </Link>
-          <h1 className="text-5xl md:text-7xl font-black text-foreground mb-6 tracking-tightest leading-[1.1]">
+          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 tracking-tight leading-[1.1]">
             Ready to scale your <span className="text-accent italic">Traffic?</span>
           </h1>
           <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
@@ -73,25 +73,25 @@ export default function PricingPage() {
           {PLANS.map((plan, index) => (
             <div 
               key={index} 
-              className={`relative flex flex-col p-8 md:p-10 rounded-3xl transition-all duration-300 border backdrop-blur-xl ${
+              className={`relative flex flex-col p-8 md:p-10 rounded-2xl transition-all duration-300 border backdrop-blur-xl ${
                 plan.highlight 
                   ? "bg-primary/10 border-primary/50 shadow-2xl shadow-primary/20 scale-105 z-10" 
-                  : "bg-card/50 border-white/5 shadow-saas hover:border-white/20"
+                  : "bg-card/50 border-white/5 shadow-sm hover:border-white/20"
               }`}
             >
               {plan.highlight && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent text-primary-foreground text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent text-primary-foreground text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg">
                   Recommended
                 </div>
               )}
 
               <div className="mb-8">
-                <h3 className={`text-xl font-black mb-2 uppercase tracking-widest ${plan.highlight ? "text-accent" : "text-slate-500"}`}>
+                <h3 className={`text-xl font-bold mb-2 uppercase tracking-wider ${plan.highlight ? "text-accent" : "text-slate-500"}`}>
                   {plan.name}
                 </h3>
                 <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-5xl font-black tracking-tightest">${plan.price}</span>
-                  <span className="text-sm text-slate-500 uppercase font-bold tracking-widest">/mo</span>
+                  <span className="text-5xl font-bold tracking-tight">${plan.price}</span>
+                  <span className="text-sm text-slate-500 uppercase font-bold tracking-wider">/mo</span>
                 </div>
                 <p className="text-sm text-slate-400 font-medium leading-relaxed">
                   {plan.description}
@@ -99,7 +99,7 @@ export default function PricingPage() {
               </div>
 
               <div className="flex-grow space-y-4 mb-10">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-600">What's included:</p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-600">What's included:</p>
                 <ul className="space-y-4">
                   {plan.features.map((feature, fIndex) => (
                     <li key={fIndex} className="flex items-start gap-3 text-sm font-medium">
@@ -122,7 +122,7 @@ export default function PricingPage() {
 
               <Link 
                 href={plan.name === "Agency" ? "/contact" : "/auth/register"} 
-                className={`block text-center py-4 rounded-xl font-black transition-all shadow-lg ${
+                className={`block text-center py-4 rounded-xl font-bold transition-all shadow-lg ${
                   plan.highlight 
                     ? "bg-accent text-primary-foreground hover:bg-accent/90 shadow-accent/20" 
                     : "bg-white/5 text-foreground border border-white/10 hover:bg-white/10 shadow-black/20"

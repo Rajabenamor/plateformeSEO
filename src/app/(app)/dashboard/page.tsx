@@ -28,6 +28,11 @@ function DashboardContent() {
 
   const [isChanging, setIsChanging] = React.useState(false);
 
+  // Close the change website form automatically when the URL updates
+  React.useEffect(() => {
+    setIsChanging(false);
+  }, [targetUrl]);
+
   // 0. Prevent flicker: Wait for the hook to resolve its initial URL/cookie check
   if (initialCheck) {
     return null;
@@ -68,6 +73,10 @@ function DashboardContent() {
   }
 
   if (error) {
+    const errorParts = error.split('|_DOMAIN_|');
+    const displayError = errorParts[0];
+    const registeredDomain = errorParts.length > 1 ? errorParts[1] : null;
+
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-500">
         <div className="max-w-md w-full space-y-6">
@@ -76,13 +85,32 @@ function DashboardContent() {
           </div>
           <div className="space-y-2">
             <h1 className="text-xl font-bold text-foreground">Analysis Error</h1>
-            <p className="text-muted-foreground font-medium">{error}</p>
+            <p className="text-sm text-muted-foreground font-medium leading-relaxed">{displayError}</p>
           </div>
+          
+          {registeredDomain && (
+            <div className="pt-2">
+               <Link 
+                 href={`/dashboard?url=${encodeURIComponent(registeredDomain)}`}
+                 className="px-6 py-3 bg-primary text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-primary/90 transition-all shadow-md inline-flex items-center gap-2"
+               >
+                 Return to {registeredDomain}
+               </Link>
+            </div>
+          )}
+
+          <div className="pt-4 pb-2">
+             <div className="bg-card p-2 rounded-xl border border-border shadow-sm text-left">
+                <p className="text-xs font-bold text-muted-foreground px-2 mb-2 uppercase tracking-wider">Try a different website</p>
+                <SearchForm />
+             </div>
+          </div>
+          
           <button 
             onClick={() => window.location.reload()}
-            className="px-6 py-2.5 bg-primary text-primary-foreground rounded-lg font-bold hover:bg-primary/90 transition-all shadow-md"
+            className="text-xs font-bold text-muted-foreground hover:text-foreground transition-all uppercase tracking-wider"
           >
-            Retry Analysis
+            Or click here to reload page
           </button>
         </div>
       </div>

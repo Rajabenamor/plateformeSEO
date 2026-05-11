@@ -45,7 +45,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
               
               <div className="bg-muted/30 rounded-xl p-3 border border-border text-xs mb-4">
                 <p className="text-muted-foreground mb-1">Target Keyword:</p>
-                <p className="font-bold text-foreground">"{stats.missed_clicks[0].keyword}"</p>
+                <p className="font-bold text-foreground">&quot;{stats.missed_clicks[0].keyword}&quot;</p>
               </div>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed font-medium">
@@ -136,7 +136,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
                 </span>
               </div>
               <h3 className="text-lg font-bold text-foreground mb-1 tracking-tighter truncate">
-                "{stats.cannibalization[0].keyword}"
+                &quot;{stats.cannibalization[0].keyword}&quot;
               </h3>
               <p className="text-sm font-semibold text-muted-foreground mb-4">Competing internal pages</p>
               
@@ -168,7 +168,7 @@ export default function EnrichedStatsGrid({ stats }: EnrichedStatsGridProps) {
               <div className="flex flex-col md:flex-row gap-6">
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-foreground mb-1 tracking-tighter">
-                    Opportunities for "{stats.competitor_blind_spots[0].target_keyword}"
+                    Opportunities for &quot;{stats.competitor_blind_spots[0].target_keyword}&quot;
                   </h3>
                   <p className="text-sm font-semibold text-muted-foreground mb-4">Topic gaps identified against top competitors</p>
                   <p className="text-xs text-muted-foreground leading-relaxed font-medium">

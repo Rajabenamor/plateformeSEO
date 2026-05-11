@@ -52,13 +52,13 @@ function VerifyEmailContent() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full" />
 
-      <div className="w-full max-w-md bg-card/50 backdrop-blur-xl border border-white/5 rounded-3xl p-8 md:p-12 shadow-saas relative z-10 text-center">
+      <div className="w-full max-w-md bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl p-8 md:p-12 shadow-sm relative z-10 text-center">
         {status === "loading" && (
           <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex justify-center">
               <Loader2 size={64} className="text-primary animate-spin" />
             </div>
-            <h2 className="text-2xl font-black text-foreground tracking-tight">Verifying your email</h2>
+            <h2 className="text-2xl font-bold text-foreground tracking-tight">Verifying your email</h2>
             <p className="text-slate-500 font-medium">Securing your account with technical precision.</p>
           </div>
         )}
@@ -71,10 +71,10 @@ function VerifyEmailContent() {
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-black text-foreground tracking-tight mb-2">Email Verified!</h2>
+              <h2 className="text-3xl font-bold text-foreground tracking-tight mb-2">Email Verified!</h2>
               <p className="text-slate-500 font-medium">Your account identity has been confirmed.</p>
             </div>
-            <p className="text-xs text-slate-600 font-bold uppercase tracking-widest">Redirecting to profile...</p>
+            <p className="text-xs text-slate-600 font-bold uppercase tracking-wider">Redirecting to profile...</p>
           </div>
         )}
 
@@ -86,7 +86,7 @@ function VerifyEmailContent() {
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-black text-foreground tracking-tight mb-2">Invalid Link</h2>
+              <h2 className="text-3xl font-bold text-foreground tracking-tight mb-2">Invalid Link</h2>
               <p className="text-slate-500 font-medium">This verification link has expired or is invalid.</p>
             </div>
             <Link
@@ -101,7 +101,7 @@ function VerifyEmailContent() {
 
         <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-center gap-3">
            <Zap size={16} className="text-primary" />
-           <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">STRIVE Identity Protocol V2</span>
+           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">STRIVE Identity Protocol V2</span>
         </div>
       </div>
     </div>

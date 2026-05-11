@@ -43,7 +43,7 @@ export default function LoginPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full" />
       
-      <div className="w-full max-w-[1000px] grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-3xl overflow-hidden shadow-saas relative z-10">
+      <div className="w-full max-w-[1000px] grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-sm relative z-10">
         
         {/* Left Side: Brand & Marketing */}
         <div className="hidden md:flex flex-col justify-between p-12 bg-primary/5 border-r border-white/5">
@@ -52,12 +52,12 @@ export default function LoginPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
                 <Zap size={22} className="text-white" />
               </div>
-              <span className="text-xl font-black tracking-tightest text-foreground uppercase">
+              <span className="text-xl font-bold tracking-tight text-foreground uppercase">
                 STRIVE<span className="text-accent italic">.</span>
               </span>
             </Link>
 
-            <h1 className="text-4xl lg:text-5xl font-black text-foreground leading-[1.1] mb-6 tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] mb-6 tracking-tight">
               Precision analytics for the <span className="text-accent">modern web.</span>
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed max-w-md">
@@ -69,15 +69,15 @@ export default function LoginPage() {
             <div className="flex gap-12">
               <div>
                 <p className="text-2xl font-bold text-foreground">99.8%</p>
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Crawl Accuracy</p>
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Crawl Accuracy</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">24ms</p>
-                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Query Latency</p>
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Query Latency</p>
               </div>
             </div>
             
-            <div className="pt-6 border-t border-white/5 flex items-center gap-4 text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+            <div className="pt-6 border-t border-white/5 flex items-center gap-4 text-[10px] text-slate-500 uppercase tracking-wider font-bold">
               <span>V2.4.0 Blueprints</span>
               <span className="h-1 w-1 rounded-full bg-slate-500" />
               <span className="text-accent">System Status: Optimal</span>
@@ -88,7 +88,7 @@ export default function LoginPage() {
         {/* Right Side: Login Form */}
         <div className="p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-10 text-center md:text-left">
-            <h2 className="text-3xl font-black text-foreground mb-2 tracking-tight">Welcome Back</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-2 tracking-tight">Welcome Back</h2>
             <p className="text-slate-400 font-medium">Log in to your SEO intelligence dashboard.</p>
           </div>
 
@@ -100,7 +100,7 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-2">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider ml-1">
                 Username
               </label>
               <input
@@ -118,12 +118,12 @@ export default function LoginPage() {
             
             <div className="space-y-2">
               <div className="flex justify-between items-center px-1">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                   Password
                 </label>
                 <Link
                   href="/auth/forgot-password"
-                  className="text-[10px] font-bold text-accent uppercase tracking-widest hover:text-accent/80 transition-colors"
+                  className="text-[10px] font-bold text-accent uppercase tracking-wider hover:text-accent/80 transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -168,7 +168,7 @@ export default function LoginPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/10" />
             </div>
-            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
+            <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-wider">
               <span className="bg-[#0c1222] px-4 text-slate-500">Or continue with</span>
             </div>
           </div>

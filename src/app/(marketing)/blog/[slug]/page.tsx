@@ -67,7 +67,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
           <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-[#15418c] text-[10px] font-bold uppercase tracking-wider mb-6">
             {post.category}
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 leading-tight mb-8">
             {post.title}
           </h1>
           
@@ -101,7 +101,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
         </div>
 
         {/* Footer CTA */}
-        <footer className="mt-20 p-8 md:p-12 bg-[#15418c] rounded-[2.5rem] text-center text-white shadow-2xl shadow-blue-900/20">
+        <footer className="mt-20 p-8 md:p-12 bg-[#15418c] rounded-2xl text-center text-white shadow-2xl shadow-blue-900/20">
           <h3 className="text-2xl font-bold mb-4">Ready to boost your rankings?</h3>
           <p className="text-blue-100 mb-8 opacity-80">Let our AI analyze your site for free today.</p>
           <Link 

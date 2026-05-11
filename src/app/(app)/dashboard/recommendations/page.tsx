@@ -6,7 +6,9 @@ import { AlertCircle, ArrowLeft, CheckCircle2, ChevronRight, Clock, Zap, FileCod
 import Link from "next/link";
 import React from "react";
 
-export default function RecommendationsPage() {
+import { Suspense } from "react";
+
+function RecommendationsContent() {
   const { data, loading, initialCheck, error, targetUrl, handleFixNow, fixStatuses, prUrls } = useDashboardData();
 
   if (initialCheck) {
@@ -87,12 +89,12 @@ export default function RecommendationsPage() {
         <div className="flex items-center gap-3">
             <div className="px-4 py-2 bg-slate-900 border border-white/5 rounded-xl flex items-center gap-3">
                 <div className="text-right">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Findings</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Total Findings</p>
                     <p className="text-sm font-bold text-foreground">{recommendations.length}</p>
                 </div>
                 <div className="h-8 w-px bg-white/5" />
                 <div className="text-right">
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Fixed Today</p>
+                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Fixed Today</p>
                     <p className="text-sm font-bold text-green-500">0</p>
                 </div>
             </div>
@@ -101,7 +103,7 @@ export default function RecommendationsPage() {
 
       {/* RECOMMENDATIONS GRID */}
       {recommendations.length === 0 ? (
-        <div className="bg-card/30 border border-white/5 rounded-3xl p-12 text-center backdrop-blur-sm">
+        <div className="bg-card/30 border border-white/5 rounded-2xl p-12 text-center backdrop-blur-sm">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-green-500/10 text-green-500 mb-6">
                 <CheckCircle2 size={32} />
             </div>
@@ -125,10 +127,10 @@ export default function RecommendationsPage() {
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* LEFT: Impact Score */}
                   <div className="shrink-0 flex md:flex-col items-center justify-center gap-2 md:w-20">
-                    <div className="w-12 h-12 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center text-lg font-black text-primary shadow-inner">
+                    <div className="w-12 h-12 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center text-lg font-bold text-primary shadow-inner">
                         {fix.impact_score || 8}
                     </div>
-                    <span className="text-[9px] font-black uppercase tracking-tighter text-slate-500">Impact</span>
+                    <span className="text-[9px] font-bold uppercase tracking-tighter text-slate-500">Impact</span>
                   </div>
 
                   {/* CENTER: Details */}
@@ -138,11 +140,11 @@ export default function RecommendationsPage() {
                         {fix.title}
                       </h3>
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-500 text-[9px] font-bold uppercase tracking-widest border border-amber-500/10 flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-500 text-[9px] font-bold uppercase tracking-wider border border-amber-500/10 flex items-center gap-1">
                            <Clock size={10} />
                            {fix.effort_level || 'Low Effort'}
                         </span>
-                        <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-50 text-[9px] font-bold uppercase tracking-widest border border-blue-500/10 flex items-center gap-1">
+                        <span className="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-50 text-[9px] font-bold uppercase tracking-wider border border-blue-500/10 flex items-center gap-1">
                            <FileCode size={10} />
                            {fix.target_file || 'Page Structure'}
                         </span>
@@ -214,7 +216,7 @@ export default function RecommendationsPage() {
       )}
 
       {/* FOOTER ADVISORY */}
-      <div className="mt-12 p-6 rounded-3xl border border-white/5 bg-slate-900/20 flex flex-col md:flex-row items-center gap-6">
+      <div className="mt-12 p-6 rounded-2xl border border-white/5 bg-slate-900/20 flex flex-col md:flex-row items-center gap-6">
         <div className="w-12 h-12 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
             <Zap size={24} />
         </div>
@@ -226,5 +228,13 @@ export default function RecommendationsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RecommendationsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RecommendationsContent />
+    </Suspense>
   );
 }
