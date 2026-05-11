@@ -84,7 +84,7 @@ export default function HistoryPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {record.status === 'COMPLETED' && (
-                      <Link href={`/dashboard/history/${record.id}`} className="text-blue-600 hover:text-blue-900">
+                      <Link href={`/dashboard/settings/history/${record.id}`} className="text-blue-600 hover:text-blue-900">
                         View Report →
                       </Link>
                     )}

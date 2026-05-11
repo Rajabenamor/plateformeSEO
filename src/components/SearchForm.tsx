@@ -10,7 +10,7 @@ export default function SearchForm() {
   return (
     <div className="w-full relative group">
       {state?.error && (
-        <div className="absolute -top-12 left-0 right-0 flex items-center gap-2 text-red-500 bg-red-500/5 px-4 py-2 rounded-lg text-xs font-bold border border-red-500/10 animate-in fade-in slide-in-from-bottom-2">
+        <div className="absolute -top-12 left-0 right-0 flex items-center gap-2 text-red-500 bg-red-500/5 px-4 py-2 rounded-lg text-xs font-semibold border border-red-500/10 animate-in fade-in slide-in-from-bottom-2">
           <AlertCircle size={14} />
           {state.error}
         </div>
@@ -23,7 +23,7 @@ export default function SearchForm() {
         }`}
       >
         <div className="relative flex-1 flex items-center">
-          <div className="absolute left-4 text-slate-500 group-focus-within:text-primary transition-colors pointer-events-none">
+          <div className="absolute left-4 text-muted-foreground group-focus-within:text-primary transition-colors pointer-events-none">
             <Globe size={16} />
           </div>
 
@@ -32,19 +32,19 @@ export default function SearchForm() {
             type="text"
             autoComplete="off"
             placeholder="target-domain.com"
-            className={`w-full bg-slate-950/50 border backdrop-blur-md rounded-xl py-3 pl-11 pr-32 text-sm font-medium transition-all outline-none placeholder:text-slate-600 ${
+            className={`w-full bg-muted/50 border rounded-lg py-3 pl-11 pr-32 text-sm font-medium transition-all outline-none placeholder:text-muted-foreground/50 ${
               state?.error 
                 ? "border-red-500/50 ring-2 ring-red-500/10" 
-                : "border-white/10 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 shadow-inner"
+                : "border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/5"
             }`}
           />
 
           <div className="absolute right-1.5 flex items-center gap-2">
             <button
               type="submit"
-              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-2 shadow-sm"
             >
-              Start Analysis
+              Analyze
               <ArrowRight size={12} className="opacity-70" />
             </button>
           </div>
@@ -54,15 +54,15 @@ export default function SearchForm() {
       <div className="mt-3 flex items-center justify-between px-1">
          <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-               <div className="w-1.5 h-1.5 rounded-full bg-green-500/50 animate-pulse" />
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Neural Core Active</span>
+               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
+               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Ready for analysis</span>
             </div>
             <div className="flex items-center gap-1.5">
                <Zap size={10} className="text-amber-500/50" />
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">GPT-4o Optimized</span>
+               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">AI-Powered Audit</span>
             </div>
          </div>
-         <span className="text-[10px] font-medium text-slate-600 italic">HTTPS required for deep crawl</span>
+         <span className="text-[10px] font-medium text-muted-foreground italic">HTTPS suggested</span>
       </div>
     </div>
   );

@@ -22,6 +22,7 @@ const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
   { name: "Site Audit", href: "/dashboard/audit", icon: ClipboardCheck },
+  { name: "Analysis History", href: "/dashboard/settings/history", icon: ClipboardCheck },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -60,7 +61,7 @@ export default function Sidebar() {
       <div className="flex-1 px-3 space-y-8">
         <div>
           {!isCollapsed && (
-            <p className="px-3 mb-4 text-[10px] font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest">
+            <p className="px-3 mb-4 text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
               Core Platform
             </p>
           )}
@@ -74,13 +75,13 @@ export default function Sidebar() {
                 <Link
                   key={item.name}
                   href={href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 group ${
                     isActive
-                      ? "bg-primary text-white shadow-lg shadow-primary/20"
-                      : "text-slate-500 dark:text-slate-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5"
+                      ? "bg-primary text-white shadow-md shadow-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   } ${isCollapsed ? "justify-center" : ""}`}
                 >
-                  <Icon size={18} className={isActive ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"} />
+                  <Icon size={18} className={isActive ? "text-white" : "text-muted-foreground group-hover:text-primary transition-colors"} />
                   {!isCollapsed && (
                     <span className="tracking-tight">
                       {item.name}
@@ -94,20 +95,20 @@ export default function Sidebar() {
 
         <div>
           {!isCollapsed && (
-            <p className="px-3 mb-4 text-[10px] font-black text-slate-500 dark:text-slate-600 uppercase tracking-widest">
-              Security
+            <p className="px-3 mb-4 text-[10px] font-bold text-muted-foreground uppercase tracking-wider opacity-60">
+              Administration
             </p>
           )}
           <nav className="space-y-1">
              <Link
                 href={currentUrl ? `/admin?url=${encodeURIComponent(currentUrl)}` : "/admin"}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 group ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 group ${
                     pathname === "/admin" 
-                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
-                    : "text-slate-500 dark:text-slate-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-white/5"
+                    ? "bg-primary text-white shadow-md shadow-primary/10" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 } ${isCollapsed ? "justify-center" : ""}`}
               >
-                <ShieldCheck size={18} className={pathname === "/admin" ? "text-white" : "text-slate-400 group-hover:text-primary transition-colors"} />
+                <ShieldCheck size={18} className={pathname === "/admin" ? "text-white" : "text-muted-foreground group-hover:text-primary transition-colors"} />
                 {!isCollapsed && <span className="tracking-tight">Admin Console</span>}
              </Link>
           </nav>
@@ -117,7 +118,7 @@ export default function Sidebar() {
       {/* Collapse Toggle */}
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-24 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-slate-500 hover:text-primary shadow-sm transition-all z-50 cursor-pointer"
+        className="absolute -right-3 top-24 flex h-6 w-6 items-center justify-center rounded-full border border-border bg-background text-muted-foreground hover:text-primary shadow-sm transition-all z-50 cursor-pointer"
       >
         {isCollapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
@@ -125,7 +126,7 @@ export default function Sidebar() {
       {/* User Info / Footer */}
       <div className="p-3 border-t border-border">
         <form action={logoutAction}>
-          <button className={`w-full flex items-center gap-3 p-3 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""}`}>
+          <button className={`w-full flex items-center gap-3 p-3 rounded-lg text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-all cursor-pointer ${isCollapsed ? "justify-center" : ""}`}>
              <LogOut size={18} />
              {!isCollapsed && <span>Log Out</span>}
           </button>

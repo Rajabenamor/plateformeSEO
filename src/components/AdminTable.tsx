@@ -109,26 +109,26 @@ export default function AdminTable({
       )}
 
       {/* users table */}
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden transition-colors">
-        <table className="w-full">
-          <thead className="bg-card border-b border-gray-200">
+      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+        <table className="w-full text-left">
+          <thead className="bg-muted/50 border-b border-border">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 User
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Role
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Joined
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase">
+              <th className="px-6 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Actions
               </th>
             </tr>
@@ -138,19 +138,19 @@ export default function AdminTable({
               const isSelf = String(user.id) === String(currentUserId);
               const canModify = !isSelf && (isSuperAdmin || !user.is_staff);
               return (
-                <tr key={user.id} className="hover:bg-primary/10">
-                  <td className="px-6 py-4 text-sm font-medium text-foreground">
+                <tr key={user.id} className="hover:bg-muted/30 transition-colors">
+                  <td className="px-6 py-4 text-sm font-semibold text-foreground">
                     {user.username}
                   </td>
-                  <td className="px-6 py-4 text-sm text-foreground/70">
+                  <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
                     {user.email}
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
                         user.is_active
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
+                          ? "bg-emerald-500/10 text-emerald-600"
+                          : "bg-red-500/10 text-red-600"
                       }`}
                     >
                       {user.is_active ? "Active" : "Inactive"}
@@ -158,16 +158,16 @@ export default function AdminTable({
                   </td>
                   <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
                         user.is_staff
-                          ? "bg-blue-100 text-blue-700"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-primary/10 text-primary"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {user.is_staff ? "Admin" : "User"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-foreground/70">
+                  <td className="px-6 py-4 text-sm text-muted-foreground font-medium">
                     {new Date(user.date_joined).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4">
@@ -177,10 +177,10 @@ export default function AdminTable({
                           <button
                             disabled={loadingId === user.id}
                             onClick={() => handleToggle(user.id)}
-                            className={`px-3 py-1 text-xs cursor-pointer font-medium rounded-lg transition-colors ${
+                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider cursor-pointer rounded-lg transition-colors ${
                               user.is_active
-                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-                                : "bg-green-100 text-green-700 hover:bg-green-200"
+                                ? "bg-amber-500/10 text-amber-600 hover:bg-amber-500/20"
+                                : "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
                             }`}
                           >
                             {user.is_active ? "Deactivate" : "Activate"}
@@ -188,21 +188,21 @@ export default function AdminTable({
                           <button
                             disabled={loadingId === user.id}
                             onClick={() => setUserToUpdate(user)}
-                            className="px-3 py-1 text-xs font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 cursor-pointer transition-colors"
+                            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer transition-colors"
                           >
                             Update
                           </button>
                           <button
                             disabled={loadingId === user.id}
                             onClick={() => setConfirmDelete(user)}
-                            className="px-3 py-1 text-xs font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 cursor-pointer transition-colors"
+                            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20 cursor-pointer transition-colors"
                           >
                             Delete
                           </button>
                         </>
                       ) : (
-                        <span className="text-xs text-gray-400 italic">
-                          {isSelf ? "You (protected)" : "Protected"}
+                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider opacity-40">
+                          {isSelf ? "Self" : "Protected"}
                         </span>
                       )}
                     </div>
