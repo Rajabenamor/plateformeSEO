@@ -51,13 +51,13 @@ export default function RecommendationsList({
                   </p>
 
                   {fix.target_file && (
-                    <div className="mb-4 inline-block bg-primary/5 text-primary text-[10px] font-bold px-3 py-1.5 rounded-md border border-primary/10 uppercase tracking-wider">
+                    <div className="mb-4 inline-block bg-primary/5 text-primary text-[10px]  px-3 py-1.5 rounded-md border border-primary/10 uppercase tracking-wider">
                       Target: {fix.target_file}
                     </div>
                   )}
 
                   {fix.code_fix && (
-                    <div className="bg-slate-950 dark:bg-black/40 text-slate-300 text-xs p-4 rounded-xl font-mono overflow-x-auto border border-border">
+                    <div className="bg-slate-950  text-white text-xs p-4 rounded-xl font-mono overflow-x-auto border border-border">
                       <code>{fix.code_fix}</code>
                     </div>
                   )}

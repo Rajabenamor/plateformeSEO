@@ -96,13 +96,19 @@ export async function saveGA4PropertyAction(propertyId: string) {
     try {
         const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/integrations/google/save-property/`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json", // Crucial for parsing the body
+            },
             body: JSON.stringify({ property_id: propertyId })
         });
         if (!res.ok) {
+            const errorDetails = await res.text();
+            console.error(`Backend returned ${res.status}:`, errorDetails);
             return { success: false, error: "Failed to save GA4 property" };
         }
         return { success: true };
     } catch (error) {
+        console.error("Network or execution error:", error);
         return { success: false, error: "Network error" };
     }
 }
