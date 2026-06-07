@@ -36,14 +36,7 @@ export default function Footer() {
                   Features
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-xs text-foreground/60 hover:text-primary transition-colors"
-                >
-                  Pricing
-                </Link>
-              </li>
+            
               <li>
                 <Link
                   href="/roadmap"
@@ -68,14 +61,7 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-xs text-foreground/60 hover:text-primary transition-colors"
-                >
-                  Blog
-                </Link>
-              </li>
+             
               <li>
                 <Link
                   href="/contact"

@@ -27,7 +27,7 @@ async function AuthLinks() {
     <div className="flex items-center gap-3">
       <Link
         href="/auth/login"
-        className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-foreground transition-all uppercase tracking-wider"
+        className="px-6 py-2 text-xs font-bold text-background bg-foreground rounded-lg  hover:opacity-90 transition-all uppercase tracking-wider shadow-lg shadow-white/20"
       >
         Sign In
       </Link>
@@ -64,12 +64,7 @@ export default async function Navbar() {
             >
               Features
             </Link>
-            <Link
-              href="/pricing"
-              className="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors uppercase tracking-wider"
-            >
-              Pricing
-            </Link>
+            
             <div className="relative group flex items-center">
               <button className="flex items-center gap-1 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-foreground transition-colors py-2 uppercase tracking-wider cursor-pointer">
                 Company
@@ -86,12 +81,7 @@ export default async function Navbar() {
                   >
                     About Us
                   </Link>
-                  <Link
-                    href="/blog"
-                    className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-wider"
-                  >
-                    Blog
-                  </Link>
+                 
                   <Link
                     href="/contact"
                     className="px-6 py-3 text-xs text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-foreground font-bold transition-colors uppercase tracking-wider"
