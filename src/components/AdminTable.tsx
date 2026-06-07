@@ -161,7 +161,7 @@ export default function AdminTable({
                       className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md ${
                         user.is_staff
                           ? "bg-primary/10 text-primary"
-                          : "bg-muted text-muted-foreground"
+                          : "bg-gray-200 text-gray-600"
                       }`}
                     >
                       {user.is_staff ? "Admin" : "User"}

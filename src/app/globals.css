@@ -14,10 +14,10 @@
 
 .dark {
   --color-background: #050914;
-  --color-foreground: #F8FAFC;
+  --color-foreground: #9ABBE9;
   --color-card: #0F172A;
   --color-card-foreground: #F8FAFC;
-  --color-border: rgba(255, 255, 255, 0.05);
+  --color-border: #22D3EE;
   color-scheme: dark;
 }
 

@@ -6,7 +6,7 @@ import { registerServerAction } from "@/app/actions/auth";
 import { RegisterFormData, registerSchema } from "@/app/types/auth";
 import { Check, Eye, EyeOff, Zap, ArrowRight, ShieldCheck, Database } from "lucide-react";
 import Link from "next/link";
-
+import Image from "next/image";
 export default function RegisterPage() {
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -40,54 +40,29 @@ export default function RegisterPage() {
       <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/20 blur-[120px] rounded-full" />
       
-      <div className="w-full max-w-[1100px] grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-sm relative z-10">
+      <div className="w-full max-w-275 grid grid-cols-1 md:grid-cols-2 bg-card/50 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden shadow-sm relative z-10">
         
         {/* Left Side: Brand & Marketing */}
         <div className="hidden md:flex flex-col justify-between p-12 bg-primary/5 border-r border-white/5">
           <div>
-            <Link href="/" className="flex items-center gap-3 mb-16">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
-                <Zap size={22} className="text-white" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-foreground uppercase">
-                STRIVE<span className="text-accent italic">.</span>
-              </span>
-            </Link>
+             <Image 
+                src="/strive-logo21.png" 
+                alt="STRIVE Logo" 
+                width={200} 
+                height={200} 
+                className="h-14 w-auto object-contain transition-transform group-hover:scale-105 dark:invert-0 brightness-0 dark:brightness-100"
+                priority
+              />
 
-            <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] mb-6 tracking-tight">
-              Build your technical <span className="text-accent">authority.</span>
+            <h1 className="text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] mb-6 tracking-tight mt-20">
+              Build your technical <span className="text-accent">authority</span>
             </h1>
-            <p className="text-slate-400 text-lg leading-relaxed max-w-md">
+            <p className="text-slate-500 text-lg leading-relaxed max-w-md">
               STRIVE provides a structural blueprint for your search performance, mapping every keyword and backlink into a high-performance growth engine.
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4">
-              <div className="bg-white/5 border border-white/5 p-4 rounded-2xl flex items-start gap-4">
-                <div className="p-2 bg-accent/10 rounded-lg text-accent">
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                   <h3 className="font-bold text-foreground text-sm">Precision Auditing</h3>
-                   <p className="text-xs text-slate-500 mt-1">Every line of code analyzed for structural integrity.</p>
-                </div>
-              </div>
-              <div className="bg-white/5 border border-white/5 p-4 rounded-2xl flex items-start gap-4">
-                <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                  <Database size={20} />
-                </div>
-                <div>
-                   <h3 className="font-bold text-foreground text-sm">Structural Linking</h3>
-                   <p className="text-xs text-slate-500 mt-1">Visualize your internal and external backlink architecture.</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="pt-6 border-t border-white/5 text-[10px] text-slate-500 uppercase tracking-wider font-bold">
-              Trusted by Technical SEOs Worldwide
-            </div>
-          </div>
+          
         </div>
 
         {/* Right Side: Register Form */}
@@ -133,7 +108,7 @@ export default function RegisterPage() {
                       {...register("username")}
                       type="text"
                       placeholder="Username"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
+                      className="w-full px-4 py-3 bg-white/5 border rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
                     />
                     {errors.username && (
                       <p className="text-red-400 text-xs mt-1 font-semibold ml-1">{errors.username.message}</p>
@@ -147,7 +122,7 @@ export default function RegisterPage() {
                       {...register("email")}
                       type="email"
                       placeholder="Email address"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
+                      className="w-full px-4 py-3 bg-white/5 border  rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
                     />
                     {errors.email && (
                       <p className="text-red-400 text-xs mt-1 font-semibold ml-1">{errors.email.message}</p>
@@ -164,12 +139,12 @@ export default function RegisterPage() {
                       {...register("password")}
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
+                      className="w-full px-4 py-3 bg-white/5 border  rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500  transition-colors"
                     >
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -188,12 +163,12 @@ export default function RegisterPage() {
                       {...register("confirmPassword")}
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
+                      className="w-full px-4 py-3 bg-white/5 border  rounded-xl text-foreground placeholder:text-slate-600 focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/50 transition-all font-medium"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500  transition-colors"
                     >
                       {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>

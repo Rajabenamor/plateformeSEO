@@ -32,7 +32,7 @@ export default function SearchForm() {
             type="text"
             autoComplete="off"
             placeholder="target-domain.com"
-            className={`w-full bg-muted/50 border rounded-lg py-3 pl-11 pr-32 text-sm font-medium transition-all outline-none placeholder:text-muted-foreground/50 ${
+            className={`w-full bg-muted/50 border-2 rounded-lg py-4 pl-11 pr-32 text-sm font-medium transition-all outline-none placeholder:text-muted-foreground/50 ${
               state?.error 
                 ? "border-red-500/50 ring-2 ring-red-500/10" 
                 : "border-border focus:border-primary/50 focus:ring-4 focus:ring-primary/5"
@@ -42,10 +42,10 @@ export default function SearchForm() {
           <div className="absolute right-1.5 flex items-center gap-2">
             <button
               type="submit"
-              className="bg-primary text-primary-foreground px-4 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-2 shadow-sm"
+              className="bg-primary text-primary-foreground px-4 py-3 rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-primary/90 transition-all flex items-center gap-2 shadow-sm"
             >
               Analyze
-              <ArrowRight size={12} className="opacity-70" />
+              <Zap size={12} className="opacity-70" />
             </button>
           </div>
         </div>
