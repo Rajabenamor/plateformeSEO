@@ -34,6 +34,25 @@ export async function registerServerAction(data: RegisterFormData) {
         return { success: false, error: "Failed to connect to the server." };
     }
 }
+export async function verifyOtpServerAction(data: { email: string; otp: string }) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/verify-otp/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        return { success: false, error: result.error || "Verification failed." };
+      }
+  
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Network error occurred. Try again." };
+    }
+  }
 
 export async function loginServerAction(data: LoginFormData) {
     let redirectPath = "/dashboard";
