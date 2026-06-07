@@ -2,17 +2,21 @@
 
 import { useEffect, useState } from "react"
 
+export default function AnalysisLoadingScreen({
+  targetUrl,
+  isGaConnected = false // Pass this from your parent component based on your integration status
+}: {
+  targetUrl: string | null;
+  isGaConnected?: boolean;
+}) {
+  const [progress, setProgress] = useState(0);
 
-
-export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string | null}){
-    const [progress , setProgress] = useState(0);
-
-    useEffect(()=> {
-      const interval = setInterval(()=> {
-        setProgress((prev)=>(prev >= 98 ? 98 : prev + 1));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((prev) => (prev >= 98 ? 98 : prev + 1));
     }, 150); // Faster visual progress
-        return () => clearInterval(interval);
-      }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   const step1Status = progress < 30 ? "active" : "complete";
   const step2Status = progress < 30 ? "pending" : progress < 70 ? "active" : "complete";
@@ -45,34 +49,49 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
             <div className="text-center z-10">
               <span className="text-3xl font-bold text-foreground">{progress}%</span>
               <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1">Complete</p>
-              </div>
-              </div>
-              </div>
+            </div>
+          </div>
+        </div>
 
-              {progress >= 95 && (
-              <div className="text-center mb-8 animate-pulse">
-              <p className="text-sm text-primary font-medium italic">
+        {progress >= 95 && (
+          <div className="text-center mb-8 animate-pulse">
+            <p className="text-sm text-primary font-medium italic">
               Finalizing deep analysis... This may take a moment for larger sites.
-              </p>
-              </div>
-              )}
+            </p>
+          </div>
+        )}
 
-              <div className="max-w-md mx-auto space-y-3">
-
+        <div className="max-w-md mx-auto space-y-3">
+          
+          {/* STEP 1: Traffic Data / Google Analytics */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step1Status === 'active' ? 'bg-primary/5 border border-primary/10' : 'bg-muted/30 border border-transparent'}`}>
-            <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step1Status === 'complete' ? 'bg-emerald-100 text-emerald-600' : 'bg-primary/10 text-primary'}`}>
+            <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
+              ${step1Status === 'complete' 
+                ? (isGaConnected ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600') 
+                : 'bg-primary/10 text-primary'}`}>
+              
               {step1Status === 'complete' ? (
-                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                isGaConnected ? (
+                  // Success Green Tick
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+                ) : (
+                  // Failed Red Cross
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                )
               ) : (
+                // Loading Spinner
                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
               )}
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Gathering Traffic Data</h3>
-              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Connecting to Google Analytics</p>
+              <p className={`text-[10px] font-medium uppercase tracking-wider ${step1Status === 'complete' && !isGaConnected ? 'text-red-500/80' : 'text-muted-foreground'}`}>
+                {step1Status === 'complete' && !isGaConnected ? 'Not Connected' : 'Connecting to Google Analytics'}
+              </p>
             </div>
           </div>
 
+          {/* STEP 2: Technical SEO */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step2Status === 'active' ? 'bg-primary/5 border border-primary/10' : 'bg-muted/30 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step2Status === 'complete' ? 'bg-emerald-100 text-emerald-600' : step2Status === 'active' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
               {step2Status === 'complete' ? (
@@ -89,6 +108,7 @@ export default function AnalysisLoadingScreen({targetUrl} : {targetUrl: string |
             </div>
           </div>
 
+          {/* STEP 3: Generating Recommendations */}
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step3Status === 'active' ? 'bg-primary/5 border border-primary/10' : 'bg-muted/30 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${step3Status === 'active' ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'}`}>
               {step3Status === 'active' ? (
