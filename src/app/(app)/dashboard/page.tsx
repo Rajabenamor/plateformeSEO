@@ -36,10 +36,24 @@ function DashboardContent() {
   } = useDashboardData();
 
   const [isChanging, setIsChanging] = React.useState(false);
+  
+  // Custom state to gracefully unmount the loading screen
+  const [showLoading, setShowLoading] = React.useState(true);
 
   React.useEffect(() => {
     setIsChanging(false);
   }, [targetUrl]);
+
+  // Sync our local showLoading state with the hook's loading state
+  React.useEffect(() => {
+    if (!loading) {
+      // Give the loading screen 800ms to show the success checks
+      const timer = setTimeout(() => setShowLoading(false), 800);
+      return () => clearTimeout(timer);
+    } else {
+      setShowLoading(true);
+    }
+  }, [loading]);
 
   if (initialCheck) {
     return null;
@@ -79,12 +93,13 @@ function DashboardContent() {
     );
   }
 
-  if (loading) {
-    // If your hook returns undefined for isGaConnected during loading, make sure to safely pass boolean
+  // Use showLoading here, and pass the hook's true `loading` state as `apiLoading`
+  if (showLoading) {
     return (
       <AnalysisLoadingScreen
         targetUrl={targetUrl}
         isGaConnected={!!isGaConnected}
+        apiLoading={loading}
       />
     );
   }
