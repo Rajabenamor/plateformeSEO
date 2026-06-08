@@ -1,11 +1,13 @@
 "use server";
 
 import { secureFetch } from "@/lib/api";
+import { revalidatePath } from "next/cache";
 
 export async function getIntegrationStatusAction() {
     try {
         const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/users/integrations/status/`, {
             method: "GET",
+            cache: "no-store",
         });
         if (!res.ok) return { success: false };
         const data = await res.json();
@@ -25,6 +27,8 @@ export async function exchangeGithubTokenAction(code: string, installation_id: s
             const err = await res.json();
             return { success: false, error: err.error || "Failed to exchange token" };
         }
+        
+        revalidatePath("/dashboard/integrations"); // <-- FIX 2: Clear cache upon success
         return { success: true };
     } catch (error) {
         return { success: false, error: "Network error" };
@@ -86,6 +90,8 @@ export async function exchangeGoogleTokenAction(code: string) {
             const err = await res.json();
             return { success: false, error: err.error || "Failed to exchange google token" };
         }
+        
+        revalidatePath("/dashboard/integrations"); // <-- FIX 3: Clear cache upon success
         return { success: true };
     } catch (error) {
         return { success: false, error: "Network error" };
@@ -109,6 +115,37 @@ export async function saveGA4PropertyAction(propertyId: string) {
         return { success: true };
     } catch (error) {
         console.error("Network or execution error:", error);
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function disconnectIntegrationAction(provider: "google" | "github") {
+    try {
+      const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/integrations/disconnect/`, {
+          method: "POST",
+          body: JSON.stringify({ provider }),
+      });
+  
+      if (!res.ok) return { success: false, error: "Failed to disconnect." };
+      
+      revalidatePath("/dashboard/integrations");
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: "Network error" };
+    }
+  }
+
+  export async function resetDomainLockAction() {
+    try {
+        const res = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/integrations/reset-domain/`, {
+            method: "POST",
+        });
+        
+        if (!res.ok) return { success: false, error: "Failed to reset domain." };
+        
+        revalidatePath("/dashboard/integrations");
+        return { success: true };
+    } catch (error) {
         return { success: false, error: "Network error" };
     }
 }

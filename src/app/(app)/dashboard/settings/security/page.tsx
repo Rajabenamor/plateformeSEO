@@ -3,9 +3,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Shield, Key, CheckCircle, AlertCircle } from "lucide-react";
+import { Shield, Key, CheckCircle, AlertCircle, AlertTriangle } from "lucide-react";
 import { changePasswordAction } from "@/app/actions/settings";
 import { useState } from "react";
+import { deleteAccountAction } from "@/app/actions/auth";
 
 const PasswordSchema = z.object({
   oldPassword: z.string().min(1, "Current password is required"),
@@ -20,7 +21,9 @@ type PasswordFormData = z.infer<typeof PasswordSchema>;
 
 export default function SecuritySettingsPage() {
   const [serverMessage, setServerMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
-
+  // New states for the Danger Zone
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);  
   const {
     register,
     handleSubmit,
@@ -44,6 +47,11 @@ export default function SecuritySettingsPage() {
     } else {
       setServerMessage({ type: "error", text: result.error || "Failed to update password." });
     }
+  };
+  // New handler for account deletion
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await deleteAccountAction();
   };
 
   return (
@@ -117,6 +125,57 @@ export default function SecuritySettingsPage() {
             </button>
           </div>
         </form>
+      </section>
+      {/* DANGER ZONE SECTION ADDED BELOW */}
+      <section className="bg-white border border-red-200 rounded-xl p-6 shadow-sm">
+        <div className="mb-4">
+          <h3 className="text-lg font-bold text-red-600 mb-2">Danger Zone</h3>
+          <p className="text-sm text-slate-600 max-w-md">
+            Once you delete your account, there is no going back. All of your SEO history, metrics, and connected integrations will be permanently wiped.
+          </p>
+        </div>
+        
+        {!showConfirm ? (
+          <button 
+            onClick={() => setShowConfirm(true)}
+            className="px-5 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 font-medium rounded-lg transition-colors border border-red-200 text-sm"
+          >
+            Delete Account
+          </button>
+        ) : (
+          <div className="p-5 bg-red-50 border border-red-200 rounded-xl max-w-md animate-in zoom-in-95 duration-200">
+            <div className="flex items-center gap-3 text-red-600 mb-3">
+              <AlertTriangle size={20} />
+              <span className="font-bold">Are you absolutely sure?</span>
+            </div>
+            <p className="text-sm text-red-700/90 mb-5 leading-relaxed">
+              This action cannot be undone. You will lose access to STRIVE immediately.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  "Yes, Delete My Account"
+                )}
+              </button>
+              <button 
+                onClick={() => setShowConfirm(false)}
+                disabled={isDeleting}
+                className="px-5 py-2.5 bg-white text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 border border-slate-300 transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );

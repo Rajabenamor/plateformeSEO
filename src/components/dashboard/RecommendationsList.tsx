@@ -13,6 +13,7 @@ interface RecommendationsListProps {
   fixStatuses: Record<string, "idle" | "fixing" | "success" | "error">;
   prUrls: Record<string, string>;
   onFixNow: (id: string, fix: Fix) => void;
+  isGithubConnected: boolean;
 }
 
 export default function RecommendationsList({
@@ -20,6 +21,7 @@ export default function RecommendationsList({
   fixStatuses,
   prUrls,
   onFixNow,
+  isGithubConnected,
 }: RecommendationsListProps) {
   return (
     <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden transition-all duration-300">
@@ -65,49 +67,54 @@ export default function RecommendationsList({
               </div>
 
               <div className="ml-6 flex flex-col items-end gap-3 shrink-0 mt-1">
-                {fixStatuses[fixId] === "fixing" ? (
-                  <button
-                    disabled
-                    className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-muted text-muted-foreground cursor-not-allowed flex items-center gap-2"
-                  >
-                    <div className="w-3 h-3 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
-                    Creating PR...
-                  </button>
-                ) : (
+                {/* CONDITIONAL RENDER: Only show buttons if GitHub is connected */}
+                {isGithubConnected && (
                   <>
-                    <button
-                      onClick={() => onFixNow(fixId, fix)}
-                      className={`cursor-pointer text-[10px] font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 ${
-                        fixStatuses[fixId] === "success"
-                          ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
-                          : "bg-primary text-white hover:bg-primary/90"
-                      }`}
-                    >
-                      {fixStatuses[fixId] === "success" ? (
-                        <>
-                          <CheckCircle2 size={12} />
-                          Re-apply Fix
-                        </>
-                      ) : fixStatuses[fixId] === "error" ? (
-                        "Retry Fix"
-                      ) : (
-                        <>
-                          <Zap size={12} className="fill-current" />
-                          Fix Now
-                        </>
-                      )}
-                    </button>
-
-                    {fixStatuses[fixId] === "success" && prUrls[fixId] && (
-                      <a
-                        href={prUrls[fixId]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all border border-border flex items-center gap-2 animate-in fade-in slide-in-from-top-1"
+                    {fixStatuses[fixId] === "fixing" ? (
+                      <button
+                        disabled
+                        className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-muted text-muted-foreground cursor-not-allowed flex items-center gap-2"
                       >
-                        <FileCode size={12} />
-                        GitHub PR
-                      </a>
+                        <div className="w-3 h-3 border-2 border-muted-foreground border-t-transparent rounded-full animate-spin" />
+                        Creating PR...
+                      </button>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => onFixNow(fixId, fix)}
+                          className={`cursor-pointer text-[10px] font-bold uppercase tracking-wider px-5 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 ${
+                            fixStatuses[fixId] === "success"
+                              ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20"
+                              : "bg-primary text-white hover:bg-primary/90"
+                          }`}
+                        >
+                          {fixStatuses[fixId] === "success" ? (
+                            <>
+                              <CheckCircle2 size={12} />
+                              Re-apply Fix
+                            </>
+                          ) : fixStatuses[fixId] === "error" ? (
+                            "Retry Fix"
+                          ) : (
+                            <>
+                              <Zap size={12} className="fill-current" />
+                              Fix Now
+                            </>
+                          )}
+                        </button>
+
+                        {fixStatuses[fixId] === "success" && prUrls[fixId] && (
+                          <a
+                            href={prUrls[fixId]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider rounded-lg bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-all border border-border flex items-center gap-2 animate-in fade-in slide-in-from-top-1"
+                          >
+                            <FileCode size={12} />
+                            GitHub PR
+                          </a>
+                        )}
+                      </>
                     )}
                   </>
                 )}

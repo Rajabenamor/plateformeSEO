@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Github, CheckCircle2, AlertCircle, SignalMedium } from "lucide-react";
-import { getIntegrationStatusAction, saveGithubRepoAction, saveGA4PropertyAction } from "@/app/actions/integrations"; 
-
+// Added Loader2 for the disconnect loading state
+import { Github, CheckCircle2, AlertCircle, SignalMedium, Loader2 } from "lucide-react";
+// Added disconnectIntegrationAction import
+import { getIntegrationStatusAction, saveGithubRepoAction, saveGA4PropertyAction, disconnectIntegrationAction } from "@/app/actions/integrations"; 
+import { resetDomainLockAction } from "@/app/actions/integrations";
 const GITHUB_CLIENT_ID = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 const REDIRECT_URI = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`; 
@@ -16,12 +18,18 @@ export default function IntegrationsPage() {
 
   const [ga4Input, setGa4Input] = useState("");
   const [isSavingGa4, setIsSavingGa4] = useState(false);
+  
+  const [isResetting, setIsResetting] = useState(false);
+
+  // Added state to track which provider is currently disconnecting
+  const [disconnectingProvider, setDisconnectingProvider] = useState<"google" | "github" | null>(null);
 
   const [status, setStatus] = useState({
     github_connected: false,
     github_repo: null as string | null,
     ga4_connected: false,
     ga4_property: null as string | null,
+    primary_domain: null as string | null,
   });
 
   useEffect(() => {
@@ -35,6 +43,22 @@ export default function IntegrationsPage() {
     
     fetchStatus();
   }, []);
+
+  const handleResetDomain = async () => {
+    if (!confirm("Are you sure? The next site you analyze will become your new registered project.")) return;
+    
+    setIsResetting(true);
+    const res = await resetDomainLockAction();
+    setIsResetting(false);
+
+    if (res.success) {
+      // Clear it from the local UI state so it updates instantly
+      setStatus(prev => ({ ...prev, primary_domain: null }));
+      alert("Success! Go to the dashboard and analyze your new site.");
+    } else {
+      alert("Failed to reset domain.");
+    }
+  };
 
   const handleConnectGithub = () => {
     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}/github&scope=repo`;
@@ -80,17 +104,49 @@ export default function IntegrationsPage() {
     }
   };
 
+  // Added the new disconnect handler
+  const handleDisconnect = async (provider: "google" | "github") => {
+    setDisconnectingProvider(provider);
+    const res = await disconnectIntegrationAction(provider);
+    setDisconnectingProvider(null);
+
+    if (res.success) {
+      if (provider === "google") {
+        setStatus(prev => ({ ...prev, ga4_connected: false, ga4_property: null }));
+      } else {
+        setStatus(prev => ({ ...prev, github_connected: false, github_repo: null }));
+      }
+    } else {
+      alert(res.error || `Failed to disconnect ${provider}`);
+    }
+  };
+
   if (isLoading) {
     return <div className="animate-pulse h-64 bg-slate-100 rounded-xl"></div>;
   }
 
   return (
-    <div className="max-w-3xl space-y-8">
+    <div className="max-w-3xl space-y-8 mx-auto">
       <div>
         <h2 className="text-xl font-bold text-slate-900 mb-1">Integrations</h2>
         <p className="text-sm text-slate-500">
           Connect third-party apps to Strive to enable AI code fixes and traffic analysis.
         </p>
+        {/* NEW RESET BUTTON */}
+        {status.primary_domain && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-center justify-between">
+             <p className="text-xs text-amber-800">
+               Integrations are currently locked to: <strong className="font-mono">{status.primary_domain}</strong>
+             </p>
+             <button 
+               onClick={handleResetDomain}
+               disabled={isResetting}
+               className="text-xs font-bold bg-white border border-amber-300 text-amber-700 px-3 py-1.5 rounded-md hover:bg-amber-100 disabled:opacity-50"
+             >
+               {isResetting ? "Resetting..." : "Change Project"}
+             </button>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4">
@@ -152,12 +208,23 @@ export default function IntegrationsPage() {
             </div>
           </div>
           
-          <button
-            onClick={handleConnectGithub}
-            className="shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-900 text-white hover:bg-slate-800"
-          >
-            {status.github_connected ? "Reconnect GitHub" : "Connect"}
-          </button>
+          {/* UPDATED GITHUB CONNECT/DISCONNECT BUTTON */}
+          {status.github_connected ? (
+            <button
+              onClick={() => handleDisconnect("github")}
+              disabled={disconnectingProvider === "github"}
+              className="shrink-0 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+            >
+              {disconnectingProvider === "github" ? <><Loader2 size={16} className="animate-spin" /> Disconnecting...</> : "Disconnect GitHub"}
+            </button>
+          ) : (
+            <button
+              onClick={handleConnectGithub}
+              className="shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-900 text-white hover:bg-slate-800"
+            >
+              Connect
+            </button>
+          )}
         </div>
 
          <div className="flex flex-col sm:flex-row sm:items-start justify-between p-5 bg-white border border-slate-200 rounded-xl shadow-sm">
@@ -217,16 +284,24 @@ export default function IntegrationsPage() {
               </div>
             </div>
           </div>
-          <button
-            onClick={handleConnectGA4}
-            className={`shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-              status.ga4_connected
-                ? "bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600" 
-                : "bg-orange-600 text-white hover:bg-orange-700"
-            }`}
-          >
-            {status.ga4_connected ? "Reconnect GA4" : "Connect"}
-          </button>
+
+          {/* UPDATED GA4 CONNECT/DISCONNECT BUTTON */}
+          {status.ga4_connected ? (
+            <button
+              onClick={() => handleDisconnect("google")}
+              disabled={disconnectingProvider === "google"}
+              className="shrink-0 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+            >
+              {disconnectingProvider === "google" ? <><Loader2 size={16} className="animate-spin" /> Disconnecting...</> : "Disconnect GA4"}
+            </button>
+          ) : (
+            <button
+              onClick={handleConnectGA4}
+              className="shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-orange-600 text-white hover:bg-orange-700"
+            >
+              Connect
+            </button>
+          )}
         </div>
       </div>
     </div>

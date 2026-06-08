@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import AnalysisLoadingScreen from "@/components/AnalysisLoadingScreen";
 import SearchForm from "@/components/SearchForm";
 import {
   SettingsIcon,
@@ -20,11 +19,14 @@ import MetricCard from "@/components/dashboard/MetricCard";
 import RecommendationsList from "@/components/dashboard/RecommendationsList";
 import EnrichedStatsGrid from "@/components/dashboard/EnrichedStatsGrid";
 import ExportPdfButton from "@/components/ExportPdfButton";
+import { AnalysisLoadingScreen } from "@/components/AnalysisLoadingScreen";
 
 function DashboardContent() {
   const {
     data,
     loading,
+    isGithubConnected,
+    isGaConnected,
     initialCheck,
     error,
     targetUrl,
@@ -34,19 +36,15 @@ function DashboardContent() {
   } = useDashboardData();
 
   const [isChanging, setIsChanging] = React.useState(false);
-  const [isExporting, setIsExporting] = React.useState(false);
 
-  // Close the change website form automatically when the URL updates
   React.useEffect(() => {
     setIsChanging(false);
   }, [targetUrl]);
 
-  // 0. Prevent flicker: Wait for the hook to resolve its initial URL/cookie check
   if (initialCheck) {
     return null;
   }
 
-  // 1. If NO website has been analyzed yet, show the onboarding view
   if (!targetUrl) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700">
@@ -66,7 +64,7 @@ function DashboardContent() {
           </div>
           <div className="mt-8 pt-8 border-t border-border">
             <Link
-              href="/dashboard/settings/history"
+              href="/dashboard/history"
               className="group text-xs font-bold text-primary flex items-center justify-center gap-2 hover:underline transition-all uppercase tracking-wider"
             >
               View History
@@ -81,9 +79,14 @@ function DashboardContent() {
     );
   }
 
-  // 2. Only show loading if we have a URL and are waiting for data
   if (loading) {
-    return <AnalysisLoadingScreen targetUrl={targetUrl} />;
+    // If your hook returns undefined for isGaConnected during loading, make sure to safely pass boolean
+    return (
+      <AnalysisLoadingScreen
+        targetUrl={targetUrl}
+        isGaConnected={!!isGaConnected}
+      />
+    );
   }
 
   if (error) {
@@ -193,7 +196,6 @@ function DashboardContent() {
 
           {!isChanging && (
             <>
-            {/*export dashboard as pdf button */}
               <ExportPdfButton targetUrl={targetUrl} />
               <button
                 onClick={() => {
@@ -253,6 +255,7 @@ function DashboardContent() {
         fixStatuses={fixStatuses}
         prUrls={prUrls}
         onFixNow={handleFixNow}
+        isGithubConnected={data?.is_github_connected || false}
       />
     </div>
   );

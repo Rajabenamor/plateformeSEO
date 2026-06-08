@@ -1,4 +1,4 @@
-// app/dashboard/settings/history/[id]/page.tsx
+// app/dashboard/history/[id]/page.tsx
 import { secureFetch } from "@/lib/api";
 import Link from "next/link";
 import { 
@@ -36,7 +36,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
         <ShieldAlert className="mx-auto mb-4 text-red-500" size={40} />
         <h1 className="text-xl font-bold text-foreground">Archive Not Found</h1>
         <p className="text-muted-foreground mt-2">The requested analysis report does not exist or has been purged.</p>
-        <Link href="/dashboard/settings/history" className="mt-6 inline-block text-primary font-bold text-sm hover:underline">
+        <Link href="/dashboard/history" className="mt-6 inline-block text-primary font-bold text-sm hover:underline">
           Return to Archives
         </Link>
       </div>
@@ -56,7 +56,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
       
       {/* BREADCRUMB */}
       <nav className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60">
-        <Link href="/dashboard/settings/history" className="flex items-center gap-1 hover:text-primary transition-colors">
+        <Link href="/dashboard/history" className="flex items-center gap-1 hover:text-primary transition-colors">
           <ChevronLeft size={14} /> History
         </Link>
         <span>/</span>

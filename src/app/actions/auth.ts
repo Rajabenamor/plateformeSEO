@@ -237,3 +237,39 @@ export async function GoogleLoginAction(Credential: string) {
     revalidatePath('/');
     redirect(redirectPath);
 }
+export async function deleteAccountAction() {
+    let redirectPath = "/";
+
+    try {
+        const cookieStore = await cookies();
+        const token = cookieStore.get("access_token")?.value;
+
+        if (!token) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/delete-account/`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            return { success: false, error: "Failed to delete account on the server." };
+        }
+
+        // Wipe local session data
+        cookieStore.delete("access_token");
+        cookieStore.delete("refresh_token");
+        cookieStore.delete("user_data");
+
+    } catch (error) {
+        return { success: false, error: "Network error occurred." };
+    }
+
+    revalidatePath('/');
+    redirect(redirectPath);
+}
+
