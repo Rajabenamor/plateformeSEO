@@ -64,5 +64,7 @@ export interface DashboardData {
   technical_health?: number;
   content_score?: number;
   backlink_strength?: number;
+  is_github_connected: boolean;
+  is_ga_connected: boolean;
 }
 

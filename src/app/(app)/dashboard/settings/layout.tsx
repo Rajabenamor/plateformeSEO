@@ -2,13 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, Shield, Link2, Clock } from "lucide-react";
+import { User, Shield } from "lucide-react";
 
 const SETTINGS_NAV = [
   { name: "Profile", href: "/dashboard/settings/profile", icon: User },
   { name: "Security", href: "/dashboard/settings/security", icon: Shield },
-  { name: "Integrations", href: "/dashboard/settings/integrations", icon: Link2 },
-  { name: "SEO History", href: "/dashboard/settings/history", icon: Clock },
 ];
 
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {

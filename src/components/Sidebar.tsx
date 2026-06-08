@@ -10,7 +10,9 @@ import {
   ChevronRight,
   Zap,
   ShieldCheck,
-  LogOut
+  LogOut, 
+  History,
+  Link2,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -22,7 +24,10 @@ const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
   { name: "Site Audit", href: "/dashboard/audit", icon: ClipboardCheck },
+  { name: "SEO History", href: "/dashboard/history", icon: History },
+  { name: "Integrations", href: "/dashboard/integrations", icon: Link2 },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
+
 ];
 
 export default function Sidebar() {
@@ -66,7 +71,7 @@ export default function Sidebar() {
           )}
           <nav className="space-y-1">
             {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/dashboard");
               const Icon = item.icon;
               const href = currentUrl ? `${item.href}?url=${encodeURIComponent(currentUrl)}` : item.href;
 
