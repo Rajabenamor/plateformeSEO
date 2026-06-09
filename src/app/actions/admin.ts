@@ -7,7 +7,6 @@ import {
 import { verifyAdminSession } from "@/lib/session";
 import { getAuthUser } from "@/lib/auth-utils";
 import { secureFetch } from "@/lib/api";
-
 export async function getUsersAction() {
     try {
         const response = await secureFetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/users/`, {
@@ -123,5 +122,26 @@ export async function createUserAction(data: AdminSchemaData) {
     } catch (error) {
         console.error("Create User Error:", error);
         return { success: false, error: "Server connection failed" };
+    }
+}
+export async function getAdminKPIsAction() {
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        
+        // Use secureFetch directly instead of "api.get"
+        const response = await secureFetch(`${baseUrl}/api/admin/kpis/`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return { success: true, data };
+
+    } catch (error: any) {
+        console.error("Error fetching KPIs:", error);
+        return { success: false, error: "Failed to load KPIs" };
     }
 }

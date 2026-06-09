@@ -1,31 +1,20 @@
-
 import { redirect } from "next/navigation";
 import { getUsersAction } from "@/app/actions/admin";
-import AdminTable from "@/components/AdminTable";
-import AdminError from "@/components/AdminError";
 import { verifyAdminSession } from "@/lib/session";
 import { getAuthUser } from "@/lib/auth-utils";
+import AdminDashboardClient from "@/components/AdminDashboardClient";
 
-export default async function AdminPage(){
+export default async function AdminPage() {
+    // 1. Secure Server-Side checks
     const isAdmin = await verifyAdminSession();
     if(!isAdmin){
         redirect('/');
     }
+    
+    // 2. Fetch the data
     const currentUser = await getAuthUser();
-
     const result = await getUsersAction();
-    if(!result.success) {
-        return <AdminError error={result.error || ""} />;
-    }
-    return(
-        <div className="max-w-6xl mx-auto p-8 transition-colors">
-            <h1 className="text-2xl font-bold text-primary mb-2">Admin Dashboard</h1>
-            <p className="text-sm text-foreground/60 mb-6">{result.count} total users</p>
-            <AdminTable initialUsers={result.users}
-            isSuperAdmin={!!currentUser?.isSuperAdmin}
-            currentUserId={currentUser?.id}
-            />
 
-        </div>
-    );
+    // 3. Pass data down to the Client Tab Controller
+    return <AdminDashboardClient result={result} currentUser={currentUser} />;
 }
