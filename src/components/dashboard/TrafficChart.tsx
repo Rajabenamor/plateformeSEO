@@ -1,11 +1,27 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 interface TrafficChartProps {
   traffic?: { displayDate: string; users: number }[];
 }
+
+// 1. Create a modern, custom tooltip to replace the default one
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-card border border-border shadow-lg rounded-xl p-3 flex flex-col gap-1 z-50">
+        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
+        <p className="text-sm font-bold text-foreground flex items-center">
+          <span className="text-blue-500 mr-2 text-lg leading-none">•</span>
+          {payload[0].value} <span className="text-muted-foreground font-medium ml-1">Users</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function TrafficChart({ traffic }: TrafficChartProps) {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,63 +35,86 @@ export default function TrafficChart({ traffic }: TrafficChartProps) {
   const chartData = hasData ? traffic : [];
 
   if (!isMounted) {
-    return <div className="bg-card p-6 rounded-2xl border border-border w-full h-[350px] animate-pulse bg-muted/20" />;
+    return <div className="bg-card p-6 rounded-2xl border border-border w-full h-[350px] animate-pulse" />;
   }
 
   return (
     <div className="bg-card p-6 rounded-2xl shadow-sm border border-border w-full transition-all duration-300 flex flex-col h-[350px]">
-      <div className="flex justify-between items-center mb-8">
-        <div className="space-y-1">
-          <h2 className="text-[10px] font-bold text-[#64748b] uppercase tracking-wider">
-            Traffic Over Time
+      
+      {/* Header Section */}
+      <div className="flex justify-between items-start mb-6">
+        <div>
+          <h2 className="text-lg font-bold text-foreground mb-1">
+            Traffic Overview
           </h2>
-          <p className="text-[10px] text-[#94a3b8] font-medium">
-            Source: GA4 Property
+          <p className="text-xs text-muted-foreground font-medium">
+            Sourced from Google Analytics 4
           </p>
         </div>
-        <span className="bg-[#1E4E9D]/5 text-[#1E4E9D] text-[10px] px-3 py-1 rounded-md font-bold uppercase tracking-wider border border-[#1E4E9D]/10">
+        <span className="bg-primary/10 text-primary text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">
           Last 30 Days
         </span>
       </div>
 
-      <div className="relative flex-1 w-full min-h-[200px] flex items-center justify-center">
+      {/* Chart Section */}
+      <div className="relative flex-1 w-full min-h-[200px] flex items-center justify-center mt-2">
         {!hasData ? (
-          <div className="flex flex-col items-center justify-center text-center space-y-2 opacity-50">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-2">
-               <span className="text-xl">🔌</span>
+          <div className="flex flex-col items-center justify-center text-center space-y-3 opacity-60">
+            <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center">
+              <span className="text-2xl">📊</span>
             </div>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">No Data Available</p>
-            <p className="text-[10px] font-medium text-muted-foreground max-w-[200px]">Connect Google Analytics to view real traffic metrics.</p>
+            <div>
+              <p className="text-sm font-bold text-foreground">No Traffic Data</p>
+              <p className="text-xs font-medium text-muted-foreground mt-1 max-w-[220px]">
+                Connect your GA4 property to view real-time visitor metrics.
+              </p>
+            </div>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+              
+              {/* 2. Add a beautiful SVG Gradient for the bars */}
+              <defs>
+                <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity={0.2} />
+                </linearGradient>
+              </defs>
+
+              <CartesianGrid 
+                strokeDasharray="4 4" 
+                vertical={false} 
+                stroke="hsl(var(--border))" 
+                opacity={0.6}
+              />
+              
               <XAxis
                 dataKey="displayDate"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 10, fill: "#94a3b8", fontWeight: 500 }}
+                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))", fontWeight: 500 }}
                 dy={10}
               />
-              <Tooltip
-                cursor={{ fill: "#f1f5f9", opacity: 0.5 }}
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: "8px",
-                  border: "1px solid #e2e8f0",
-                  boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-                  fontSize: "11px",
-                  fontWeight: "600",
-                  color: "#0f172a"
-                }}
-                itemStyle={{ color: "#1E4E9D", padding: 0 }}
+
+              {/* 3. Added the Y-Axis to ground the data visually */}
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))", fontWeight: 500 }}
+                dx={-10}
               />
+              
+              <Tooltip 
+                content={<CustomTooltip />} 
+                cursor={{ fill: "hsl(var(--muted))", opacity: 0.5 }}
+              />
+              
               <Bar
                 dataKey="users"
-                fill="#1E4E9D"
+                fill="url(#blueGradient)"
                 radius={[4, 4, 0, 0]}
-                barSize={20}
+                maxBarSize={40} /* Prevents bars from getting too wide on large screens */
               />
             </BarChart>
           </ResponsiveContainer>
