@@ -16,10 +16,11 @@ import { useDashboardData } from "@/hooks/useDashboardData";
 import ScoreCard from "@/components/dashboard/ScoreCard";
 import TrafficChart from "@/components/dashboard/TrafficChart";
 import MetricCard from "@/components/dashboard/MetricCard";
-import RecommendationsList from "@/components/dashboard/RecommendationsList";
+// REMOVED: import RecommendationsList from "@/components/dashboard/RecommendationsList";
 import EnrichedStatsGrid from "@/components/dashboard/EnrichedStatsGrid";
 import ExportPdfButton from "@/components/ExportPdfButton";
 import { AnalysisLoadingScreen } from "@/components/AnalysisLoadingScreen";
+import TopRecommendationsSummary from "@/components/dashboard/TopRecommendationsSummary";
 
 function DashboardContent() {
   const {
@@ -30,9 +31,6 @@ function DashboardContent() {
     initialCheck,
     error,
     targetUrl,
-    fixStatuses,
-    prUrls,
-    handleFixNow,
   } = useDashboardData();
 
   const [isChanging, setIsChanging] = React.useState(false);
@@ -264,14 +262,13 @@ function DashboardContent() {
 
       {/* STRATEGIC RECOMMENDATIONS */}
       <EnrichedStatsGrid stats={data?.enriched_statistics} />
-
-      <RecommendationsList
-        fixes={data?.seo_fixes || []}
-        fixStatuses={fixStatuses}
-        prUrls={prUrls}
-        onFixNow={handleFixNow}
-        isGithubConnected={data?.is_github_connected || false}
-      />
+      
+      {/* SUMMARY PREVIEW (Replaces the large list) */}
+      <div className="w-full">
+          <TopRecommendationsSummary fixes={data?.seo_fixes || []} />
+      </div>
+      
+      
     </div>
   );
 }

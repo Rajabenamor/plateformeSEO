@@ -78,11 +78,11 @@ export function AnalysisLoadingScreen({
           <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step1Status === 'active' ? 'bg-primary/5 border border-primary/10' : 'bg-muted/30 border border-transparent'}`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
               ${step1Status === 'complete' 
-                ? (!apiLoading && !isGaConnected ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600') 
+                ? (isGaConnected ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600') 
                 : 'bg-primary/10 text-primary'}`}>
               
               {step1Status === 'complete' ? (
-                !apiLoading && !isGaConnected ? (
+                !isGaConnected ? (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                 ) : (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
@@ -93,9 +93,9 @@ export function AnalysisLoadingScreen({
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Gathering Traffic Data</h3>
-              <p className={`text-[10px] font-medium uppercase tracking-wider ${step1Status === 'complete' ? (!apiLoading && !isGaConnected ? 'text-red-500/80' : 'text-emerald-600') : 'text-muted-foreground'}`}>
+              <p className={`text-[10px] font-medium uppercase tracking-wider ${step1Status === 'complete' ? (isGaConnected ? 'text-emerald-600' : 'text-red-500/80') : 'text-muted-foreground'}`}>
                 {step1Status === 'complete' 
-                  ? (apiLoading ? 'Gathered' : (isGaConnected ? 'Connected' : 'Not Connected')) 
+                  ? (isGaConnected ? 'Connected & Gathered' : 'Not Connected') 
                   : 'Connecting to Google Analytics'}
               </p>
             </div>

@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   LayoutDashboard,
   Lightbulb,
-  ClipboardCheck,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -23,7 +22,6 @@ import Image from "next/image";
 const NAV_ITEMS = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Recommendations", href: "/dashboard/recommendations", icon: Lightbulb },
-  { name: "Site Audit", href: "/dashboard/audit", icon: ClipboardCheck },
   { name: "SEO History", href: "/dashboard/history", icon: History },
   { name: "Integrations", href: "/dashboard/integrations", icon: Link2 },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },

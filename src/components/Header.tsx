@@ -3,8 +3,9 @@
 import { Bell, LogOut, Search, User } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import { logoutAction } from "@/app/actions/auth";
+import LogoutButton from "./LogoutButton";
 
-export default function Header() {
+export default function Header({ isAdmin = false }: { isAdmin?: boolean }) {
   return (
     <header className="sticky top-0 z-30 h-16 w-full border-b border-white/5 bg-background/60 backdrop-blur-md">
       <div className="flex h-full items-center justify-end px-6">
@@ -13,7 +14,11 @@ export default function Header() {
         {/* Right: Context Actions */}
         <div className="flex items-center gap-4">
           
-          
+        {isAdmin && (
+          <div className="mr-2">
+            <LogoutButton />
+          </div>
+        )}
           <div className="h-6 w-px bg-white/5" />
           
           <div className="flex items-center gap-3">

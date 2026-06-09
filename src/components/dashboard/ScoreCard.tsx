@@ -10,14 +10,26 @@ export default function ScoreCard({ score }: ScoreCardProps) {
   const strokeDashoffset = circumference - ((score || 0) / 100) * circumference;
 
   return (
-    <div className="bg-card p-6 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-center transition-all duration-300 relative overflow-hidden group hover:shadow-md">
-      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-6 self-start z-10">
-        Overall Score
-      </p>
+    <div className="bg-card p-6 h-[350px] rounded-2xl shadow-sm border border-border flex flex-col transition-all duration-300 relative overflow-hidden group hover:shadow-md">
       
-      <div className="relative flex items-center justify-center z-10 my-2">
-        {/* Background Circle */}
+      {/* Header Section - Matches the Traffic Chart layout perfectly */}
+      <div className="flex justify-between items-start mb-6 z-10 relative">
+        <div>
+          <h2 className="text-lg font-bold text-foreground mb-1">
+            Overall Score
+          </h2>
+          <p className="text-xs text-muted-foreground font-medium">
+            Platform Audit Average
+          </p>
+        </div>
+      </div>
+      
+      {/* Circle Section - 'flex-1' ensures it perfectly centers in the remaining space */}
+      <div className="relative flex-1 flex items-center justify-center z-10">
+        
+        {/* SVG Container */}
         <svg className="w-36 h-36 transform -rotate-90">
+          {/* Background Circle */}
           <circle
             cx="72"
             cy="72"
@@ -42,23 +54,20 @@ export default function ScoreCard({ score }: ScoreCardProps) {
           />
         </svg>
         
+        {/* Score Text inside the circle */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span className="text-4xl font-bold text-foreground tracking-tighter">
             {score || "--"}
           </span>
-          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">of 100</p>
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mt-1">
+            of 100
+          </p>
         </div>
+
       </div>
 
-      <div className="mt-6 flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-lg z-10">
-         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-         <p className="text-emerald-500 font-bold text-[10px] uppercase tracking-wider">
-           +5.2% vs last week
-         </p>
-      </div>
-
-      {/* Subtle background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Subtle background glow on hover */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     </div>
   );
 }
