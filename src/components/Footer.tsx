@@ -22,31 +22,7 @@ export default function Footer() {
             Making the internet more accessible by helping great content find its audience through simple, human-centric SEO.
             </p>
           </div>
-          {/* Product column  */}
-          <div>
-            <h3 className="text-xs font-extrabold text-foreground  mb-4">
-              Product
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/features"
-                  className="text-xs text-foreground/60 hover:text-primary transition-colors"
-                >
-                  Features
-                </Link>
-              </li>
-            
-              <li>
-                <Link
-                  href="/roadmap"
-                  className="text-xs text-foreground/60 hover:text-primary transition-colors"
-                >
-                Roadmap
-                </Link>
-              </li>
-            </ul>
-          </div>
+          
           {/* Company column  */}
           <div>
             <h3 className="text-xs font-extrabold text-foreground  mb-4">
@@ -102,12 +78,7 @@ export default function Footer() {
           <p className="text-[10px] text-foreground/50">
             &copy; {currentYear} STRIVE. All rights reserved
           </p>
-          {/* optional : social icons space*/}
-          <div className="flex space-x-4 mt-4 md:mt-0 text-foreground/50">
-            <span className="hover:text-foreground cursor-pointer text-sm transition-colors">
-              Twitter
-            </span>
-          </div>
+         
         </div>
       </div>
     </footer>

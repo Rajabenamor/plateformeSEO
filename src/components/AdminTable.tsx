@@ -46,7 +46,7 @@ export default function AdminTable({
             onClick={() => setShowCreateAdmin(true)}
             className="px-4 py-2 text-sm font-medium text-white bg-[#15418c] rounded-lg hover:bg- transition-colors"
           >
-            + Create admin
+            + Create 
           </button>
         </div>
       )}

@@ -28,8 +28,8 @@ export function AnalysisLoadingScreen({
     return () => clearInterval(interval);
   }, [apiLoading]);
 
-  // REVERTED: Sequential loading logic (one by one)
-  const step1Status = progress < 30 ? "active" : "complete";
+  // UPDATED: Added a "waiting" state for Step 1 between 30% and 100%
+  const step1Status = progress < 30 ? "active" : progress < 100 ? "waiting" : "complete";
   const step2Status = progress < 30 ? "pending" : progress < 70 ? "active" : "complete";
   const step3Status = progress < 70 ? "pending" : (apiLoading ? "active" : "complete");
 
@@ -75,10 +75,16 @@ export function AnalysisLoadingScreen({
         <div className="max-w-md mx-auto space-y-3">
           
           {/* STEP 1: Traffic Data / Google Analytics */}
-          <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${step1Status === 'active' ? 'bg-primary/5 border border-primary/10' : 'bg-muted/30 border border-transparent'}`}>
+          <div className={`p-4 rounded-xl flex items-center gap-4 transition-colors ${
+            step1Status === 'active' ? 'bg-primary/5 border border-primary/10' : 
+            step1Status === 'waiting' ? 'bg-yellow-50/50 border border-yellow-100' :
+            'bg-muted/30 border border-transparent'
+          }`}>
             <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center 
               ${step1Status === 'complete' 
                 ? (isGaConnected ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600') 
+                : step1Status === 'waiting'
+                ? 'bg-yellow-100 text-yellow-600'
                 : 'bg-primary/10 text-primary'}`}>
               
               {step1Status === 'complete' ? (
@@ -87,15 +93,23 @@ export function AnalysisLoadingScreen({
                 ) : (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
                 )
+              ) : step1Status === 'waiting' ? (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
               ) : (
                 <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
               )}
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">Gathering Traffic Data</h3>
-              <p className={`text-[10px] font-medium uppercase tracking-wider ${step1Status === 'complete' ? (isGaConnected ? 'text-emerald-600' : 'text-red-500/80') : 'text-muted-foreground'}`}>
+              <p className={`text-[10px] font-medium uppercase tracking-wider ${
+                step1Status === 'complete' ? (isGaConnected ? 'text-emerald-600' : 'text-red-500/80') : 
+                step1Status === 'waiting' ? 'text-yellow-600/90' :
+                'text-muted-foreground'
+              }`}>
                 {step1Status === 'complete' 
                   ? (isGaConnected ? 'Connected & Gathered' : 'Not Connected') 
+                  : step1Status === 'waiting'
+                  ? 'Pending Verification'
                   : 'Connecting to Google Analytics'}
               </p>
             </div>
